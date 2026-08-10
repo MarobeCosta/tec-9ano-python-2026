@@ -208,8 +208,10 @@ footer.nav .in{max-width:880px;margin:0 auto;padding:11px 18px;
 .it .ck{margin-left:auto;color:var(--ok)}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 
-.selo{font-family:var(--mono);font-size:11.5px;color:var(--fraco);text-align:center;
-  margin:22px 0 0;padding-top:14px;border-top:1px solid var(--borda)}
+.btn.ok{background:var(--ok);color:#07240F}
+.btn.falhou{background:var(--erro);color:#2A0A0A}
+.copfalha{background:rgba(248,113,113,.12);border-top:1px solid var(--erro);
+  color:#FFD9D9;font-size:13.5px;padding:9px 14px;font-family:var(--ui)}
 </style>
 </head>
 <body>
@@ -227,7 +229,7 @@ footer.nav .in{max-width:880px;margin:0 auto;padding:11px 18px;
 <div class="mapa"><button class="card c1" data-aula="a01"><div class="n">AULA 01</div><div class="t">Número Secreto · parte 1</div><div class="d">Pedir, guardar e mostrar um número</div><div class="st" id="st_a01">0 de 8 telas</div></button><button class="card c2" data-aula="a02"><div class="n">AULA 02</div><div class="t">Número Secreto · parte 2</div><div class="d">O computador sorteia sozinho</div><div class="st" id="st_a02">0 de 7 telas</div></button><button class="card c3" data-aula="a03"><div class="n">AULA 03</div><div class="t">Quiz · parte 1</div><div class="d">Montar as perguntas e conferir</div><div class="st" id="st_a03">0 de 6 telas</div></button><button class="card c4" data-aula="a04"><div class="n">AULA 04</div><div class="t">Quiz · parte 2</div><div class="d">Deixar o jogo esperto e entregar</div><div class="st" id="st_a04">0 de 7 telas</div></button></div>
 <div class="aviso"><b>Antes de tudo: entre na sua conta Google.</b>Sem login o Colab funciona, mas o seu arquivo some quando você fecha a aba. Confira a bolinha com a sua foto no canto de cima, à direita do navegador.</div>
 <div class="aviso bom"><b>Como este guia funciona</b>Uma tela de cada vez, como fases. No rodapé você tem <b>Voltar</b>, a <b>lista de todas as telas</b> e <b>Avançar</b>. Deixe esta aba aberta e vá alternando com a aba do Colab.</div>
-<p class="selo">FACAPY-9ANO-V03.00-TELAS · 26.08.05</p>
+<p class="selo">FACAPY-9ANO-V04.00-TELAS · 26.08.05</p>
 </div>
 <div class="tela" id="t_obj_a01" data-aula="a01">
 <span class="cod">AULA 01 · OBJETIVOS</span>
@@ -520,9 +522,8 @@ function pintaObjetivos(aula,destaque){
   var lista=OBJ[aula], f=feitos[aula]||[];
   box.innerHTML='';
   lista.forEach(function(o,i){
-    var st = f.indexOf(i)>=0 ? 'feito' : (i===destaque?'atual':(i===f.length?'':'bloq'));
-    if(st==='')st='bloq';
-    var mk = st==='feito'?'✅':(st==='atual'?'✅':'🔒');
+    var st = (i===destaque) ? 'atual' : (f.indexOf(i)>=0 ? 'feito' : 'bloq');
+    var mk = (st==='bloq') ? '🔒' : '✅';
     var d=document.createElement('div');
     d.className='obj '+st;
     d.innerHTML='<div class="mk">'+mk+'</div><div class="tx"><b>'+o[0]+'</b><span>'+o[1]+'</span>'+
@@ -583,16 +584,38 @@ document.getElementById('bFecha').addEventListener('click',function(){ov.classLi
 ov.addEventListener('click',function(e){if(e.target===ov)ov.classList.remove('on')});
 
 /* ---- copiar ---- */
+function limpaBotoes(menos){
+  document.querySelectorAll('[data-copiar]').forEach(function(x){
+    if(x!==menos){x.textContent='Copiar';x.classList.remove('ok','falhou')}
+  });
+}
+function marcaOk(b){limpaBotoes(b);b.textContent='✓ Copiado';b.classList.add('ok');b.classList.remove('falhou')}
+function marcaFalha(b,id){
+  limpaBotoes(b);b.textContent='Aperte Ctrl+C';b.classList.add('falhou');b.classList.remove('ok');
+  var pre=document.getElementById(id);
+  try{
+    var r=document.createRange();r.selectNodeContents(pre);
+    var s=window.getSelection();s.removeAllRanges();s.addRange(r);
+    pre.scrollIntoView({block:'nearest'});
+  }catch(e){}
+  var av=pre.parentNode.querySelector('.copfalha');
+  if(!av){av=document.createElement('div');av.className='copfalha';
+    av.textContent='O navegador nao deixou copiar sozinho. Ja deixei o texto selecionado: aperte Ctrl+C.';
+    pre.parentNode.appendChild(av);}
+}
 document.querySelectorAll('[data-copiar]').forEach(function(b){
   b.addEventListener('click',function(){
-    var txt=document.getElementById(b.dataset.copiar).textContent;
-    function done(){var a=b.textContent;b.textContent='Copiado';b.classList.add('ok');
-      setTimeout(function(){b.textContent=a;b.classList.remove('ok')},1400)}
-    function fb(){var ta=document.createElement('textarea');ta.value=txt;ta.style.position='fixed';
-      ta.style.opacity='0';document.body.appendChild(ta);ta.select();
-      try{document.execCommand('copy');done()}catch(e){b.textContent='Selecione e copie'}
-      document.body.removeChild(ta)}
-    if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(txt).then(done,fb)}else{fb()}
+    var id=b.dataset.copiar, txt=document.getElementById(id).textContent;
+    function velho(){
+      var ta=document.createElement('textarea');ta.value=txt;ta.style.position='fixed';
+      ta.style.top='-1000px';document.body.appendChild(ta);ta.focus();ta.select();
+      var deu=false;try{deu=document.execCommand('copy')}catch(e){deu=false}
+      document.body.removeChild(ta);
+      if(deu){marcaOk(b)}else{marcaFalha(b,id)}
+    }
+    if(navigator.clipboard&&navigator.clipboard.writeText){
+      navigator.clipboard.writeText(txt).then(function(){marcaOk(b)},velho);
+    }else{velho()}
   });
 });
 
