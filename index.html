@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Python no Google Colab · 9º ano · 3º bimestre</title>
+<style>:root{
+  --tinta:#0E1A28; --painel:#16273C; --painel2:#1D3350; --borda:#2B4869;
+  --texto:#E9EFF6; --fraco:#93A9C0; --giz:#FFD166; --ok:#4ADE80;
+  --alerta:#FB923C; --erro:#F87171; --tela:#FFFFFF; --telacinza:#F1F3F4;
+  --telaborda:#BDC1C6; --telatexto:#202124;
+  --mono:"Consolas","DejaVu Sans Mono","Courier New",monospace;
+  --ui:"Segoe UI",system-ui,-apple-system,"Trebuchet MS",sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--tinta);color:var(--texto);font-family:var(--ui);
+  font-size:17px;line-height:1.55;padding-bottom:70px}
+.wrap{max-width:900px;margin:0 auto;padding:0 18px}
+a{color:var(--giz)}
+
+header.top{background:linear-gradient(180deg,#132135,#0E1A28);
+  border-bottom:2px solid var(--borda);padding:24px 0 18px}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--giz);margin:0 0 6px}
+h1.titulo{font-size:29px;font-weight:800;letter-spacing:-.02em;margin:0 0 4px}
+.sub{color:var(--fraco);font-size:15px;margin:0}
+
+.abas{display:flex;gap:8px;margin:20px 0 0;flex-wrap:wrap}
+.aba{background:var(--painel);border:1px solid var(--borda);color:var(--texto);
+  border-radius:9px 9px 0 0;padding:11px 18px;cursor:pointer;font-family:var(--ui);
+  font-size:15px;font-weight:600}
+.aba .n{font-family:var(--mono);font-size:11px;color:var(--fraco);display:block;letter-spacing:.1em}
+.aba.on{background:var(--painel2);border-color:var(--giz);color:#fff}
+.aba.on .n{color:var(--giz)}
+
+.barra{height:6px;background:var(--painel);border-radius:99px;overflow:hidden;margin:18px 0 4px}
+.barra i{display:block;height:100%;background:var(--giz);width:0;transition:width .3s}
+.barratxt{font-family:var(--mono);font-size:12px;color:var(--fraco)}
+
+.painelaula{display:none}
+.painelaula.on{display:block}
+
+section.passo{border-top:1px solid var(--borda);padding:24px 0 6px}
+.cab{display:flex;align-items:baseline;gap:11px;flex-wrap:wrap}
+.cod{font-family:var(--mono);font-size:14px;color:var(--giz);
+  background:rgba(255,209,102,.1);border:1px solid rgba(255,209,102,.28);
+  padding:2px 9px;border-radius:6px}
+h2{font-size:21px;margin:0;font-weight:700;letter-spacing:-.01em}
+h3{font-size:17px;margin:22px 0 6px;font-weight:700}
+section.passo,.check,.seq{counter-reset:a}
+ol.acoes{list-style:none;padding:0;margin:13px 0 0}
+ol.acoes li,.acao{position:relative;padding:7px 0 7px 42px;counter-increment:a}
+ol.acoes li::before,.acao::before{content:counter(a);position:absolute;left:0;top:7px;
+  width:27px;height:27px;border-radius:50%;background:var(--painel2);
+  border:1px solid var(--borda);font-family:var(--mono);font-size:13px;
+  color:var(--fraco);display:flex;align-items:center;justify-content:center}
+.acao{margin:0}
+.dentro{margin:8px 0 14px 42px}
+.dentro .copiar,.dentro .espelho{margin-top:8px}
+li b{color:#fff}
+.ui{background:#D7E7FB;color:#103A66;font-weight:700;padding:1px 7px;
+  border-radius:5px;white-space:nowrap}
+code.inl{font-family:var(--mono);font-size:.92em;background:var(--painel2);
+  padding:1px 6px;border-radius:5px;border:1px solid var(--borda)}
+
+.copiar{margin:15px 0 6px;border:1px solid var(--giz);border-radius:10px;overflow:hidden}
+.copiar .cab2{display:flex;justify-content:space-between;align-items:center;gap:10px;
+  background:rgba(255,209,102,.13);padding:8px 12px;font-family:var(--mono);
+  font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--giz)}
+.copiar pre{margin:0;padding:14px;background:#0A1420;overflow-x:auto;
+  font-family:var(--mono);font-size:14.5px;line-height:1.65;color:#DCE7F2;white-space:pre}
+.btn{font-family:var(--ui);font-weight:700;font-size:13px;cursor:pointer;
+  background:var(--giz);color:#20180A;border:0;border-radius:7px;padding:7px 15px}
+.btn:hover{filter:brightness(1.08)}
+.btn:active{transform:translateY(1px)}
+.btn.ok{background:var(--ok);color:#07240F}
+.btn.sec{background:transparent;color:var(--giz);border:1px solid var(--giz)}
+
+.espelho{margin:13px 0 6px}
+.rot{font-family:var(--mono);font-size:11.5px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--fraco);margin-bottom:6px}
+.colab{background:var(--telacinza);border:1px solid var(--telaborda);
+  border-radius:8px;display:flex;overflow:hidden}
+.colab .play{background:#E8EAED;border-right:1px solid var(--telaborda);min-width:44px;
+  display:flex;align-items:flex-start;justify-content:center;padding-top:12px;
+  color:#5F6368;font-size:16px}
+.colab pre{margin:0;padding:12px 14px;flex:1;overflow-x:auto;color:var(--telatexto);
+  font-family:var(--mono);font-size:14px;line-height:1.6;white-space:pre;background:var(--telacinza)}
+.saida{background:var(--tela);border:1px solid #9AA0A6;border-radius:8px;margin-top:8px}
+.saida pre{margin:0;padding:12px 14px;color:var(--telatexto);font-family:var(--mono);
+  font-size:14px;line-height:1.6;white-space:pre-wrap;overflow-x:auto}
+
+.aviso{border-left:4px solid var(--alerta);background:rgba(251,146,60,.09);
+  padding:12px 15px;border-radius:0 8px 8px 0;margin:15px 0;font-size:15.5px}
+.aviso.bom{border-color:var(--ok);background:rgba(74,222,128,.09)}
+.aviso > b:first-child{display:block;margin-bottom:4px}
+.aviso b{color:#fff}
+
+.check{background:var(--painel);border:2px solid var(--giz);border-radius:12px;
+  padding:20px;margin:20px 0}
+.check h3{margin:0 0 6px;font-size:19px;color:var(--giz)}
+.check p{margin:0 0 10px;color:var(--fraco);font-size:15px}
+
+.verif{background:var(--painel);border:1px solid var(--borda);border-radius:12px;
+  padding:18px;margin:20px 0}
+.verif h3{margin:0 0 6px;font-size:17px}
+.verif p{margin:0 0 10px;color:var(--fraco);font-size:14.5px}
+.verif textarea{width:100%;min-height:110px;background:#0A1420;color:#DCE7F2;
+  border:1px solid var(--borda);border-radius:8px;padding:11px;
+  font-family:var(--mono);font-size:14px;line-height:1.6;resize:vertical}
+.diag{margin-top:12px;padding:13px 15px;border-radius:8px;display:none;font-size:15.5px}
+.diag.mostra{display:block}
+.diag.certo{background:rgba(74,222,128,.12);border:1px solid var(--ok)}
+.diag.errado{background:rgba(248,113,113,.1);border:1px solid var(--erro)}
+.diag ol{margin:8px 0 0;padding-left:20px}
+.diag .lin{font-family:var(--mono);font-size:13.5px;background:#0A1420;
+  padding:6px 10px;border-radius:6px;display:block;margin-top:6px;white-space:pre-wrap}
+
+.feito{display:flex;align-items:center;gap:10px;margin:15px 0 0;background:var(--painel);
+  border:1px solid var(--borda);border-radius:9px;padding:11px 14px}
+.feito input{width:20px;height:20px;accent-color:var(--ok);cursor:pointer}
+.feito label{cursor:pointer;font-size:15.5px}
+
+.sond{background:var(--painel);border:1px solid var(--borda);border-radius:12px;
+  padding:20px;margin:26px 0}
+.q{border-top:1px solid var(--borda);padding:17px 0 4px}
+.q:first-of-type{border-top:0;padding-top:6px}
+.q .txt{font-weight:600;margin-bottom:9px}
+.alt{display:block;width:100%;text-align:left;background:var(--painel2);
+  border:1px solid var(--borda);color:var(--texto);border-radius:8px;
+  padding:10px 13px;margin:6px 0;cursor:pointer;font-size:15.5px;font-family:var(--ui)}
+.alt:hover{border-color:var(--giz)}
+.alt.certa{border-color:var(--ok);background:rgba(74,222,128,.14)}
+.alt.errada{border-color:var(--erro);background:rgba(248,113,113,.12)}
+.expl{font-size:14.5px;color:var(--fraco);margin-top:8px;display:none;
+  border-left:3px solid var(--borda);padding-left:12px}
+.expl.mostra{display:block}
+.placar{font-family:var(--mono);font-size:15px;margin-top:15px;padding-top:13px;
+  border-top:1px solid var(--borda);display:none}
+.placar.mostra{display:block}
+
+footer{border-top:1px solid var(--borda);margin-top:34px;padding:18px 0;
+  color:var(--fraco);font-size:13px;font-family:var(--mono)}
+@media (max-width:620px){h1.titulo{font-size:23px}body{font-size:16px}
+  .colab pre,.copiar pre{font-size:12.5px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+/* ---------- trava progressiva ---------- */
+section.passo.trancado,.sond.trancado{opacity:.4;pointer-events:none;user-select:none}
+section.passo.trancado .btn,.sond.trancado .btn{filter:grayscale(1)}
+.tranca{display:none;align-items:center;gap:9px;background:var(--painel2);
+  border:1px dashed var(--borda);border-radius:9px;padding:10px 14px;
+  margin:0 0 12px;font-size:14px;color:var(--fraco);font-family:var(--mono)}
+section.passo.trancado > .tranca,.sond.trancado > .tranca{display:flex}
+.avisoprof{background:rgba(255,209,102,.12);border:1px solid var(--giz);color:var(--giz);
+  border-radius:9px;padding:10px 14px;margin:16px 0 0;font-family:var(--mono);font-size:13px}
+.feito.pronto{border-color:var(--ok)}
+
+/* ---------- atalhos de teclado ---------- */
+.atalhos{background:rgba(255,209,102,.07);border:1px dashed rgba(255,209,102,.45);
+  border-radius:9px;padding:11px 14px;margin:6px 0 12px}
+.atalhos .rotulo{font-family:var(--mono);font-size:11px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--giz);margin-bottom:8px}
+.atalhos .lin{display:flex;align-items:baseline;gap:10px;padding:4px 0;flex-wrap:wrap}
+.atalhos .teclas{flex:0 0 auto;min-width:150px}
+.atalhos .oque{color:var(--texto);font-size:15px}
+kbd{font-family:var(--mono);font-size:12.5px;background:var(--painel2);
+  border:1px solid var(--borda);border-bottom-width:2px;border-radius:5px;
+  padding:2px 7px;color:#fff;white-space:nowrap}
+.atalhos .mais{color:var(--fraco);font-size:12px;margin:0 3px}
+.atalhos .nota{color:var(--fraco);font-size:13px;margin-top:8px;font-style:italic}
+
+/* ---------- tabela de explicacao de linhas ---------- */
+table.linhas{width:100%;border-collapse:collapse;margin:6px 0 10px}
+table.linhas td{border-top:1px solid var(--borda);padding:9px 10px;vertical-align:top}
+td.lcod{font-family:var(--mono);font-size:13px;color:var(--giz);white-space:nowrap;width:1%}
+td.lexp{font-size:15px;color:var(--texto)}
+@media (max-width:620px){
+  table.linhas td{display:block;border-top:0}
+  td.lcod{border-top:1px solid var(--borda);padding-bottom:2px;white-space:normal}
+  td.lexp{padding-top:0}
+}
+
+.mapa{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:12px;margin:22px 0 0}
+.cardaula{background:var(--painel);border:1px solid var(--borda);border-radius:12px;
+  padding:15px;text-align:left;color:inherit;cursor:pointer;font-family:var(--ui);
+  transition:border-color .2s}
+.cardaula:hover{border-color:var(--giz)}
+.cardaula.on{border-color:var(--giz);background:var(--painel2)}
+.cardaula .n{font-family:var(--mono);font-size:11px;color:var(--giz);letter-spacing:.11em}
+.cardaula .t{font-weight:700;font-size:16px;margin:5px 0 3px;color:#fff}
+.cardaula .d{font-size:13.5px;color:var(--fraco);line-height:1.4}
+.cardaula .proj{font-family:var(--mono);font-size:11px;color:var(--fraco);
+  margin-top:10px;padding-top:9px;border-top:1px solid var(--borda)}
+.voltar{display:inline-block;margin:20px 0 0;font-family:var(--mono);font-size:13px}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+<p class="eyebrow">Tecnologia · 9º ano · 3º bimestre</p>
+<h1 class="titulo">Python no Google Colab</h1>
+<p class="sub">Quatro aulas · dois projetos · dois arquivos no Colab</p>
+<div class="mapa"><button class="cardaula aba" data-alvo="a01">
+<div class="n">AULA 01 · S.00–S.07</div>
+<div class="t">Número Secreto · parte 1</div>
+<div class="d">Pedir, guardar e mostrar um número</div>
+<div class="proj">Arquivo 1 no Colab</div>
+</button><button class="cardaula aba" data-alvo="a02">
+<div class="n">AULA 02 · S.08–S.12</div>
+<div class="t">Número Secreto · parte 2</div>
+<div class="d">O computador sorteia sozinho</div>
+<div class="proj">Arquivo 1 no Colab</div>
+</button><button class="cardaula aba" data-alvo="a03">
+<div class="n">AULA 03 · S.13–S.18</div>
+<div class="t">Quiz · parte 1</div>
+<div class="d">Montar as perguntas e conferir</div>
+<div class="proj">Arquivo 2 no Colab</div>
+</button><button class="cardaula aba" data-alvo="a04">
+<div class="n">AULA 04 · S.19–S.24</div>
+<div class="t">Quiz · parte 2</div>
+<div class="d">Deixar o jogo esperto e entregar</div>
+<div class="proj">Arquivo 2 no Colab</div>
+</button></div>
+<div class="barra"><i id="barra"></i></div>
+<div class="barratxt" id="barratxt">0 passos concluídos</div>
+</div></header>
+
+<main class="wrap">
+<div class="aviso bom" style="margin-top:20px">
+<b>Como este guia funciona.</b>
+Escolha a aula lá em cima. Em cada aula você faz <b>uma colagem só</b>: o código
+vem inteiro num quadro, você cola, escreve o seu nome e roda.
+Os passos abrem um de cada vez, conforme você marca os quadrinhos.
+</div>
+
+<div class="aviso" style="margin-bottom:6px">
+<b>Antes de tudo: entre na sua conta Google.</b>
+Sem login o Colab funciona, mas o arquivo some quando você fecha a aba.
+Confira a bolinha com a sua foto no canto de cima, à direita do navegador.
+</div>
+
+<div class="painelaula" id="a01">
+<div class="aviso bom"><b>Nesta aula você faz UMA colagem.</b>O código inteiro vem pronto num quadro só. Você cola, escreve o seu nome e roda. Depois o guia explica o que cada linha faz.</div>
+
+
+<section class="passo">
+<div class="cab"><span class="cod">S.00</span><h2>As três regras</h2></div>
+<div class="acoes">
+<div class="acao"><b>Uma colagem só por aula.</b> Você cola o código inteiro de uma vez e pronto.</div>
+<div class="acao"><b>Use sempre o botão Copiar.</b> Nunca selecione o texto com o mouse.</div>
+<div class="acao"><b>Se der errado, apague tudo e cole de novo.</b> Nunca conserte letra por letra.</div>
+</div>
+</section>
+
+
+<section class="passo">
+<div class="tranca"><i>&#128274;</i><span class="trancatxt">Marque o passo anterior para liberar</span></div>
+<div class="cab"><span class="cod">S.01</span><h2>Entrar na sua conta Google</h2></div>
+<div class="acoes"><div class="acao">Abra o navegador Google Chrome.</div><div class="acao">Olhe o canto de cima, à direita. Tem que aparecer a bolinha com a sua letra ou a sua foto.</div><div class="acao">Se não aparecer, clique em <span class="ui">Fazer login</span> e entre com a sua conta de estudante.</div></div>
+<div class="aviso"><b>Sem login você perde tudo</b>O Colab abre e funciona mesmo sem login. Mas quando você fechar a aba, o arquivo some. Confira a bolinha ANTES de começar.</div><div class="feito"><input type="checkbox" id="p1"><label for="p1">Estou logado na minha conta</label></div>
+</section>
+
+<section class="passo">
+<div class="tranca"><i>&#128274;</i><span class="trancatxt">Marque o passo anterior para liberar</span></div>
+<div class="cab"><span class="cod">S.02</span><h2>Abrir o Google Colab</h2></div>
+<div class="acoes"><div class="acao">Clique no botão <b>Copiar</b> deste quadro:</div><div class="dentro"><div class="copiar">
+<div class="cab2"><span>endereço do site</span><button class="btn" data-copiar="c0">Copiar</button></div>
+<pre id="c0">colab.research.google.com</pre></div></div><div class="acao">Cole na barra de endereço, lá em cima do navegador.</div><div class="dentro"><div class="atalhos"><div class="rotulo">atalho de teclado</div><div class="lin"><span class="teclas"><kbd>Ctrl</kbd><span class="mais">+</span><kbd>L</kbd></span><span class="oque">leva o cursor direto para a barra de endereço, sem precisar do mouse</span></div><div class="lin"><span class="teclas"><kbd>Ctrl</kbd><span class="mais">+</span><kbd>V</kbd></span><span class="oque">cola o que você copiou</span></div><div class="nota">Você já viu atalhos de teclado no 6º ano. Eles voltam aqui, e agora com uso real.</div></div></div><div class="acao">Aperte <b>Enter</b>.</div><div class="acao">Clique no botão <span class="ui">Novo notebook</span>.</div><div class="acao">Espere aparecer uma caixa cinza vazia. Ela se chama <b>célula</b>.</div><div class="dentro"><div class="espelho"><div class="rot">espelho · sua tela deve ficar assim</div>
+<div class="colab"><div class="play">&#9654;</div><pre> </pre></div></div></div></div>
+<div class="feito"><input type="checkbox" id="p2"><label for="p2">A célula vazia apareceu</label></div>
+</section>
+
+<section class="passo">
+<div class="tranca"><i>&#128274;</i><span class="trancatxt">Marque o passo anterior para liberar</span></div>
+<div class="cab"><span class="cod">S.03</span><h2>Dar nome ao arquivo</h2></div>
+<div class="acoes"><div class="acao">No canto de cima, à esquerda, clique no nome <span class="ui">Untitled0.ipynb</span>.</div><div class="acao">Apague tudo o que está escrito lá.</div><div class="dentro"><div class="atalhos"><div class="rotulo">atalho de teclado</div><div class="lin"><span class="teclas"><kbd>Ctrl</kbd><span class="mais">+</span><kbd>A</kbd></span><span class="oque">seleciona tudo o que está escrito no campo, de uma vez</span></div><div class="lin"><span class="teclas"><kbd>Delete</kbd></span><span class="oque">apaga o que está selecionado</span></div><div class="lin"><span class="teclas"><kbd>Backspace</kbd></span><span class="oque">faz a mesma coisa; é a tecla com a seta para a esquerda, em cima do Enter</span></div><div class="nota">Sem os atalhos você teria que apagar letra por letra, 28 vezes.</div></div></div><div class="acao">Clique no botão <b>Copiar</b> deste quadro:</div><div class="dentro"><div class="copiar">
+<div class="cab2"><span>nome do arquivo</span><button class="btn" data-copiar="c1">Copiar</button></div>
+<pre id="c1">3ºbim-A.01+02=Numero Secreto</pre></div></div><div class="acao">Cole no lugar do nome que você apagou e aperte <b>Enter</b>.</div></div>
+<div class="feito"><input type="checkbox" id="p3"><label for="p3">Meu arquivo tem o nome certo</label></div>
+</section>
+
+<section class="passo">
+<div class="tranca"><i>&#128274;</i><span class="trancatxt">Marque o passo anterior para liberar</span></div>
+<div class="cab"><span class="cod">S.04</span><h2>Colar o código da aula inteira</h2></div>
+<div class="acoes"><div class="acao">Clique dentro da <b>caixa cinza</b> (a célula), que está vazia.</div><div class="acao">Clique no botão <b>Copiar</b> deste quadro. É o código completo desta aula:</div><div class="dentro"><div class="copiar">
+<div class="cab2"><span>código completo da Aula 01 · uma colagem só</span><button class="btn" data-copiar="c2">Copiar</button></div>
+<pre id="c2"># 3ºbim-A.01+02=Numero Secreto - ESCREVA SEU NOME AQUI (01/01)
+
+numero_secreto = 9
+
+input(&quot;Adivinhe o número entre 1 e 10:&quot;)
+print(&quot;O número secreto é:&quot;, numero_secreto)</pre></div></div><div class="acao">Cole dentro da célula.</div><div class="dentro"><div class="atalhos"><div class="rotulo">atalho de teclado</div><div class="lin"><span class="teclas"><kbd>Ctrl</kbd><span class="mais">+</span><kbd>V</kbd></span><span class="oque">cola dentro da célula</span></div><div class="lin"><span class="teclas"><kbd>Ctrl</kbd><span class="mais">+</span><kbd>Z</kbd></span><span class="oque">desfaz a última coisa que você fez; use se colar no lugar errado</span></div><div class="nota">O Ctrl+Z é o seu botão de arrependimento. Guarde bem esse.</div></div></div><div class="acao">Na primeira linha, apague <code class="inl">ESCREVA SEU NOME AQUI</code> e digite o seu nome completo.</div><div class="acao">Não mexa no <code class="inl">(01/01)</code> do fim.</div><div class="acao">Confira: a sua tela tem que ficar assim, com o seu nome no lugar do exemplo.</div><div class="dentro"><div class="espelho"><div class="rot">espelho · sua tela deve ficar assim</div>
+<div class="colab"><div class="play">&#9654;</div><pre># 3ºbim-A.01+02=Numero Secreto - Ana Souza (01/01)
+
+numero_secreto = 9
+
+input(&quot;Adivinhe o número entre 1 e 10:&quot;)
+print(&quot;O número secreto é:&quot;, numero_secreto)</pre></div></div></div></div>
+<div class="aviso"><b>Se ficou diferente</b>Apague tudo o que está na célula e cole de novo, de uma vez só. É mais rápido que procurar o erro.</div><div class="feito"><input type="checkbox" id="p4"><label for="p4">Colei o código e escrevi o meu nome</label></div>
+</section>
+
+<section class="passo">
+<div class="tranca"><i>&#128274;</i><span class="trancatxt">Marque o passo anterior para liberar</span></div>
+<div class="cab"><span class="cod">S.05</span><h2>Rodar e testar</h2></div>
+<div class="acoes"><div class="acao">Clique no botão <span class="ui">&#9654;</span>, do lado esquerdo da célula.</div><div class="dentro"><div class="atalhos"><div class="rotulo">atalho de teclado</div><div class="lin"><span class="teclas"><kbd>Ctrl</kbd><span class="mais">+</span><kbd>Enter</kbd></span><span class="oque">roda a célula e o cursor continua nela</span></div><div class="lin"><span class="teclas"><kbd>Shift</kbd><span class="mais">+</span><kbd>Enter</kbd></span><span class="oque">roda a célula e pula para a de baixo</span></div></div></div><div class="acao">Na primeira vez o Colab demora alguns segundos para conectar. É normal.</div><div class="acao">Aparece a pergunta e uma caixinha para digitar.</div><div class="acao">Digite um número e aperte <b>Enter</b>.</div><div class="dentro"><div class="espelho"><div class="rot">espelho · o resultado embaixo da célula</div>
+<div class="saida"><pre>Adivinhe o número entre 1 e 10: 5
+O número secreto é: 9</pre></div></div></div></div>
+<div class="aviso bom"><b>Você já percebeu o problema?</b>O jogo entrega o número secreto na tela. Assim ninguém precisa adivinhar nada. Na Aula 02 o computador vai sortear sozinho.</div><div class="feito"><input type="checkbox" id="p5"><label for="p5">Apareceu "O número secreto é: 9"</label></div>
+</section>
+
+<div class="verif">
+<h3>Conferir a minha tela</h3>
+<p>Selecione tudo o que está na sua célula, copie, e cole aqui embaixo.</p>
+<div class="atalhos"><div class="rotulo">atalho de teclado</div><div class="lin"><span class="teclas"><kbd>Ctrl</kbd><span class="mais">+</span><kbd>A</kbd></span><span class="oque">clique dentro da célula do Colab e selecione todo o código</span></div><div class="lin"><span class="teclas"><kbd>Ctrl</kbd><span class="mais">+</span><kbd>C</kbd></span><span class="oque">copia o que está selecionado</span></div><div class="lin"><span class="teclas"><kbd>Ctrl</kbd><span class="mais">+</span><kbd>V</kbd></span><span class="oque">cola aqui na caixa de baixo</span></div></div>
+<textarea id="cola1" placeholder="cole aqui o que está na sua célula do Colab" spellcheck="false"></textarea>
+<div style="margin-top:10px;display:flex;gap:9px;flex-wrap:wrap">
+<button class="btn" data-verif="1">Conferir</button>
+<button class="btn sec" data-limpa="1">Limpar</button></div>
+<div class="diag" id="diag1"></div>
+</div>
+
+<section class="passo">
+<div class="tranca"><i>&#128274;</i><span class="trancatxt">Marque o passo anterior para liberar</span></div>
+<div class="cab"><span class="cod">S.06</span><h2>Entender o que você colou</h2></div>
+<div class="acoes"><div class="acao">Nenhuma colagem aqui. Só leia e confira no seu código.</div><div class="dentro"><table class="linhas"><tbody><tr><td class="lcod"># 3ºbim-A.01+02=... (01/01)</td><td class="lexp">Recado para gente ler. O computador ignora esta linha. Ela identifica o projeto, você, e diz que este projeto tem 1 célula só.</td></tr><tr><td class="lcod">(linha em branco)</td><td class="lexp">Serve só para separar. O computador não liga.</td></tr><tr><td class="lcod">numero_secreto = 9</td><td class="lexp">Guarda o número 9 numa caixinha chamada numero_secreto. Isso se chama <b>variável</b>.</td></tr><tr><td class="lcod">input(&quot;Adivinhe...&quot;)</td><td class="lexp">Escreve a pergunta na tela e espera a pessoa digitar.</td></tr><tr><td class="lcod">print(&quot;O número...&quot;, numero_secreto)</td><td class="lexp">Escreve na tela o texto entre aspas e, depois da vírgula, o que está guardado na caixinha.</td></tr></tbody></table></div></div>
+<div class="aviso bom"><b>Troque o 9 e veja o que acontece</b>Ache a linha do numero_secreto, apague o 9, digite 4 e clique no ▶. O jogo passa a esconder o número 4. É você mandando no código.</div><div class="feito"><input type="checkbox" id="p6"><label for="p6">Li a tabela e testei trocar o número</label></div>
+</section>
+
+<section class="passo">
+<div class="tranca"><i>&#128274;</i><span class="trancatxt">Marque o passo anterior para liberar</span></div>
+<div class="cab"><span class="cod">S.07</span><h2>Ver a saída em tela cheia</h2></div>
+<div class="acoes"><div class="acao">Olhe embaixo da célula, onde aparece o resultado.</div><div class="acao">Clique nos três pontinhos <span class="ui">&#8942;</span> do lado desse resultado.</div><div class="acao">Escolha <span class="ui">Ver saída em tela cheia</span>. Assim o jogador vê só a pergunta, e não o código.</div><div class="acao">Para sair, aperte <b>Esc</b>.</div><div class="dentro"><div class="atalhos"><div class="rotulo">atalho de teclado</div><div class="lin"><span class="teclas"><kbd>Esc</kbd></span><span class="oque">fecha a tela cheia e volta para o Colab normal</span></div><div class="lin"><span class="teclas"><kbd>F11</kbd></span><span class="oque">faz o navegador inteiro ocupar a tela; aperte de novo para voltar</span></div></div></div></div>
+<div class="feito"><input type="checkbox" id="p7"><label for="p7">Testei a tela cheia</label></div>
+</section>
+
+<div class="sond" id="sond1">
+<div class="tranca"><i>&#128274;</i><span class="trancatxt">Termine os passos da aula para liberar</span></div>
+<div class="cab"><span class="cod">SONDA</span><h2>Você entendeu ou só colou?</h2></div>
+<p style="color:var(--fraco);margin:8px 0 4px">Cinco perguntas. Não vale voltar no Colab.</p>
+<div class="qs" data-set="1"></div>
+<div class="placar" id="placar1"></div>
+</div>
+<p class="voltar"><button class="btn sec">&#8593; voltar para escolher a aula</button></p></div>
+<div class="painelaula" id="a02">
+<div class="check">
+<h3>Ponto de partida da Aula 02</h3>
+<p>Abra o Colab e o arquivo <code class="inl">3ºbim-A.01+02=Numero Secreto</code>. Cole aqui o que está na sua célula e clique em <b>Conferir</b>.</p>
+<textarea id="cola0" placeholder="cole aqui o código que está no seu arquivo" spellcheck="false"
+ style="width:100%;min-height:100px;background:#0A1420;color:#DCE7F2;border:1px solid var(--borda);
+ border-radius:8px;padding:11px;font-family:var(--mono);font-size:14px;line-height:1.6;margin-top:8px"></textarea>
+<div style="margin-top:10px;display:flex;gap:9px;flex-wrap:wrap">
+<button class="btn" data-verif="0">Conferir</button>
+<button class="btn sec" data-limpa="0">Limpar</button></div>
+<div class="diag" id="diag0"></div>
+<p style="margin-top:14px">Faltou a aula passada, perdeu o arquivo ou deu erro? Sem problema:
+o passo S.08 apaga tudo e cola o código novo por cima. Você entra junto com a turma.</p>
+</div>
+
+<div class="aviso bom"><b>Nesta aula você também faz UMA colagem.</b>O código novo substitui o antigo inteiro. Não precisa procurar linha nem inserir nada no meio.</div>
+
+<section class="passo">
+<div class="tranca"><i>&#128274;</i><span class="trancatxt">Marque o passo anterior para liberar</span></div>
+<div class="cab"><span class="cod">S.08</span><h2>Trocar o código pelo da Aula 02</h2></div>
+<div class="acoes"><div class="acao">Clique dentro da célula.</div><div class="acao">Apague TUDO o que está lá dentro.</div><div class="dentro"><div class="atalhos"><div class="rotulo">atalho de teclado</div><div class="lin"><span class="teclas"><kbd>Ctrl</kbd><span class="mais">+</span><kbd>A</kbd></span><span class="oque">clique dentro da célula e selecione todo o código de uma vez</span></div><div class="lin"><span class="teclas"><kbd>Delete</kbd></span><span class="oque">apaga o que está selecionado</span></div><div class="nota">Não tenha medo de apagar. O código novo já vem completo.</div></div></div><div class="acao">Clique no botão <b>Copiar</b> deste quadro. É o código completo desta aula:</div><div class="dentro"><div class="copiar">
+<div class="cab2"><span>código completo da Aula 02 · uma colagem só</span><button class="btn" data-copiar="c3">Copiar</button></div>
+<pre id="c3"># 3ºbim-A.01+02=Numero Secreto - ESCREVA SEU NOME AQUI (01/01)
+
+import random
+numero_secreto = random.randint(1, 10)
+
+input(&quot;Adivinhe o número entre 1 e 10:&quot;)
+print(&quot;O número secreto é:&quot;, numero_secreto)</pre></div></div><div class="acao">Cole dentro da célula.</div><div class="acao">Na primeira linha, apague <code class="inl">ESCREVA SEU NOME AQUI</code> e digite o seu nome completo.</div><div class="acao">Confira: a sua tela tem que ficar assim, com o seu nome no lugar do exemplo.</div><div class="dentro"><div class="espelho"><div class="rot">espelho · sua tela deve ficar assim</div>
+<div class="colab"><div class="play">&#9654;</div><pre># 3ºbim-A.01+02=Numero Secreto - Ana Souza (01/01)
+
+import random
+numero_secreto = random.randint(1, 10)
+
+input(&quot;Adivinhe o número entre 1 e 10:&quot;)
+print(&quot;O número secreto é:&quot;, numero_secreto)</pre></div></div></div></div>
+<div class="feito"><input type="checkbox" id="q1"><label for="q1">Colei o código novo e escrevi o meu nome</label></div>
+</section>
+
+<section class="passo">
+<div class="tranca"><i>&#128274;</i><span class="trancatxt">Marque o passo anterior para liberar</span></div>
+<div class="cab"><span class="cod">S.09</span><h2>Rodar duas vezes</h2></div>
+<div class="acoes"><div class="acao">Clique no botão <span class="ui">&#9654;</span>, digite um número e aperte <b>Enter</b>.</div><div class="acao">Anote o número secreto que apareceu.</div><div class="acao">Clique no <span class="ui">&#9654;</span> de novo e responda de novo.</div><div class="acao">O número secreto tem que ser <b>diferente</b>.</div><div class="dentro"><div class="espelho"><div class="rot">espelho · o resultado embaixo da célula</div>
+<div class="saida"><pre>Adivinhe o número entre 1 e 10: 5
+O número secreto é: 3
+
+(rodando de novo)
+Adivinhe o número entre 1 e 10: 5
+O número secreto é: 8</pre></div></div></div></div>
+<div class="aviso bom"><b>Se o número repetir</b>Às vezes o sorteio dá o mesmo número duas vezes seguidas. Isso é normal. Rode mais uma vez e ele muda.</div><div class="feito"><input type="checkbox" id="q2"><label for="q2">O número secreto mudou entre uma vez e outra</label></div>
+</section>
+
+<section class="passo">
+<div class="tranca"><i>&#128274;</i><span class="trancatxt">Marque o passo anterior para liberar</span></div>
+<div class="cab"><span class="cod">S.10</span><h2>Entender o que mudou</h2></div>
+<div class="acoes"><div class="acao">Nenhuma colagem aqui. Só leia e confira no seu código.</div><div class="dentro"><table class="linhas"><tbody><tr><td class="lcod">import random</td><td class="lexp">Liga a ferramenta de sorteio. Sem esta linha o computador não sabe o que é random.</td></tr><tr><td class="lcod">numero_secreto = random.randint(1, 10)</td><td class="lexp">Sorteia um número inteiro de 1 até 10 e guarda na caixinha. Trocou a linha que tinha o 9 fixo.</td></tr><tr><td class="lcod">as outras 2 linhas</td><td class="lexp">Continuam iguais à Aula 01. O input pergunta e o print responde.</td></tr></tbody></table></div></div>
+<div class="aviso bom"><b>Só número inteiro</b>O randint sorteia 1, 2, 3, 10. Nunca sorteia número com vírgula, como 1,5. Em Python, número inteiro se chama <b>int</b>.</div><div class="feito"><input type="checkbox" id="q3"><label for="q3">Entendi as duas linhas novas</label></div>
+</section>
+
+<section class="passo">
+<div class="tranca"><i>&#128274;</i><span class="trancatxt">Marque o passo anterior para liberar</span></div>
+<div class="cab"><span class="cod">S.11</span><h2>Mudar a dificuldade</h2></div>
+<div class="acoes"><div class="acao">Ache a linha que tem <span class="ui">random.randint(1, 10)</span>.</div><div class="acao">Apague o número <b>10</b> e digite <b>50</b>. A linha fica assim:</div><div class="dentro"><div class="espelho"><div class="rot">como a linha deve ficar</div>
+<div class="colab"><div class="play">&#9654;</div><pre>numero_secreto = random.randint(1, 50)</pre></div></div></div><div class="acao">Clique no <span class="ui">&#9654;</span> e teste. Agora sorteia de 1 até 50.</div><div class="acao">Se quiser mais difícil, troque 50 por 100.</div><div class="acao">Depois de testar, <b>volte para 10</b>.</div></div>
+<div class="feito"><input type="checkbox" id="q4"><label for="q4">Testei com 50 e voltei para 10</label></div>
+</section>
+
+<div class="verif">
+<h3>Conferir a minha tela</h3>
+<p>Cole aqui o que está na sua célula. O guia diz se o projeto está pronto.</p>
+<textarea id="cola2" placeholder="cole aqui o que está na sua célula do Colab" spellcheck="false"></textarea>
+<div style="margin-top:10px;display:flex;gap:9px;flex-wrap:wrap">
+<button class="btn" data-verif="2">Conferir</button>
+<button class="btn sec" data-limpa="2">Limpar</button></div>
+<div class="diag" id="diag2"></div>
+</div>
+
+<section class="passo">
+<div class="tranca"><i>&#128274;</i><span class="trancatxt">Marque o passo anterior para liberar</span></div>
+<div class="cab"><span class="cod">S.12</span><h2>Entregar</h2></div>
+<div class="acoes"><div class="acao">Clique em <span class="ui">Compartilhar</span>, no canto de cima e à direita.</div><div class="acao">Na parte <span class="ui">Acesso geral</span>, clique em <span class="ui">Restrito</span>.</div><div class="acao">Escolha <span class="ui">Qualquer pessoa com o link</span>.</div><div class="acao">Do lado direito, deixe <span class="ui">Leitor</span>.</div><div class="acao">Clique em <span class="ui">Copiar link</span> e depois em <span class="ui">Concluído</span>.</div><div class="acao">Cole o link na plataforma, onde o professor indicar.</div></div>
+<div class="aviso"><b>Se ficar em Restrito</b>O professor não consegue abrir o seu trabalho e a atividade fica sem nota. Confira antes de enviar.</div><div class="feito"><input type="checkbox" id="q5"><label for="q5">Entreguei o link do Número Secreto</label></div>
+</section>
+
+<div class="sond" id="sond2">
+<div class="tranca"><i>&#128274;</i><span class="trancatxt">Termine os passos da aula para liberar</span></div>
+<div class="cab"><span class="cod">SONDA</span><h2>Você entendeu ou só colou?</h2></div>
+<p style="color:var(--fraco);margin:8px 0 4px">Cinco perguntas sobre a Aula 02.</p>
+<div class="qs" data-set="2"></div>
+<div class="placar" id="placar2"></div>
+</div>
+<p class="voltar"><button class="btn sec">&#8593; voltar para escolher a aula</button></p></div>
+<div class="painelaula" id="a03">
+<div class="aviso bom"><b>Projeto novo, arquivo novo, uma colagem só.</b>O Quiz é um jogo diferente do Número Secreto e tem o seu próprio arquivo. <b>Não apague</b> o arquivo do Número Secreto.</div>
+
+<section class="passo">
+<div class="tranca"><i>&#128274;</i><span class="trancatxt">Marque o passo anterior para liberar</span></div>
+<div class="cab"><span class="cod">S.13</span><h2>As três regras</h2></div>
+<div class="acoes">
+<div class="acao"><b>Uma colagem só por aula.</b> Você cola o código inteiro de uma vez e pronto.</div>
+<div class="acao"><b>Use sempre o botão Copiar.</b> Nunca selecione o texto com o mouse.</div>
+<div class="acao"><b>Se der errado, apague tudo e cole de novo.</b> Nunca conserte letra por letra.</div>
+</div>
+<div class="feito"><input type="checkbox" id="r0"><label for="r0">Li as três regras</label></div>
+</section>
+
+<section class="passo">
+<div class="tranca"><i>&#128274;</i><span class="trancatxt">Marque o passo anterior para liberar</span></div>
+<div class="cab"><span class="cod">S.14</span><h2>Criar o arquivo do Quiz</h2></div>
+<div class="acoes"><div class="acao">Abra o Colab. Você já está logado desde a Aula 01.</div><div class="acao">No canto de cima, à esquerda, clique no menu <span class="ui">Arquivo</span>.</div><div class="acao">Clique em <span class="ui">Novo notebook</span>. Abre uma aba nova, com uma célula vazia.</div><div class="acao">Clique no nome <span class="ui">Untitled0.ipynb</span> e apague tudo.</div><div class="dentro"><div class="atalhos"><div class="rotulo">atalho de teclado</div><div class="lin"><span class="teclas"><kbd>Ctrl</kbd><span class="mais">+</span><kbd>A</kbd></span><span class="oque">seleciona tudo o que está escrito no campo do nome</span></div><div class="lin"><span class="teclas"><kbd>Delete</kbd></span><span class="oque">apaga o que está selecionado</span></div></div></div><div class="acao">Clique no botão <b>Copiar</b> deste quadro:</div><div class="dentro"><div class="copiar">
+<div class="cab2"><span>nome do arquivo 2</span><button class="btn" data-copiar="b1">Copiar</button></div>
+<pre id="b1">3ºbim-A.03+04=Quiz</pre></div></div><div class="acao">Cole no lugar do nome que você apagou e aperte <b>Enter</b>.</div></div>
+<div class="aviso"><b>São dois arquivos diferentes</b>Arquivo 1: <code class="inl">3ºbim-A.01+02=Numero Secreto</code>. Arquivo 2: <code class="inl">3ºbim-A.03+04=Quiz</code>. No fim do bimestre você entrega os dois links.</div><div class="feito"><input type="checkbox" id="r1"><label for="r1">Criei o segundo arquivo com o nome certo</label></div>
+</section>
+
+<section class="passo">
+<div class="tranca"><i>&#128274;</i><span class="trancatxt">Marque o passo anterior para liberar</span></div>
+<div class="cab"><span class="cod">S.15</span><h2>Colar o código da aula inteira</h2></div>
+<div class="acoes"><div class="acao">Clique dentro da <b>caixa cinza</b> (a célula), que está vazia.</div><div class="acao">Clique no botão <b>Copiar</b> deste quadro. É o código completo desta aula:</div><div class="dentro"><div class="copiar">
+<div class="cab2"><span>código completo da Aula 03 · uma colagem só</span><button class="btn" data-copiar="b2">Copiar</button></div>
+<pre id="b2"># 3ºbim-A.03+04=Quiz - ESCREVA SEU NOME AQUI (01/01)
+
+resposta1 = input(&quot;Quem é a protagonista de Guerreiras do K-Pop?&quot;)
+resposta2 = input(&quot;Quem é o autor do livro Diário de um Banana?&quot;)
+resposta3 = input(&quot;Qual é o nome da nova vocalista da banda LINKIN PARK?&quot;)
+
+if resposta1 == &quot;rumi&quot;:
+    if resposta2 == &quot;jeff kinney&quot;:
+        if resposta3 == &quot;emily&quot;:
+            print(&quot;PARABÉNS, GANHOU O QUIZ E 1 MILHÃO DE REAIS!!&quot;)</pre></div></div><div class="acao">Cole dentro da célula.</div><div class="dentro"><div class="atalhos"><div class="rotulo">atalho de teclado</div><div class="lin"><span class="teclas"><kbd>Ctrl</kbd><span class="mais">+</span><kbd>V</kbd></span><span class="oque">cola dentro da célula</span></div><div class="lin"><span class="teclas"><kbd>Ctrl</kbd><span class="mais">+</span><kbd>Z</kbd></span><span class="oque">desfaz a última coisa que você fez; use se colar no lugar errado</span></div></div></div><div class="acao">Na primeira linha, apague <code class="inl">ESCREVA SEU NOME AQUI</code> e digite o seu nome completo.</div><div class="acao">Confira: a sua tela tem que ficar assim, com o seu nome no lugar do exemplo.</div><div class="dentro"><div class="espelho"><div class="rot">espelho · sua tela deve ficar assim</div>
+<div class="colab"><div class="play">&#9654;</div><pre># 3ºbim-A.03+04=Quiz - Ana Souza (01/01)
+
+resposta1 = input(&quot;Quem é a protagonista de Guerreiras do K-Pop?&quot;)
+resposta2 = input(&quot;Quem é o autor do livro Diário de um Banana?&quot;)
+resposta3 = input(&quot;Qual é o nome da nova vocalista da banda LINKIN PARK?&quot;)
+
+if resposta1 == &quot;rumi&quot;:
+    if resposta2 == &quot;jeff kinney&quot;:
+        if resposta3 == &quot;emily&quot;:
+            print(&quot;PARABÉNS, GANHOU O QUIZ E 1 MILHÃO DE REAIS!!&quot;)</pre></div></div></div></div>
+<div class="aviso bom"><b>Repare na escadinha</b>As quatro últimas linhas entram cada uma um pouco mais para a direita. Esse espaço não é enfeite: ele diz ao computador o que pertence a quê. Como você colou de uma vez, ela já veio pronta.</div><div class="feito"><input type="checkbox" id="r2"><label for="r2">Colei o código e escrevi o meu nome</label></div>
+</section>
+
+<section class="passo">
+<div class="tranca"><i>&#128274;</i><span class="trancatxt">Marque o passo anterior para liberar</span></div>
+<div class="cab"><span class="cod">S.16</span><h2>Rodar e ganhar o quiz</h2></div>
+<div class="acoes"><div class="acao">Clique no botão <span class="ui">&#9654;</span>.</div><div class="dentro"><div class="atalhos"><div class="rotulo">atalho de teclado</div><div class="lin"><span class="teclas"><kbd>Ctrl</kbd><span class="mais">+</span><kbd>Enter</kbd></span><span class="oque">roda a célula sem precisar do mouse</span></div></div></div><div class="acao">Responda as 3 perguntas usando só <b>letra minúscula</b>: rumi, jeff kinney, emily.</div><div class="dentro"><div class="espelho"><div class="rot">espelho · o resultado embaixo da célula</div>
+<div class="saida"><pre>Quem é a protagonista de Guerreiras do K-Pop? rumi
+Quem é o autor do livro Diário de um Banana? jeff kinney
+Qual é o nome da nova vocalista da banda LINKIN PARK? emily
+PARABÉNS, GANHOU O QUIZ E 1 MILHÃO DE REAIS!!</pre></div></div></div><div class="acao">Agora rode de novo e erre uma de propósito. Não aparece nada.</div></div>
+<div class="aviso"><b>Duas coisas ainda estão erradas no seu jogo</b>Se você digitar RUMI com letra grande, ele conta como erro. E quando a pessoa erra, o jogo fica calado. Você conserta as duas na Aula 04.</div><div class="feito"><input type="checkbox" id="r3"><label for="r3">Ganhei o quiz respondendo em minúscula</label></div>
+</section>
+
+<div class="verif">
+<h3>Conferir a minha tela</h3>
+<p>Selecione tudo o que está na sua célula, copie, e cole aqui embaixo.</p>
+<div class="atalhos"><div class="rotulo">atalho de teclado</div><div class="lin"><span class="teclas"><kbd>Ctrl</kbd><span class="mais">+</span><kbd>A</kbd></span><span class="oque">clique dentro da célula do Colab e selecione todo o código</span></div><div class="lin"><span class="teclas"><kbd>Ctrl</kbd><span class="mais">+</span><kbd>C</kbd></span><span class="oque">copia o que está selecionado</span></div><div class="lin"><span class="teclas"><kbd>Ctrl</kbd><span class="mais">+</span><kbd>V</kbd></span><span class="oque">cola aqui na caixa de baixo</span></div></div>
+<textarea id="cola3" placeholder="cole aqui o que está na sua célula do Colab" spellcheck="false"></textarea>
+<div style="margin-top:10px;display:flex;gap:9px;flex-wrap:wrap">
+<button class="btn" data-verif="3">Conferir</button>
+<button class="btn sec" data-limpa="3">Limpar</button></div>
+<div class="diag" id="diag3"></div>
+</div>
+
+<section class="passo">
+<div class="tranca"><i>&#128274;</i><span class="trancatxt">Marque o passo anterior para liberar</span></div>
+<div class="cab"><span class="cod">S.17</span><h2>Entender o que você colou</h2></div>
+<div class="acoes"><div class="acao">Nenhuma colagem aqui. Só leia e confira no seu código.</div><div class="dentro"><table class="linhas"><tbody><tr><td class="lcod"># 3ºbim-A.03+04=Quiz ... (01/01)</td><td class="lexp">Identifica o projeto, você, e diz que este projeto tem 1 célula só. O computador ignora esta linha.</td></tr><tr><td class="lcod">resposta1 = input(&quot;...&quot;)</td><td class="lexp">Faz a pergunta e guarda o que a pessoa digitou numa caixinha chamada resposta1.</td></tr><tr><td class="lcod">if resposta1 == &quot;rumi&quot;:</td><td class="lexp">Compara. Dois sinais de igual (==) querem dizer "é igual a?". Um sinal só (=) guarda um valor.</td></tr><tr><td class="lcod">(espaço na frente)</td><td class="lexp">O recuo diz ao computador o que só acontece se a comparação der certo.</td></tr><tr><td class="lcod">print(&quot;PARABÉNS...&quot;)</td><td class="lexp">Só roda se as três comparações derem certo. Por isso está na ponta da escadinha.</td></tr></tbody></table></div></div>
+<div class="aviso bom"><b>Por que as respostas certas estão em minúscula no código</b>Para o computador, RUMI e rumi são textos diferentes. Por enquanto o jogo só aceita minúscula. Na Aula 04 isso muda.</div><div class="feito"><input type="checkbox" id="r4"><label for="r4">Li a tabela e conferi no meu código</label></div>
+</section>
+
+<section class="passo">
+<div class="tranca"><i>&#128274;</i><span class="trancatxt">Marque o passo anterior para liberar</span></div>
+<div class="cab"><span class="cod">S.18</span><h2>Escolher o tema do seu quiz</h2></div>
+<div class="acoes"><div class="acao">Pense num assunto que você gosta: música, série, livro ou filme.</div><div class="acao">No caderno, escreva 3 perguntas sobre esse assunto.</div><div class="acao">Ao lado de cada uma, escreva a resposta certa, tudo em letra minúscula.</div><div class="acao">Guarde o caderno. Você vai usar essas perguntas no passo S.23.</div></div>
+<div class="feito"><input type="checkbox" id="r5"><label for="r5">Escrevi minhas 3 perguntas no caderno</label></div>
+</section>
+
+<div class="sond" id="sond3">
+<div class="tranca"><i>&#128274;</i><span class="trancatxt">Termine os passos da aula para liberar</span></div>
+<div class="cab"><span class="cod">SONDA</span><h2>Você entendeu ou só colou?</h2></div>
+<p style="color:var(--fraco);margin:8px 0 4px">Cinco perguntas. Não vale voltar no Colab.</p>
+<div class="qs" data-set="3"></div>
+<div class="placar" id="placar3"></div>
+</div>
+<p class="voltar"><button class="btn sec">&#8593; voltar para escolher a aula</button></p></div>
+<div class="painelaula" id="a04">
+<div class="check">
+<h3>Ponto de partida da Aula 04</h3>
+<p>Abra o Colab e o arquivo <code class="inl">3ºbim-A.03+04=Quiz</code>. Cole aqui o que está na sua célula e clique em <b>Conferir</b>.</p>
+<textarea id="cola4" placeholder="cole aqui o código que está no seu arquivo" spellcheck="false"
+ style="width:100%;min-height:100px;background:#0A1420;color:#DCE7F2;border:1px solid var(--borda);
+ border-radius:8px;padding:11px;font-family:var(--mono);font-size:14px;line-height:1.6;margin-top:8px"></textarea>
+<div style="margin-top:10px;display:flex;gap:9px;flex-wrap:wrap">
+<button class="btn" data-verif="4">Conferir</button>
+<button class="btn sec" data-limpa="4">Limpar</button></div>
+<div class="diag" id="diag4"></div>
+<p style="margin-top:14px">Faltou a aula passada, perdeu o arquivo ou deu erro? Sem problema:
+o passo S.19 apaga tudo e cola o código novo por cima. Você entra junto com a turma.</p>
+</div>
+
+<div class="aviso bom"><b>Nesta aula você também faz UMA colagem.</b>O código novo substitui o antigo inteiro. Não precisa procurar linha nem apagar pedaço.</div>
+
+<section class="passo">
+<div class="tranca"><i>&#128274;</i><span class="trancatxt">Marque o passo anterior para liberar</span></div>
+<div class="cab"><span class="cod">S.19</span><h2>Trocar o código pelo da Aula 04</h2></div>
+<div class="acoes"><div class="acao">Antes, rode o jogo e digite <span class="ui">RUMI</span> com letra grande. Ele não dá parabéns, mesmo você tendo acertado.</div><div class="acao">Clique dentro da célula e apague TUDO.</div><div class="dentro"><div class="atalhos"><div class="rotulo">atalho de teclado</div><div class="lin"><span class="teclas"><kbd>Ctrl</kbd><span class="mais">+</span><kbd>A</kbd></span><span class="oque">clique dentro da célula e selecione todo o código de uma vez</span></div><div class="lin"><span class="teclas"><kbd>Delete</kbd></span><span class="oque">apaga o que está selecionado</span></div><div class="nota">Não tenha medo de apagar. O código novo já vem completo.</div></div></div><div class="acao">Clique no botão <b>Copiar</b> deste quadro. É o código completo desta aula:</div><div class="dentro"><div class="copiar">
+<div class="cab2"><span>código completo da Aula 04 · uma colagem só</span><button class="btn" data-copiar="b3">Copiar</button></div>
+<pre id="b3"># 3ºbim-A.03+04=Quiz - ESCREVA SEU NOME AQUI (01/01)
+
+resposta1 = input(&quot;Quem é a protagonista de Guerreiras do K-Pop?&quot;).lower()
+resposta2 = input(&quot;Quem é o autor do livro Diário de um Banana?&quot;).lower()
+resposta3 = input(&quot;Qual é o nome da nova vocalista da banda LINKIN PARK?&quot;).lower()
+
+if resposta1 == &quot;rumi&quot; and resposta2 == &quot;jeff kinney&quot; and resposta3 == &quot;emily&quot;:
+    print(&quot;PARABÉNS, GANHOU O QUIZ E 1 MILHÃO DE REAIS!!&quot;)
+else:
+    print(&quot;VOCÊ ERROU UMA OU MAIS PERGUNTAS, TENTE NOVAMENTE!&quot;)</pre></div></div><div class="acao">Cole dentro da célula.</div><div class="acao">Na primeira linha, apague <code class="inl">ESCREVA SEU NOME AQUI</code> e digite o seu nome completo.</div><div class="acao">Confira: a sua tela tem que ficar assim, com o seu nome no lugar do exemplo.</div><div class="dentro"><div class="espelho"><div class="rot">espelho · sua tela deve ficar assim</div>
+<div class="colab"><div class="play">&#9654;</div><pre># 3ºbim-A.03+04=Quiz - Ana Souza (01/01)
+
+resposta1 = input(&quot;Quem é a protagonista de Guerreiras do K-Pop?&quot;).lower()
+resposta2 = input(&quot;Quem é o autor do livro Diário de um Banana?&quot;).lower()
+resposta3 = input(&quot;Qual é o nome da nova vocalista da banda LINKIN PARK?&quot;).lower()
+
+if resposta1 == &quot;rumi&quot; and resposta2 == &quot;jeff kinney&quot; and resposta3 == &quot;emily&quot;:
+    print(&quot;PARABÉNS, GANHOU O QUIZ E 1 MILHÃO DE REAIS!!&quot;)
+else:
+    print(&quot;VOCÊ ERROU UMA OU MAIS PERGUNTAS, TENTE NOVAMENTE!&quot;)</pre></div></div></div></div>
+<div class="feito"><input type="checkbox" id="s1"><label for="s1">Colei o código novo e escrevi o meu nome</label></div>
+</section>
+
+<section class="passo">
+<div class="tranca"><i>&#128274;</i><span class="trancatxt">Marque o passo anterior para liberar</span></div>
+<div class="cab"><span class="cod">S.20</span><h2>Testar as duas mensagens</h2></div>
+<div class="acoes"><div class="acao">Clique no botão <span class="ui">&#9654;</span>.</div><div class="acao">Teste 1: responda tudo certo, misturando letra grande e pequena.</div><div class="dentro"><div class="espelho"><div class="rot">espelho · teste 1 · acertando tudo</div>
+<div class="saida"><pre>Quem é a protagonista de Guerreiras do K-Pop? RUMI
+Quem é o autor do livro Diário de um Banana? Jeff Kinney
+Qual é o nome da nova vocalista da banda LINKIN PARK? emily
+PARABÉNS, GANHOU O QUIZ E 1 MILHÃO DE REAIS!!</pre></div></div></div><div class="acao">Teste 2: rode de novo e erre uma resposta de propósito.</div><div class="dentro"><div class="espelho"><div class="rot">espelho · teste 2 · errando uma</div>
+<div class="saida"><pre>Quem é a protagonista de Guerreiras do K-Pop? rumi
+Quem é o autor do livro Diário de um Banana? banana
+Qual é o nome da nova vocalista da banda LINKIN PARK? emily
+VOCÊ ERROU UMA OU MAIS PERGUNTAS, TENTE NOVAMENTE!</pre></div></div></div><div class="acao">Se as duas mensagens apareceram, o seu jogo está pronto.</div></div>
+<div class="feito"><input type="checkbox" id="s2"><label for="s2">As duas mensagens funcionam</label></div>
+</section>
+
+<section class="passo">
+<div class="tranca"><i>&#128274;</i><span class="trancatxt">Marque o passo anterior para liberar</span></div>
+<div class="cab"><span class="cod">S.21</span><h2>Entender o que mudou</h2></div>
+<div class="acoes"><div class="acao">Nenhuma colagem aqui. Só leia e confira no seu código.</div><div class="dentro"><table class="linhas"><tbody><tr><td class="lcod">.lower()</td><td class="lexp">Transforma o que a pessoa digitou em letra minúscula antes de comparar. Por isso RUMI passa a valer. Fica <b>depois</b> do parêntese fechado.</td></tr><tr><td class="lcod">and</td><td class="lexp">Quer dizer "e". As três respostas precisam estar certas ao mesmo tempo. Substituiu a escadinha de três if.</td></tr><tr><td class="lcod">else:</td><td class="lexp">O caminho do "não". Roda quando a comparação do if dá errado. Começa colado na margem, igual ao if, porque os dois são o mesmo nível da decisão.</td></tr></tbody></table></div></div>
+<div class="aviso bom"><b>A escadinha diminuiu</b>Antes eram 4 linhas em escada. Agora são 4 linhas com só 1 nível de recuo. O jogo faz mais e o código ficou mais curto.</div><div class="feito"><input type="checkbox" id="s3"><label for="s3">Entendi o .lower(), o and e o else</label></div>
+</section>
+
+<section class="passo">
+<div class="tranca"><i>&#128274;</i><span class="trancatxt">Marque o passo anterior para liberar</span></div>
+<div class="cab"><span class="cod">S.22</span><h2>Trocar pelas suas perguntas</h2></div>
+<div class="acoes"><div class="acao">Pegue o caderno do passo S.18.</div><div class="acao">Troque só o texto que está <b>dentro das aspas</b> das três perguntas.</div><div class="acao">Na linha do <code class="inl">if</code>, troque <code class="inl">rumi</code>, <code class="inl">jeff kinney</code> e <code class="inl">emily</code> pelas suas respostas certas, sempre em minúscula.</div><div class="acao">Não apague as aspas, os parênteses, o <code class="inl">.lower()</code> nem os dois-pontos.</div><div class="acao">Clique no <span class="ui">&#9654;</span> e teste com as suas perguntas antes de seguir.</div></div>
+<div class="aviso"><b>Se algo quebrar</b>Volte ao passo S.19, apague tudo e cole o código do exemplo de novo. Depois troque com mais calma, uma pergunta de cada vez.</div><div class="feito"><input type="checkbox" id="s4"><label for="s4">Testei o quiz com as minhas perguntas, ou mantive o exemplo</label></div>
+</section>
+
+<section class="passo">
+<div class="tranca"><i>&#128274;</i><span class="trancatxt">Marque o passo anterior para liberar</span></div>
+<div class="cab"><span class="cod">S.23</span><h2>Renomear o arquivo com o seu tema</h2></div>
+<div class="acoes"><div class="acao">Agora o seu quiz tem um assunto. O nome do arquivo precisa dizer qual.</div><div class="acao">Clique no nome do arquivo e <b>acrescente</b> o assunto no fim, depois da palavra Quiz. Não apague o resto.</div><div class="dentro"><div class="espelho"><div class="rot">como renomear</div>
+<div class="colab"><div class="play">&#9654;</div><pre>antes:   3ºbim-A.03+04=Quiz
+depois:  3ºbim-A.03+04=Quiz de Música
+
+outros exemplos:
+  3ºbim-A.03+04=Quiz de Séries
+  3ºbim-A.03+04=Quiz de Livros
+  3ºbim-A.03+04=Quiz de Filmes</pre></div></div></div><div class="acao">Volte na primeira linha do código e acrescente o mesmo assunto lá também.</div><div class="dentro"><div class="espelho"><div class="rot">como a primeira linha fica no fim</div>
+<div class="colab"><div class="play">&#9654;</div><pre># 3ºbim-A.03+04=Quiz de Música - Ana Souza (01/01)</pre></div></div></div></div>
+<div class="aviso"><b>Só renomeie depois de trocar as perguntas</b>Se renomear antes, o nome promete um assunto que o quiz ainda não tem. A ordem é: trocar, testar, renomear.</div><div class="aviso bom"><b>Se você não trocou as perguntas</b>Deixe o nome como está: <code class="inl">3ºbim-A.03+04=Quiz</code>. Nome sem assunto quer dizer que o quiz é o do exemplo da aula.</div><div class="feito"><input type="checkbox" id="s5"><label for="s5">Renomeei, ou deixei o nome do exemplo</label></div>
+</section>
+
+<div class="verif">
+<h3>Conferir a minha tela</h3>
+<p>Cole aqui o que está na sua célula. O guia diz se o Quiz está pronto.</p>
+<textarea id="cola5" placeholder="cole aqui o que está na sua célula do Colab" spellcheck="false"></textarea>
+<div style="margin-top:10px;display:flex;gap:9px;flex-wrap:wrap">
+<button class="btn" data-verif="5">Conferir</button>
+<button class="btn sec" data-limpa="5">Limpar</button></div>
+<div class="diag" id="diag5"></div>
+</div>
+
+<section class="passo">
+<div class="tranca"><i>&#128274;</i><span class="trancatxt">Marque o passo anterior para liberar</span></div>
+<div class="cab"><span class="cod">S.24</span><h2>Entregar os dois links</h2></div>
+<div class="acoes"><div class="acao">Abra o arquivo e clique em <span class="ui">Compartilhar</span>, no canto de cima e à direita.</div><div class="acao">Na parte <span class="ui">Acesso geral</span>, clique em <span class="ui">Restrito</span>.</div><div class="acao">Escolha <span class="ui">Qualquer pessoa com o link</span>.</div><div class="acao">Do lado direito, deixe <span class="ui">Leitor</span>.</div><div class="acao">Clique em <span class="ui">Copiar link</span> e depois em <span class="ui">Concluído</span>.</div><div class="acao">Cole o link na plataforma, onde o professor indicar.</div><div class="acao"><b>Repita tudo com o outro arquivo</b>, o do Número Secreto. São dois links.</div></div>
+<div class="aviso"><b>Se ficar em Restrito</b>O professor não consegue abrir o seu trabalho e a atividade fica sem nota. Confira os dois antes de enviar.</div><div class="feito"><input type="checkbox" id="s6"><label for="s6">Entreguei os DOIS links</label></div>
+</section>
+
+<div class="sond" id="sond4">
+<div class="tranca"><i>&#128274;</i><span class="trancatxt">Termine os passos da aula para liberar</span></div>
+<div class="cab"><span class="cod">SONDA</span><h2>Você entendeu ou só colou?</h2></div>
+<p style="color:var(--fraco);margin:8px 0 4px">Cinco perguntas sobre a Aula 04.</p>
+<div class="qs" data-set="4"></div>
+<div class="placar" id="placar4"></div>
+</div>
+<p class="voltar"><button class="btn sec">&#8593; voltar para escolher a aula</button></p></div>
+
+<footer>FAÇA · Python · 9º ano · 3º bimestre · aulas 01 a 04 · FACAPY-9ANO-V02.00-4AULAS · 26.08.05</footer>
+</main>
+<script>
+(function(){
+"use strict";
+var PFX='facaPY9_';
+var mem={};
+function guarda(k,v){try{localStorage.setItem(k,v)}catch(e){mem[k]=v}}
+function le(k){try{var v=localStorage.getItem(k);return v===null?mem[k]:v}catch(e){return mem[k]}}
+
+/* abas */
+var abas=[].slice.call(document.querySelectorAll('.aba'));
+var paineis=[].slice.call(document.querySelectorAll('.painelaula'));
+function mostra(id){
+  abas.forEach(function(b){b.classList.toggle('on',b.dataset.alvo===id)});
+  paineis.forEach(function(p){p.classList.toggle('on',p.id===id)});
+  try{
+    if(history.replaceState && location.protocol!=='about:' && location.href.indexOf('srcdoc')===-1){
+      history.replaceState(null,'','#'+id);
+    }
+  }catch(e){ /* preview em iframe srcdoc bloqueia replaceState; nao afeta o guia */ }
+  window.scrollTo({top:0,behavior:'instant'});
+}
+abas.forEach(function(b){b.addEventListener('click',function(){mostra(b.dataset.alvo)})});
+mostra((location.hash||'').replace('#','')||abas[0].dataset.alvo);
+
+/* copiar */
+document.querySelectorAll('[data-copiar]').forEach(function(b){
+  b.addEventListener('click',function(){
+    var txt=document.getElementById(b.dataset.copiar).textContent;
+    function done(){var a=b.textContent;b.textContent='Copiado';b.classList.add('ok');
+      setTimeout(function(){b.textContent=a;b.classList.remove('ok')},1400)}
+    function fb(){var ta=document.createElement('textarea');ta.value=txt;
+      ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();
+      try{document.execCommand('copy');done()}catch(e){b.textContent='Selecione e copie'}
+      document.body.removeChild(ta)}
+    if(navigator.clipboard&&navigator.clipboard.writeText){
+      navigator.clipboard.writeText(txt).then(done,fb)}else{fb()}
+  });
+});
+
+/* progresso + trava progressiva */
+var checks=[].slice.call(document.querySelectorAll('.feito input'));
+var aberto = /[?&]prof=1(&|$)/.test(location.search);
+
+function trava(){
+  paineis.forEach(function(painel){
+    var secs=[].slice.call(painel.querySelectorAll('section.passo, .sond'));
+    var liberado=true, pendente='';
+    secs.forEach(function(sec){
+      var travado = !aberto && !liberado;
+      sec.classList.toggle('trancado', travado);
+      if(travado){
+        var t=sec.querySelector('.trancatxt');
+        if(t) t.textContent = pendente
+          ? 'Marque o quadrinho do passo '+pendente+' para liberar'
+          : 'Termine o passo anterior para liberar';
+      }
+      var cx=sec.querySelector('.feito input');
+      if(cx && !cx.checked && liberado){
+        liberado=false;
+        var c=sec.querySelector('.cod');
+        pendente=c?c.textContent:'';
+      }
+    });
+  });
+}
+function pinta(){
+  var n=checks.filter(function(c){return c.checked}).length;
+  document.getElementById('barra').style.width=(n/checks.length*100)+'%';
+  document.getElementById('barratxt').textContent=n+' de '+checks.length+' passos concluídos';
+  checks.forEach(function(c){c.parentNode.classList.toggle('pronto',c.checked)});
+}
+function proxima(sec){
+  var p=sec.nextElementSibling;
+  while(p && !(p.classList.contains('passo')||p.classList.contains('sond')||p.classList.contains('verif')))
+    p=p.nextElementSibling;
+  return p;
+}
+checks.forEach(function(c){
+  if(le(''+PFX+''+c.id)==='1')c.checked=true;
+  c.addEventListener('change',function(){
+    guarda(''+PFX+''+c.id,c.checked?'1':'0');
+    pinta();trava();
+    if(c.checked){
+      var sec=c.closest('section.passo')||c.closest('.sond');
+      var prox=sec?proxima(sec):null;
+      if(prox)setTimeout(function(){prox.scrollIntoView({behavior:'smooth',block:'start'})},150);
+    }
+  });
+});
+if(aberto){
+  var av=document.createElement('div');
+  av.className='avisoprof';
+  av.textContent='Modo professor: todos os passos abertos. Tire ?prof=1 do endereço para voltar ao normal.';
+  var m=document.querySelector('main.wrap');
+  if(m)m.insertBefore(av,m.firstChild);
+}
+pinta();trava();
+
+/* verificador */
+var GAB={"0": ["# 3ºbim-A.01+02=Numero Secreto - ESCREVA SEU NOME AQUI (01/01)", "", "numero_secreto = 9", "", "input(\"Adivinhe o número entre 1 e 10:\")", "print(\"O número secreto é:\", numero_secreto)"], "1": ["# 3ºbim-A.01+02=Numero Secreto - ESCREVA SEU NOME AQUI (01/01)", "", "numero_secreto = 9", "", "input(\"Adivinhe o número entre 1 e 10:\")", "print(\"O número secreto é:\", numero_secreto)"], "2": ["# 3ºbim-A.01+02=Numero Secreto - ESCREVA SEU NOME AQUI (01/01)", "", "import random", "numero_secreto = random.randint(1, 10)", "", "input(\"Adivinhe o número entre 1 e 10:\")", "print(\"O número secreto é:\", numero_secreto)"], "3": ["# 3ºbim-A.03+04=Quiz - ESCREVA SEU NOME AQUI (01/01)", "", "resposta1 = input(\"Quem é a protagonista de Guerreiras do K-Pop?\")", "resposta2 = input(\"Quem é o autor do livro Diário de um Banana?\")", "resposta3 = input(\"Qual é o nome da nova vocalista da banda LINKIN PARK?\")", "", "if resposta1 == \"rumi\":", "    if resposta2 == \"jeff kinney\":", "        if resposta3 == \"emily\":", "            print(\"PARABÉNS, GANHOU O QUIZ E 1 MILHÃO DE REAIS!!\")"], "4": ["# 3ºbim-A.03+04=Quiz - ESCREVA SEU NOME AQUI (01/01)", "", "resposta1 = input(\"Quem é a protagonista de Guerreiras do K-Pop?\")", "resposta2 = input(\"Quem é o autor do livro Diário de um Banana?\")", "resposta3 = input(\"Qual é o nome da nova vocalista da banda LINKIN PARK?\")", "", "if resposta1 == \"rumi\":", "    if resposta2 == \"jeff kinney\":", "        if resposta3 == \"emily\":", "            print(\"PARABÉNS, GANHOU O QUIZ E 1 MILHÃO DE REAIS!!\")"], "5": ["# 3ºbim-A.03+04=Quiz - ESCREVA SEU NOME AQUI (01/01)", "", "resposta1 = input(\"Quem é a protagonista de Guerreiras do K-Pop?\").lower()", "resposta2 = input(\"Quem é o autor do livro Diário de um Banana?\").lower()", "resposta3 = input(\"Qual é o nome da nova vocalista da banda LINKIN PARK?\").lower()", "", "if resposta1 == \"rumi\" and resposta2 == \"jeff kinney\" and resposta3 == \"emily\":", "    print(\"PARABÉNS, GANHOU O QUIZ E 1 MILHÃO DE REAIS!!\")", "else:", "    print(\"VOCÊ ERROU UMA OU MAIS PERGUNTAS, TENTE NOVAMENTE!\")"]};
+function norm(l){return l.replace(/[\u201C\u201D\u201E\u2033]/g,'"')
+  .replace(/[\u2018\u2019\u2032]/g,"'").replace(/\u00A0/g,' ').replace(/\s+$/,'')}
+function chaveia(l){
+  return l.replace(/^#.*$/,'#TITULO').replace(/^\s+/,'');
+}
+function verificar(bruto,gab){
+  var brutas=bruto.split(/\r?\n/).map(norm);
+  var linhas=brutas.filter(function(l){return l.trim()!==''&&l.trim()!=='Copiar código'});
+  var probs=[];
+  if(linhas.length===0)return{ok:false,probs:['A caixa está vazia. Cole o que está na sua célula do Colab.']};
+  if(/Copiar c[oó]digo/i.test(bruto))probs.push('Você copiou junto as palavras "Copiar código". Apague essa linha.');
+  if(/[\u201C\u201D\u2018\u2019]/.test(bruto))probs.push('As suas aspas vieram tortas, de um programa de texto. Apague e use o botão Copiar.');
+  linhas.forEach(function(l,i){if(/^\s+/.test(l))
+    probs.push('A linha '+(i+1)+' tem espaço na frente. Nenhuma linha deste projeto pode ter espaço no começo.')});
+  var g=gab.filter(function(l){return l.trim()!==''});
+  var meu=linhas.map(chaveia), ref=g.map(chaveia);
+  if(!/^#/.test(linhas[0]||''))probs.push('Falta a primeira linha, a que começa com # e tem o seu nome.');
+  if(meu.length<ref.length){
+    ref.forEach(function(r,i){if(meu.indexOf(r)===-1&&r!=='#TITULO')probs.push('Faltou esta linha:|'+g[i])});
+  }
+  if(meu.length>ref.length)probs.push('Você tem '+meu.length+' linhas de comando e deveria ter '+ref.length+'. Provavelmente colou duas vezes.');
+  if(probs.length===0){
+    for(var i=0;i<ref.length;i++){
+      if(meu[i]!==ref[i]){
+        if(ref.indexOf(meu[i])!==-1){probs.push('As linhas estão certas, mas na ordem errada. A linha '+(i+1)+' deveria ser:|'+g[i]);}
+        else{probs.push('A linha '+(i+1)+' está diferente.|você colou:  '+linhas[i]+'\ndeveria ser: '+g[i]);}
+        break;
+      }
+    }
+  }
+  if(probs.length===0&&/ESCREVA SEU NOME AQUI/.test(bruto))
+    probs.push('Está quase. Falta trocar ESCREVA SEU NOME AQUI pelo seu nome completo.');
+  return{ok:probs.length===0,probs:probs};
+}
+function esc(s){return String(s).replace(/[&<>]/g,function(c){
+  return{'&':'&amp;','<':'&lt;','>':'&gt;'}[c]})}
+document.querySelectorAll('[data-verif]').forEach(function(b){
+  b.addEventListener('click',function(){
+    var k=b.dataset.verif;
+    var r=verificar(document.getElementById('cola'+k).value,GAB[k]);
+    var d=document.getElementById('diag'+k);
+    d.className='diag mostra '+(r.ok?'certo':'errado');
+    if(r.ok){d.innerHTML=k==='0'
+      ? '<b>Seu código está no ponto certo.</b> Pode seguir para o passo S.11.'
+      : '<b>Está igual ao espelho.</b> Pode seguir.';return}
+    var h='<b>Achei '+r.probs.length+(r.probs.length===1?' diferença:':' diferenças:')+'</b><ol>';
+    r.probs.forEach(function(p){var q=p.split('|');
+      h+='<li>'+esc(q[0]);if(q[1])h+='<span class="lin">'+esc(q[1])+'</span>';h+='</li>'});
+    h+='</ol><p style="margin:10px 0 0">Jeito mais rápido: apague tudo da célula e cole de novo com os botões Copiar.</p>';
+    d.innerHTML=h;
+  });
+});
+document.querySelectorAll('[data-limpa]').forEach(function(b){
+  b.addEventListener('click',function(){
+    document.getElementById('cola'+b.dataset.limpa).value='';
+    document.getElementById('diag'+b.dataset.limpa).className='diag';
+  });
+});
+
+/* sondagem */
+var PERG={"1": [{"t": "O que o comando <code class='inl'>input()</code> faz?", "a": ["Recebe o que a pessoa digita", "Escreve uma mensagem na tela", "Apaga a célula", "Sorteia um número"], "c": 0, "e": "O input espera a pessoa digitar. Quem escreve na tela é o print."}, {"t": "Para que serve o <code class='inl'>numero_secreto</code>?", "a": ["Para dar nome ao arquivo", "Para guardar um valor na memória do computador", "Para o jogo rodar mais rápido", "Para deixar o código bonito"], "c": 1, "e": "Isso é uma variável: uma caixinha com nome onde o computador guarda uma informação."}, {"t": "Por que o jogo desta aula ainda não funciona de verdade?", "a": ["Porque falta apertar o ▶", "Porque ele mostra o número secreto na tela", "Porque o 9 é fácil demais", "Porque o Colab está lento"], "c": 1, "e": "O print entrega o segredo. Ninguém precisa adivinhar nada."}, {"t": "O que acontece se o <code class='inl'>print</code> vier <b>antes</b> da linha <code class='inl'>numero_secreto = 9</code>?", "a": ["Funciona igual", "O jogo fica mais difícil", "Dá erro, porque a variável ainda não existe", "O número vira zero"], "c": 2, "e": "O computador lê de cima para baixo. Ele não mostra algo que ainda não foi guardado."}, {"t": "A primeira linha começa com <code class='inl'>#</code>. O que ela faz quando você clica no ▶?", "a": ["Aparece no resultado, embaixo da célula", "Nada: o computador ignora essa linha", "Dá erro", "Apaga o resto do código"], "c": 1, "e": "O # desliga o texto para o computador e liga o texto para a pessoa. Não é executado nem aparece no resultado."}], "2": [{"t": "O que a linha <code class='inl'>import random</code> faz?", "a": ["Sorteia um número", "Liga a ferramenta de sorteio", "Apaga o número antigo", "Mostra o número na tela"], "c": 1, "e": "O import só carrega a ferramenta. Quem sorteia é o random.randint."}, {"t": "O que acontece se você apagar a linha <code class='inl'>import random</code>?", "a": ["O jogo continua funcionando", "Sorteia sempre o mesmo número", "Dá erro dizendo que random não existe", "O número vira zero"], "c": 2, "e": "Sem carregar a ferramenta, o computador não sabe o que é random. A mensagem é NameError."}, {"t": "Em <code class='inl'>random.randint(1, 10)</code>, o que os números 1 e 10 significam?", "a": ["Quantas vezes o jogo roda", "O menor e o maior número que podem ser sorteados", "A dificuldade em porcentagem", "Quantas linhas o código tem"], "c": 1, "e": "São o começo e o fim do sorteio. Trocar o 10 por 50 amplia o intervalo."}, {"t": "Você rodou duas vezes e saiu o mesmo número secreto. O que isso quer dizer?", "a": ["O sorteio quebrou", "Você esqueceu o import", "Nada de errado: sorteio pode repetir", "O randint só sorteia números pares"], "c": 2, "e": "Sorteio é assim. Rodar de novo costuma mudar."}, {"t": "O <code class='inl'>(01/01)</code> no fim da primeira linha quer dizer o quê?", "a": ["Que o projeto tem uma célula só, e é esta", "Que você acertou uma de uma", "Que é o primeiro dia do mês", "Que o código tem uma linha"], "c": 0, "e": "O primeiro número é a ordem da célula, o segundo é o total. (02/04) seria a segunda célula de quatro."}], "3": [{"t": "Por que as respostas certas foram escritas em <b>letra minúscula</b> no código?", "a": ["Porque fica mais bonito", "Porque o computador diferencia letra grande de pequena", "Porque o Python só aceita minúscula", "Porque a professora mandou"], "c": 1, "e": "Para o computador, RUMI e rumi são textos diferentes. Na Aula 04 você conserta isso."}, {"t": "O que os <b>dois</b> sinais de igual (<code class='inl'>==</code>) fazem?", "a": ["Guardam um valor numa variável", "Comparam duas coisas para ver se são iguais", "Somam dois textos", "Apagam o valor anterior"], "c": 1, "e": "Um sinal só (=) guarda. Dois sinais (==) comparam. É o erro mais comum de quem começa."}, {"t": "Por que a linha do <code class='inl'>print</code> está mais para dentro que a linha do <code class='inl'>if</code>?", "a": ["Para o código ficar organizado", "Porque o espaço mostra que ela só acontece se o if for verdadeiro", "É enfeite, pode tirar", "Porque o print é mais importante"], "c": 1, "e": "O espaço na frente não é decoração: ele diz ao computador o que pertence ao if."}, {"t": "Nesta aula, o que acontece se você errar uma das perguntas?", "a": ["Aparece uma mensagem de erro", "Não aparece nada", "O jogo recomeça sozinho", "O Colab mostra erro vermelho"], "c": 1, "e": "O jogo fica calado. Na Aula 04 você acrescenta o else para ele avisar."}, {"t": "Se você apagar os dois-pontos (<code class='inl'>:</code>) do fim da linha do <code class='inl'>if</code>, o que acontece?", "a": ["Nada, funciona igual", "O jogo fica mais rápido", "O Colab mostra erro vermelho e o código não roda", "O if vira um else"], "c": 2, "e": "Os dois-pontos avisam que vem um bloco embaixo. Sem eles, o Python não entende a linha."}], "4": [{"t": "O que o <code class='inl'>.lower()</code> faz com o que a pessoa digitou?", "a": ["Transforma tudo em letra minúscula antes de comparar", "Apaga os espaços", "Deixa a letra maior", "Corrige os erros de português"], "c": 0, "e": "Ele passa tudo para minúscula. Aí RUMI, Rumi e rumi viram a mesma coisa."}, {"t": "Onde o <code class='inl'>.lower()</code> tem que ficar?", "a": ["No começo da linha", "Dentro das aspas, junto da pergunta", "Depois do parêntese fechado, no fim da linha", "Em qualquer lugar"], "c": 2, "e": "Ele age sobre a resposta que já foi recebida, então vem depois que o input fecha o parêntese."}, {"t": "O que a palavra <code class='inl'>and</code> exige para o jogador ganhar?", "a": ["Que ele acerte pelo menos uma", "Que ele acerte as três ao mesmo tempo", "Que ele acerte a última", "Que ele responda rápido"], "c": 1, "e": "and quer dizer 'e'. Todas as condições precisam ser verdadeiras juntas."}, {"t": "Por que o <code class='inl'>else</code> começa colado na margem, igual ao <code class='inl'>if</code>?", "a": ["Para ficar bonito", "Porque os dois são o mesmo nível da decisão: um é o caminho do sim, o outro o do não", "Porque else é mais curto", "Não importa, pode ficar em qualquer lugar"], "c": 1, "e": "Se o else ficar para dentro, o Python acha que ele pertence a outro bloco e mostra erro."}, {"t": "Você entregou o link, mas deixou em <b>Restrito</b>. O que acontece?", "a": ["O professor abre normalmente", "O professor recebe um pedido de acesso e o trabalho fica sem nota", "O arquivo é apagado", "O jogo para de funcionar"], "c": 1, "e": "Restrito quer dizer que só você entra. Tem que ser 'Qualquer pessoa com o link · Leitor'."}]};
+document.querySelectorAll('.qs').forEach(function(box){
+  var set=box.dataset.set, lista=PERG[set], estado={n:0,acertos:0};
+  lista.forEach(function(p,i){
+    var d=document.createElement('div');d.className='q';
+    var h='<div class="txt">'+(i+1)+'. '+p.t+'</div>';
+    p.a.forEach(function(a,j){h+='<button class="alt" data-q="'+i+'" data-a="'+j+'">'+a+'</button>'});
+    h+='<div class="expl" id="e'+set+'_'+i+'">'+p.e+'</div>';
+    d.innerHTML=h;box.appendChild(d);
+  });
+  box.addEventListener('click',function(ev){
+    var b=ev.target.closest('.alt');if(!b)return;
+    var qi=+b.dataset.q, ai=+b.dataset.a;
+    var grupo=box.querySelectorAll('.alt[data-q="'+qi+'"]');
+    if(grupo[0].disabled)return;
+    grupo.forEach(function(g,j){g.disabled=true;
+      if(j===lista[qi].c)g.classList.add('certa');else if(j===ai)g.classList.add('errada')});
+    document.getElementById('e'+set+'_'+qi).classList.add('mostra');
+    estado.n++;if(ai===lista[qi].c)estado.acertos++;
+    if(estado.n===lista.length){
+      var pl=document.getElementById('placar'+set);pl.classList.add('mostra');
+      var m=estado.acertos>=4?'Você entendeu o que fez.'
+        :estado.acertos>=2?'Você acertou parte. Releia os passos desta aula.'
+        :'Você colou, mas ainda não entendeu. Chame o professor.';
+      pl.textContent=estado.acertos+' de '+lista.length+' · '+m;
+      guarda(''+PFX+'sonda'+set,estado.acertos+'/'+lista.length);
+    }
+  });
+});
+})();
+
+document.querySelectorAll('.voltar .btn').forEach(function(b){
+  b.addEventListener('click',function(){window.scrollTo({top:0,behavior:'smooth'})});
+});
+</script>
+</body>
+</html>
