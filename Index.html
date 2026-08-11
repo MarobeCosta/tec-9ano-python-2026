@@ -1,0 +1,1478 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-aula="a01">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Python no Google Colab · 9º ano</title>
+<style>:root{
+  --fundo:#F4F7FA; --cartao:#FFFFFF; --cartao2:#EEF3F8; --borda:#D6DFE8;
+  --texto:#16232E; --fraco:#5B6B7C; --giz:#B26A00; --gizfd:#FFF8E8; --gizbd:#E8A33D;
+  --ok:#1E8449; --okfd:#E9F7EF; --alerta:#C2620E; --alertafd:#FFF3E4;
+  --erro:#C0392B; --errofd:#FDEDEC;
+  --colabfd:#F1F3F4; --colabbd:#4285F4; --colabtx:#202124;
+  --aula:#155E75; --aulafd:#E3EEF3;
+  --mono:"Consolas","DejaVu Sans Mono","Courier New",monospace;
+  --ui:"Segoe UI",system-ui,-apple-system,"Trebuchet MS",sans-serif;
+}
+[data-aula="a01"]{--aula:#155E75;--aulafd:#E2EFF4}
+[data-aula="a02"]{--aula:#1E6F4C;--aulafd:#E4F2EB}
+[data-aula="a03"]{--aula:#9A5B0C;--aulafd:#FAEFE0}
+[data-aula="a04"]{--aula:#8A2E66;--aulafd:#F7E7F1}
+
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--fundo);color:var(--texto);font-family:var(--ui);
+  font-size:17px;line-height:1.55;padding-bottom:96px}
+.wrap{max-width:880px;margin:0 auto;padding:0 18px}
+
+header.top{background:var(--aulafd);border-bottom:3px solid var(--aula);
+  padding:18px 0 14px;transition:background .3s,border-color .3s}
+.eyebrow{font-family:var(--mono);font-size:11.5px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--aula);margin:0;font-weight:700}
+h1.tt{font-size:24px;font-weight:800;letter-spacing:-.02em;margin:4px 0 0}
+.passoinfo{font-family:var(--mono);font-size:12px;color:var(--fraco);margin-top:6px}
+.barra{height:6px;background:#fff;border:1px solid var(--borda);border-radius:99px;
+  overflow:hidden;margin:10px 0 0}
+.barra i{display:block;height:100%;background:var(--aula);width:0;transition:width .35s}
+
+.tela{display:none;padding:22px 0 10px;animation:entra .22s ease}
+.tela.on{display:block}
+@keyframes entra{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+h2.th{font-size:23px;margin:0 0 4px;font-weight:700;letter-spacing:-.01em}
+.cod{font-family:var(--mono);font-size:13px;color:#fff;background:var(--aula);
+  padding:3px 10px;border-radius:6px;display:inline-block;margin-bottom:8px;font-weight:700}
+.intro{color:var(--fraco);margin:0 0 14px}
+
+.mapa{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:13px;margin:18px 0 0}
+.card{border-radius:14px;padding:17px;text-align:left;cursor:pointer;font-family:var(--ui);
+  color:#fff;border:0;transition:transform .15s,box-shadow .15s}
+.card:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(20,40,60,.18)}
+.card.c1{background:linear-gradient(160deg,#1B7A96,#125670)}
+.card.c2{background:linear-gradient(160deg,#2E9170,#1C6650)}
+.card.c3{background:linear-gradient(160deg,#C07C22,#8A5512)}
+.card.c4{background:linear-gradient(160deg,#A34480,#77295C)}
+.card .n{font-family:var(--mono);font-size:11px;letter-spacing:.13em;opacity:.9}
+.card .t{font-weight:700;font-size:17px;margin:6px 0 3px}
+.card .d{font-size:13.5px;opacity:.95;line-height:1.4}
+.card .st{font-family:var(--mono);font-size:11.5px;margin-top:11px;padding-top:9px;
+  border-top:1px solid rgba(255,255,255,.35)}
+
+.objs{margin:16px 0 0}
+.obj{display:flex;align-items:flex-start;gap:12px;background:var(--cartao);
+  border:1px solid var(--borda);border-radius:11px;padding:13px 15px;margin:9px 0}
+.obj .mk{flex:0 0 auto;width:28px;height:28px;border-radius:8px;display:flex;
+  align-items:center;justify-content:center;font-size:16px;background:var(--cartao2);
+  border:1px solid var(--borda)}
+.obj .tx{flex:1}
+.obj .tx b{display:block;font-size:16px}
+.obj .tx span{font-size:14px;color:var(--fraco)}
+.obj.feito{border-color:var(--ok);background:var(--okfd)}
+.obj.feito .mk{background:#fff;border-color:var(--ok)}
+.obj.atual{border:2px solid var(--gizbd);background:var(--gizfd);cursor:pointer;
+  box-shadow:0 0 0 4px rgba(232,163,61,.22)}
+.obj.atual .mk{background:#fff;border-color:var(--gizbd)}
+.obj.atual .cta{display:block;margin-top:6px;font-family:var(--mono);font-size:12.5px;
+  color:var(--giz);font-weight:700}
+.obj.bloq{opacity:.55;background:var(--cartao2)}
+.cta{display:none}
+
+ol.acoes{list-style:none;padding:0;margin:14px 0 0;counter-reset:a}
+.acao{position:relative;padding:7px 0 7px 42px;counter-increment:a}
+.acao::before{content:counter(a);position:absolute;left:0;top:7px;width:27px;height:27px;
+  border-radius:50%;background:var(--aula);color:#fff;font-family:var(--mono);
+  font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.dentro{margin:8px 0 14px 42px}
+.ui{background:#E3EDFB;color:#124A8C;font-weight:700;padding:1px 7px;border-radius:5px;
+  white-space:nowrap;border:1px solid #B9D3F2}
+code.inl{font-family:var(--mono);font-size:.92em;background:var(--cartao2);
+  padding:1px 6px;border-radius:5px;border:1px solid var(--borda)}
+
+.copiar{margin:14px 0 6px;border:2px solid var(--gizbd);border-radius:10px;overflow:hidden;
+  background:var(--gizfd)}
+.copiar .cab2{display:flex;justify-content:space-between;align-items:center;gap:10px;
+  background:#FBEFD6;padding:8px 12px;font-family:var(--mono);font-size:11.5px;
+  letter-spacing:.08em;text-transform:uppercase;color:var(--giz);font-weight:700}
+.copiar pre{margin:0;padding:14px;overflow-x:auto;font-family:var(--mono);
+  font-size:14px;line-height:1.65;color:var(--texto);white-space:pre;background:#FFFDF7}
+.btn{font-family:var(--ui);font-weight:700;font-size:13px;cursor:pointer;
+  background:var(--giz);color:#fff;border:0;border-radius:7px;padding:7px 15px}
+.btn:hover{filter:brightness(1.1)}
+.btn.ok{background:var(--ok)}
+.btn.falhou{background:var(--erro)}
+.btn.sec{background:#fff;color:var(--giz);border:1px solid var(--gizbd)}
+.copfalha{background:var(--errofd);border-top:1px solid var(--erro);
+  color:var(--erro);font-size:13.5px;padding:9px 14px;font-family:var(--ui)}
+
+.espelho{margin:13px 0 6px}
+.rot{font-family:var(--mono);font-size:11px;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--fraco);margin-bottom:6px}
+.colab{background:var(--colabfd);border:2px solid var(--colabbd);border-radius:8px;
+  display:flex;overflow:hidden}
+.colab .play{background:#E8EAED;border-right:1px solid #D2D5D9;min-width:44px;
+  display:flex;align-items:flex-start;justify-content:center;padding-top:12px;
+  color:#5F6368;font-size:16px}
+.colab pre{margin:0;padding:12px 14px;flex:1;overflow-x:auto;color:var(--colabtx);
+  font-family:var(--mono);font-size:13.5px;line-height:1.6;white-space:pre;background:var(--colabfd)}
+.saida{background:#fff;border:1px solid #C4C8CC;border-radius:8px;margin-top:8px}
+.saida pre{margin:0;padding:12px 14px;color:var(--colabtx);font-family:var(--mono);
+  font-size:13.5px;line-height:1.6;white-space:pre-wrap;overflow-x:auto}
+
+.aviso{border-left:5px solid var(--alerta);background:var(--alertafd);
+  padding:12px 15px;border-radius:0 8px 8px 0;margin:15px 0;font-size:15.5px}
+.aviso.bom{border-color:var(--ok);background:var(--okfd)}
+.aviso > b:first-child{display:block;margin-bottom:4px}
+
+.atalhos{background:var(--gizfd);border:1px dashed var(--gizbd);
+  border-radius:9px;padding:11px 14px;margin:6px 0 12px}
+.atalhos .rotulo{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--giz);margin-bottom:8px;font-weight:700}
+.atalhos .lin{display:flex;align-items:baseline;gap:10px;padding:4px 0;flex-wrap:wrap}
+.atalhos .teclas{flex:0 0 auto;min-width:145px}
+.atalhos .oque{font-size:14.5px}
+.atalhos .nota{color:var(--fraco);font-size:13px;margin-top:8px;font-style:italic}
+kbd{font-family:var(--mono);font-size:12px;background:#fff;border:1px solid #B9C4CF;
+  border-bottom-width:2px;border-radius:5px;padding:2px 7px;color:var(--texto);white-space:nowrap}
+.mais{color:var(--fraco);font-size:12px;margin:0 3px}
+
+table.linhas{width:100%;border-collapse:collapse;margin:6px 0 10px;background:var(--cartao)}
+table.linhas td{border:1px solid var(--borda);padding:9px 10px;vertical-align:top}
+td.lcod{font-family:var(--mono);font-size:12.5px;color:var(--giz);white-space:nowrap;
+  width:1%;font-weight:700}
+td.lexp{font-size:15px}
+@media (max-width:620px){
+  table.linhas td{display:block;border-top:0}
+  td.lcod{border-top:1px solid var(--borda);padding-bottom:2px;white-space:normal}
+  td.lexp{padding-top:0}
+}
+
+.verif{background:var(--cartao);border:1px solid var(--borda);border-radius:12px;
+  padding:17px;margin:16px 0}
+.verif h3{margin:0 0 6px;font-size:17px}
+.verif p{margin:0 0 10px;color:var(--fraco);font-size:14.5px}
+.verif textarea{width:100%;min-height:105px;background:#FBFDFF;color:var(--texto);
+  border:1px solid var(--borda);border-radius:8px;padding:11px;
+  font-family:var(--mono);font-size:13.5px;line-height:1.6;resize:vertical}
+.diag{margin-top:12px;padding:13px 15px;border-radius:8px;display:none;font-size:15.5px}
+.diag.mostra{display:block}
+.diag.certo{background:var(--okfd);border:1px solid var(--ok)}
+.diag.errado{background:var(--errofd);border:1px solid var(--erro)}
+.diag ol{margin:8px 0 0;padding-left:20px}
+.diag .lin{font-family:var(--mono);font-size:13px;background:#fff;border:1px solid var(--borda);
+  padding:6px 10px;border-radius:6px;display:block;margin-top:6px;white-space:pre-wrap}
+
+.q{border-top:1px solid var(--borda);padding:17px 0 4px}
+.q:first-of-type{border-top:0}
+.q .txt{font-weight:600;margin-bottom:4px}
+.q .quantas{font-family:var(--mono);font-size:12px;color:var(--giz);margin-bottom:9px;font-weight:700}
+.alt{display:block;width:100%;text-align:left;background:var(--cartao);
+  border:1px solid var(--borda);color:var(--texto);border-radius:8px;
+  padding:10px 13px;margin:6px 0;cursor:pointer;font-size:15.5px;font-family:var(--ui)}
+.alt:hover{border-color:var(--aula)}
+.alt.certa{border:2px solid var(--ok);background:var(--okfd)}
+.alt.errada{border:2px solid var(--erro);background:var(--errofd)}
+.expl{font-size:14.5px;color:var(--fraco);margin-top:8px;display:none;
+  border-left:3px solid var(--borda);padding-left:12px}
+.expl.mostra{display:block}
+.placar{font-family:var(--mono);font-size:15px;margin-top:15px;padding-top:13px;
+  border-top:1px solid var(--borda);display:none}
+.placar.mostra{display:block}
+
+footer.nav{position:fixed;left:0;right:0;bottom:0;background:rgba(255,255,255,.97);
+  border-top:3px solid var(--aula);box-shadow:0 -2px 12px rgba(20,40,60,.1);z-index:40}
+footer.nav .in{max-width:880px;margin:0 auto;padding:11px 18px;
+  display:flex;align-items:center;gap:10px}
+.nb{flex:0 0 auto;font-family:var(--ui);font-weight:700;font-size:14px;cursor:pointer;
+  background:#fff;border:1px solid var(--borda);color:var(--texto);
+  border-radius:9px;padding:10px 16px}
+.nb:hover:not(:disabled){border-color:var(--aula)}
+.nb:disabled{opacity:.4;cursor:default}
+.nb.prim{background:var(--aula);border-color:var(--aula);color:#fff}
+.nb.lista{flex:1;text-align:center;font-family:var(--mono);font-size:13px;font-weight:400;
+  color:var(--fraco)}
+
+.overlay{position:fixed;inset:0;background:rgba(30,45,60,.55);z-index:60;display:none;
+  overflow-y:auto;padding:26px 16px 90px}
+.overlay.on{display:block}
+.lista{max-width:820px;margin:0 auto;background:var(--fundo);border:1px solid var(--borda);
+  border-radius:14px;padding:20px;box-shadow:0 10px 40px rgba(20,40,60,.25)}
+.lista h3{margin:0 0 4px;font-size:20px}
+.lista .fecha{float:right}
+.grupo{margin:18px 0 0}
+.grupo .gt{font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;
+  padding:6px 10px;border-radius:7px;display:inline-block;margin-bottom:8px;color:#fff}
+.g1{background:#1B7A96}.g2{background:#2E9170}.g3{background:#C07C22}.g4{background:#A34480}
+.it{display:flex;align-items:center;gap:10px;background:var(--cartao);border:1px solid var(--borda);
+  border-radius:9px;padding:9px 13px;margin:6px 0;cursor:pointer;font-size:15px}
+.it:hover{border-color:var(--aula)}
+.it.atual{border:2px solid var(--gizbd);background:var(--gizfd)}
+.it .num{font-family:var(--mono);font-size:12px;color:var(--fraco);min-width:26px}
+.it .ck{margin-left:auto;color:var(--ok)}
+
+.selo{font-family:var(--mono);font-size:11.5px;color:var(--fraco);text-align:center;
+  margin:22px 0 0;padding-top:14px;border-top:1px solid var(--borda)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+.placarbox{background:var(--cartao);border:2px solid var(--aula);border-radius:16px;
+  padding:26px;text-align:center;margin:18px 0}
+.placarnum{font-family:var(--mono);font-size:52px;font-weight:800;color:var(--aula);line-height:1}
+.placarde{font-family:var(--mono);font-size:15px;color:var(--fraco);margin-top:4px}
+.placarmsg{font-size:18px;margin-top:14px;font-weight:600}
+.bolinhas{display:flex;gap:9px;justify-content:center;margin-top:16px;flex-wrap:wrap}
+.bo{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:16px;background:var(--cartao2);border:1px solid var(--borda)}
+.bo.c{background:var(--okfd);border-color:var(--ok)}
+.bo.x{background:var(--errofd);border-color:var(--erro)}
+.andamento{font-family:var(--mono);font-size:13px;color:var(--fraco);margin-top:14px;
+  padding-top:12px;border-top:1px solid var(--borda)}
+
+/* ---------- figuras de referencia ---------- */
+.figura{margin:10px 0 14px}
+.figura svg{width:100%;height:auto;border-radius:10px;display:block}
+/* ---------- icones de mouse e teclado ---------- */
+.ico{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;
+  border-radius:7px;margin-right:8px;font-size:14px;vertical-align:-6px;border:1px solid}
+.ico.mouse{background:#E8F0FE;border-color:#A8C7FA}
+.ico.tecla{background:#FFF8E8;border-color:#E8A33D}
+
+/* ---------- trilha de telas ---------- */
+.trilha{display:flex;align-items:center;gap:3px;flex-wrap:wrap;margin-top:9px}
+.tp{width:11px;height:11px;border-radius:50%;border:1.5px solid var(--borda);
+  background:#fff;padding:0;cursor:pointer;transition:transform .12s}
+.tp:hover{transform:scale(1.35)}
+.tp.visto{background:var(--aula);border-color:var(--aula)}
+.tp.atual{background:var(--gizbd);border-color:var(--giz);transform:scale(1.5);
+  box-shadow:0 0 0 3px rgba(232,163,61,.3)}
+.tp.obj{width:13px;height:13px;border-radius:3px;transform:rotate(45deg);border-width:2px}
+.tp.obj:hover{transform:rotate(45deg) scale(1.3)}
+.tp.obj.atual{transform:rotate(45deg) scale(1.4)}
+.tp.sonda{width:12px;height:12px;border-radius:2px}
+.tp.sonda:hover{transform:scale(1.3)}
+.tp.placar{width:16px;height:16px;border-radius:0;border:0;background:var(--borda);
+  clip-path:polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%)}
+.tp.placar.visto{background:var(--aula)}
+.tp.placar.atual{background:var(--gizbd);box-shadow:none;transform:scale(1.35)}
+.tp.capa{width:13px;height:13px;border-radius:3px}
+.sep{width:2px;height:16px;background:var(--borda);margin:0 6px;border-radius:2px;display:inline-block}
+.legtrilha{font-family:var(--mono);font-size:10.5px;color:var(--fraco);margin-top:6px;
+  display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+.legtrilha i{display:inline-block;width:10px;height:10px;border:1.5px solid var(--borda);
+  background:#fff;margin-right:5px;border-radius:50%;vertical-align:-1px}
+.legtrilha i.o{border-radius:2px;transform:rotate(45deg)}
+.legtrilha i.v{background:var(--aula);border-color:var(--aula)}
+
+.legtrilha i.s{border-radius:2px}
+.legtrilha i.p{border:0;background:var(--borda);width:12px;height:12px;
+  clip-path:polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%)}
+
+/* ---------- faixa permanente de objetivos ---------- */
+.objbar{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-top:10px;
+  background:#fff;border:1px solid var(--borda);border-radius:10px;padding:8px 11px}
+.oclab{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--fraco);margin-right:2px}
+.oc{display:inline-flex;align-items:center;gap:4px;font-family:var(--mono);font-size:12px;
+  border:1.5px solid var(--borda);background:var(--cartao2);color:var(--fraco);
+  border-radius:8px;padding:3px 8px;cursor:pointer;line-height:1.2}
+.oc:hover{border-color:var(--aula)}
+.oc.ok{background:var(--okfd);border-color:var(--ok);color:var(--ok);font-weight:700}
+.oc.agora{background:var(--gizfd);border-color:var(--gizbd);color:var(--giz);font-weight:700;
+  box-shadow:0 0 0 2px rgba(232,163,61,.25)}
+.oc.trava{opacity:.6}
+.ocfrase{flex:1;min-width:180px;font-size:13.5px;color:var(--texto)}
+.ocver{font-family:var(--mono);font-size:11.5px;background:transparent;border:1px solid var(--aula);
+  color:var(--aula);border-radius:8px;padding:4px 10px;cursor:pointer}
+.ocver:hover{background:var(--aulafd)}
+@media (max-width:620px){.ocfrase{order:9;flex-basis:100%;min-width:0}}
+
+.tp.fecha{border-color:var(--gizbd);border-width:2.5px}
+.tp.fecha.visto{background:var(--aula);border-color:var(--gizbd)}
+.ondeobj{display:block;font-family:var(--mono);font-size:11.5px;color:var(--aula);margin-top:5px}
+.legtrilha i.f{border-color:var(--gizbd);border-width:2.5px}
+
+/* ---------- cabecalho fixo ---------- */
+header.top{position:sticky;top:0;z-index:35;box-shadow:0 2px 8px rgba(20,40,60,.09)}
+.eyebrow .marca{background:var(--aula);color:#fff;font-size:10px;letter-spacing:.12em;
+  padding:2px 7px;border-radius:5px;margin-right:8px}
+.eyebrow .deq{color:var(--fraco);font-weight:400}
+/* ---------- "agora" vivo ---------- */
+.agora{display:inline-flex;align-items:center;gap:8px;border-radius:99px;padding:3px 4px 3px 3px;
+  background:linear-gradient(100deg,var(--gizfd) 0%,#fff 40%,var(--gizfd) 80%);
+  background-size:220% 100%;animation:onda 3.2s linear infinite;border:1px solid var(--gizbd)}
+.agora .ag{background:var(--giz);color:#fff;font-family:var(--mono);font-size:10.5px;
+  letter-spacing:.12em;text-transform:uppercase;padding:3px 9px;border-radius:99px}
+.agora .agtx{font-weight:700;color:var(--texto);padding-right:10px;font-size:14.5px}
+.agora.pronto{background:linear-gradient(100deg,var(--okfd) 0%,#fff 40%,var(--okfd) 80%);
+  background-size:220% 100%;border-color:var(--ok)}
+.agora.pronto .ag{background:var(--ok)}
+@keyframes onda{0%{background-position:200% 0}100%{background-position:0 0}}
+@media (prefers-reduced-motion:reduce){.agora{animation:none}}
+/* ---------- ficha da aula ---------- */
+.ficha{background:#fff;border:1px solid var(--borda);border-radius:12px;overflow:hidden;margin:14px 0 0}
+.fl{display:flex;gap:12px;padding:11px 14px;border-top:1px solid var(--borda);flex-wrap:wrap}
+.fl:first-child{border-top:0}
+.fl span{flex:0 0 152px;font-family:var(--mono);font-size:11px;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--fraco);padding-top:3px}
+.fl b{flex:1;min-width:200px;font-weight:600;font-size:15px}
+.fl.pend{background:var(--gizfd)}
+.tag-prov,.tag-pend{font-family:var(--mono);font-size:10px;font-style:normal;padding:2px 7px;
+  border-radius:5px;margin-left:7px;vertical-align:1px}
+.tag-prov{background:var(--aulafd);color:var(--aula);border:1px solid var(--aula)}
+.tag-pend{background:#fff;color:var(--giz);border:1px solid var(--gizbd)}
+/* ---------- placar geral ---------- */
+.lgeral{display:flex;justify-content:space-between;gap:10px;background:#fff;
+  border:1px solid var(--borda);border-radius:9px;padding:10px 14px;margin:7px 0;font-size:15px}
+.lga{font-weight:600}
+.lgb{font-family:var(--mono);font-size:13.5px;color:var(--fraco)}
+
+/* ---------- verdadeiro ou falso ---------- */
+.alt.vf{display:inline-block;width:auto;min-width:170px;margin-right:9px;font-weight:600}
+/* ---------- montar a frase ---------- */
+.montado{min-height:44px;border:2px dashed var(--borda);border-radius:9px;padding:8px;
+  background:var(--cartao2);display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.montado:empty::before{content:'clique nas partes abaixo, na ordem certa';color:var(--fraco);
+  font-size:13.5px;font-family:var(--mono)}
+.montado.certo{border-style:solid;border-color:var(--ok);background:var(--okfd)}
+.montado.errado{border-style:solid;border-color:var(--erro);background:var(--errofd)}
+.pcm{background:#fff;border:1px solid var(--aula);color:var(--aula);border-radius:7px;
+  padding:5px 11px;font-size:14.5px;font-weight:600}
+.pecas{display:flex;gap:7px;flex-wrap:wrap;margin:10px 0}
+.pc{background:#fff;border:1px solid var(--borda);border-radius:8px;padding:8px 13px;
+  font-size:15px;cursor:pointer;font-family:var(--ui);color:var(--texto)}
+.pc:hover:not(:disabled){border-color:var(--aula);background:var(--aulafd)}
+.pc.usada{opacity:.35;cursor:default}
+.limpalac{font-size:12px;padding:5px 11px}
+.lacresp{margin-top:8px;font-size:14px;background:var(--okfd);border:1px solid var(--ok);
+  border-radius:8px;padding:8px 12px}
+/* ---------- andamento com estado ---------- */
+.andamento.ok{color:var(--ok);font-weight:700}
+.andamento.falta{color:var(--giz);font-weight:700}
+
+/* ---------- Bloom com cor ---------- */
+.bl{display:inline-flex;align-items:center;gap:6px;background:#fff;border:1px solid var(--bl);
+  border-radius:99px;padding:3px 11px 3px 5px;font-size:13.5px;margin-right:7px;font-weight:400}
+.bl i{width:14px;height:14px;border-radius:50%;background:var(--bl);display:inline-block}
+.bl b{color:var(--texto);font-weight:600}
+/* ---------- codigo antes da descricao ---------- */
+.cdg{font-family:var(--mono);font-size:13px;background:var(--cartao2);border:1px solid var(--borda);
+  border-radius:5px;padding:2px 8px;margin-right:7px;font-weight:700}
+.cdesc{font-weight:400;color:var(--texto)}
+/* ---------- identificacao ---------- */
+.formid{background:#fff;border:1px solid var(--borda);border-radius:12px;padding:18px;margin:14px 0}
+.formid label{display:block;font-family:var(--mono);font-size:11px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--fraco);margin:12px 0 5px}
+.formid label:first-child{margin-top:0}
+.formid input{width:100%;font-family:var(--ui);font-size:17px;padding:11px 13px;
+  border:2px solid var(--borda);border-radius:9px;background:var(--cartao2);color:var(--texto)}
+.formid input:focus{outline:0;border-color:var(--aula);background:#fff}
+.idaviso{margin-top:14px;font-size:14.5px;color:var(--fraco);background:var(--cartao2);
+  border-radius:9px;padding:10px 13px}
+.idaviso.ok{background:var(--okfd);color:var(--texto);border:1px solid var(--ok)}
+.meunome{background:var(--gizfd);border:1px solid var(--gizbd);border-radius:5px;
+  padding:1px 7px;font-weight:700}
+.calend{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:11px;margin:16px 0 0}
+.cl{background:#fff;border:1px solid var(--borda);border-left:5px solid var(--aula);
+  border-radius:10px;padding:12px 14px}
+.cl span{display:block;font-family:var(--mono);font-size:11px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--fraco)}
+.cl b{font-size:16px}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+<p class="eyebrow" id="eyebrow">Tecnologia · 9º ano · 3º bimestre</p>
+<h1 class="tt" id="tt">Escolha a aula</h1>
+<div class="passoinfo" id="passoinfo"></div>
+<div class="barra"><i id="barra"></i></div>
+<div class="trilha" id="trilha"></div>
+<div class="objbar" id="objbar"></div>
+<div class="legtrilha">
+<span><i class="v"></i>já vista</span>
+<span><i class="o"></i>objetivos</span>
+<span><i class="s"></i>perguntas</span>
+<span><i class="p"></i>placar</span>
+<span><i class="f"></i>fecha objetivo</span>
+<span><span class="sep" style="height:12px;margin:0 5px 0 0"></span>troca de aula</span>
+</div>
+</div></header>
+
+<main class="wrap">
+<div class="tela" id="t_ident" data-aula="a01">
+<h2 class="th">Antes de começar, diga quem você é</h2>
+<p class="intro">Isso fica guardado só neste computador. Serve para o guia lembrar o seu nome
+na hora de assinar o código.</p>
+<div class="formid">
+<label for="fNome">Seu nome completo</label>
+<input id="fNome" type="text" placeholder="exemplo: Ana Souza Lima" autocomplete="off">
+<label for="fTurma">Sua turma</label>
+<input id="fTurma" type="text" placeholder="exemplo: 9º A" autocomplete="off">
+<div class="idaviso" id="idaviso"></div>
+</div>
+<div class="aviso bom"><b>Por que o guia precisa disso</b>Em vários momentos você vai escrever o seu nome dentro do código. Com o nome guardado aqui, o guia mostra exatamente o que você deve digitar.</div>
+<div class="calend">
+<div class="cl"><span>Aulas 01 e 02</span><b>03 a 07 de agosto de 2026</b></div>
+<div class="cl"><span>Aulas 03 e 04</span><b>10 a 14 de agosto de 2026</b></div>
+</div>
+</div>
+<div class="tela" id="t_capa" data-aula="a01">
+<h2 class="th">Python no Google Colab</h2>
+<p class="intro">Quatro aulas · dois jogos · dois arquivos no Colab. Escolha por onde começar.</p>
+<div class="mapa"><button class="card c1" data-aula="a01"><div class="n">AULA 01</div><div class="t">Número Secreto · parte 1</div><div class="d">Pedir, guardar e mostrar um número</div><div class="st" id="st_a01">0 de 13 telas</div></button><button class="card c2" data-aula="a02"><div class="n">AULA 02</div><div class="t">Número Secreto · parte 2</div><div class="d">O computador sorteia sozinho</div><div class="st" id="st_a02">0 de 13 telas</div></button><button class="card c3" data-aula="a03"><div class="n">AULA 03</div><div class="t">Quiz · parte 1</div><div class="d">Montar as perguntas e conferir</div><div class="st" id="st_a03">0 de 11 telas</div></button><button class="card c4" data-aula="a04"><div class="n">AULA 04</div><div class="t">Quiz · parte 2</div><div class="d">Deixar o jogo esperto e entregar</div><div class="st" id="st_a04">0 de 14 telas</div></button></div>
+<div class="aviso"><b>Antes de tudo: entre na sua conta Google.</b>Sem login o Colab funciona, mas o seu arquivo some quando você fecha a aba. Confira a bolinha com a sua foto no canto de cima, à direita do navegador.</div>
+<div class="aviso bom"><b>Como este guia funciona</b>Uma tela de cada vez, como fases. No rodapé você tem <b>Voltar</b>, a <b>lista de todas as telas</b> e <b>Avançar</b>. Deixe esta aba aberta e vá alternando com a aba do Colab.</div>
+<p class="selo">FACAPY-9ANO-V17.00-IDENT · 26.08.05</p>
+</div>
+<div class="tela" id="t_obj_a01" data-aula="a01">
+<span class="cod">AULA 01 · OBJETIVOS</span>
+<h2 class="th">Número Secreto · parte 1</h2>
+<div class="ficha"><div class="fl"><span>Unidade</span><b>Programação em Python · Google Colab</b></div><div class="fl"><span>Aula</span><b>Aula 01 · Número Secreto · parte 1</b></div><div class="fl"><span>Semana de aplicação</span><b>03 a 07 de agosto de 2026</b></div><div class="fl"><span>Conteúdo desta aula</span><b>O ambiente Colab · entrada de dados com <code class="inl">input()</code> · variável · saída com <code class="inl">print()</code> · comentário com <code class="inl">#</code></b></div><div class="fl"><span>Nível Bloom</span><b><span class="bl" style="--bl:#2E5C8A"><i></i>B1 <b>lembrar</b></span> <span class="bl" style="--bl:#F0C419"><i></i>B3 <b>aplicar</b></span> <i class="tag-prov">proposto</i></b></div><div class="fl pend"><span>Habilidade</span><b><span class="cdg">EF09TI__</span> <span class="cdesc">descrição a confirmar no Currículo Paulista de Tecnologia e Inovação</span> <i class="tag-pend">a preencher</i></b></div><div class="fl pend"><span>Descritor</span><b><span class="cdg">D__</span> <span class="cdesc">nome a definir depois das avaliações</span> <i class="tag-pend">a preencher</i></b></div></div>
+<h2 class="th" style="margin-top:22px">O que você vai conseguir nesta aula</h2>
+<p class="intro">Cada objetivo abre quando você termina a tela dele.</p>
+<div class="objs" id="objs_a01"></div>
+</div><div class="tela" id="t_obj_a02" data-aula="a02">
+<span class="cod">AULA 02 · OBJETIVOS</span>
+<h2 class="th">Número Secreto · parte 2</h2>
+<div class="ficha"><div class="fl"><span>Unidade</span><b>Programação em Python · Google Colab</b></div><div class="fl"><span>Aula</span><b>Aula 02 · Número Secreto · parte 2</b></div><div class="fl"><span>Semana de aplicação</span><b>03 a 07 de agosto de 2026</b></div><div class="fl"><span>Conteúdo desta aula</span><b>Célula nova no mesmo arquivo · módulo <code class="inl">random</code> · <code class="inl">random.randint()</code> · tipo <code class="inl">int</code> · intervalo de sorteio</b></div><div class="fl"><span>Nível Bloom</span><b><span class="bl" style="--bl:#F0C419"><i></i>B3 <b>aplicar</b></span> <span class="bl" style="--bl:#E07B2C"><i></i>B4 <b>analisar</b></span> <i class="tag-prov">proposto</i></b></div><div class="fl pend"><span>Habilidade</span><b><span class="cdg">EF09TI__</span> <span class="cdesc">descrição a confirmar no Currículo Paulista de Tecnologia e Inovação</span> <i class="tag-pend">a preencher</i></b></div><div class="fl pend"><span>Descritor</span><b><span class="cdg">D__</span> <span class="cdesc">nome a definir depois das avaliações</span> <i class="tag-pend">a preencher</i></b></div></div>
+<h2 class="th" style="margin-top:22px">O que você vai conseguir nesta aula</h2>
+<p class="intro">Cada objetivo abre quando você termina a tela dele.</p>
+<div class="objs" id="objs_a02"></div>
+</div><div class="tela" id="t_obj_a03" data-aula="a03">
+<span class="cod">AULA 03 · OBJETIVOS</span>
+<h2 class="th">Quiz · parte 1</h2>
+<div class="ficha"><div class="fl"><span>Unidade</span><b>Programação em Python · Google Colab</b></div><div class="fl"><span>Aula</span><b>Aula 03 · Quiz · parte 1</b></div><div class="fl"><span>Semana de aplicação</span><b>10 a 14 de agosto de 2026</b></div><div class="fl"><span>Conteúdo desta aula</span><b>Segundo projeto e segundo arquivo · <code class="inl">input()</code> em série · condicional <code class="inl">if</code> · operador <code class="inl">==</code> · indentação</b></div><div class="fl"><span>Nível Bloom</span><b><span class="bl" style="--bl:#F0C419"><i></i>B3 <b>aplicar</b></span> <span class="bl" style="--bl:#E07B2C"><i></i>B4 <b>analisar</b></span> <i class="tag-prov">proposto</i></b></div><div class="fl pend"><span>Habilidade</span><b><span class="cdg">EF09TI__</span> <span class="cdesc">descrição a confirmar no Currículo Paulista de Tecnologia e Inovação</span> <i class="tag-pend">a preencher</i></b></div><div class="fl pend"><span>Descritor</span><b><span class="cdg">D__</span> <span class="cdesc">nome a definir depois das avaliações</span> <i class="tag-pend">a preencher</i></b></div></div>
+<h2 class="th" style="margin-top:22px">O que você vai conseguir nesta aula</h2>
+<p class="intro">Cada objetivo abre quando você termina a tela dele.</p>
+<div class="objs" id="objs_a03"></div>
+</div><div class="tela" id="t_obj_a04" data-aula="a04">
+<span class="cod">AULA 04 · OBJETIVOS</span>
+<h2 class="th">Quiz · parte 2</h2>
+<div class="ficha"><div class="fl"><span>Unidade</span><b>Programação em Python · Google Colab</b></div><div class="fl"><span>Aula</span><b>Aula 04 · Quiz · parte 2</b></div><div class="fl"><span>Semana de aplicação</span><b>10 a 14 de agosto de 2026</b></div><div class="fl"><span>Conteúdo desta aula</span><b><code class="inl">.lower()</code> · operador lógico <code class="inl">and</code> · <code class="inl">else</code> · personalização do projeto · compartilhamento e entrega</b></div><div class="fl"><span>Nível Bloom</span><b><span class="bl" style="--bl:#E07B2C"><i></i>B4 <b>analisar</b></span> <span class="bl" style="--bl:#9C27B0"><i></i>B6 <b>criar</b></span> <i class="tag-prov">proposto</i></b></div><div class="fl pend"><span>Habilidade</span><b><span class="cdg">EF09TI__</span> <span class="cdesc">descrição a confirmar no Currículo Paulista de Tecnologia e Inovação</span> <i class="tag-pend">a preencher</i></b></div><div class="fl pend"><span>Descritor</span><b><span class="cdg">D__</span> <span class="cdesc">nome a definir depois das avaliações</span> <i class="tag-pend">a preencher</i></b></div></div>
+<h2 class="th" style="margin-top:22px">O que você vai conseguir nesta aula</h2>
+<p class="intro">Cada objetivo abre quando você termina a tela dele.</p>
+<div class="objs" id="objs_a04"></div>
+</div>
+<div class="tela" id="t_0" data-aula="a01">
+<span class="cod">AULA 01 · S.01</span>
+<h2 class="th">Entrar na sua conta Google</h2>
+<div class="aviso bom"><b>As três regras desta atividade</b><b>1.</b> Cada célula recebe <b>uma colagem inteira</b>. O código de uma célula nunca vem partido em pedaços.<br><b>2.</b> Use sempre o botão Copiar. Nunca selecione o texto com o mouse.<br><b>3.</b> Se der errado, apague a célula toda e cole de novo. Nunca conserte letra por letra.</div><div class="aviso bom"><b>Quantas células a aula tem?</b>Depende do que a aula pede. Se a aula tiver dois programas diferentes, serão duas células, com dois quadros para copiar. O contador no fim da primeira linha sempre diz quantas são.</div><div class="acoes"><div class="acao"><span class="ico mouse" title="use o mouse">&#128433;&#65039;</span>Abra o navegador Google Chrome.</div><div class="acao"><span class="ico mouse" title="use o mouse">&#128433;&#65039;</span>Olhe o canto de cima, à direita. Tem que aparecer a bolinha com a sua letra ou a sua foto.</div><div class="acao">Se não aparecer, clique em <span class="ui">Fazer login</span> e entre com a sua conta de estudante.</div></div><div class="aviso"><b>Sem login você perde tudo</b>O Colab abre e funciona mesmo sem login. Mas quando você fechar a aba, o arquivo some.</div>
+</div><div class="tela" id="t_1" data-aula="a01">
+<span class="cod">AULA 01 · S.02</span>
+<h2 class="th">Abrir o Google Colab</h2>
+<div class="acoes"><div class="acao"><span class="ico mouse" title="use o mouse">&#128433;&#65039;</span>Clique no botão <b>Copiar</b> deste quadro:</div><div class="dentro"><div class="copiar"><div class="cab2"><span>endereço do site</span><button class="btn" data-copiar="c0">Copiar</button></div><pre id="c0">colab.research.google.com</pre></div></div><div class="acao"><span class="ico tecla" title="use o teclado">&#9000;&#65039;</span>Cole na barra de endereço, lá em cima do navegador.</div><div class="dentro"><div class="atalhos"><div class="rotulo">atalho de teclado</div><div class="lin"><span class="teclas"><kbd>Ctrl</kbd><span class="mais">+</span><kbd>L</kbd></span><span class="oque">leva o cursor direto para a barra de endereço</span></div><div class="lin"><span class="teclas"><kbd>Ctrl</kbd><span class="mais">+</span><kbd>V</kbd></span><span class="oque">cola o que você copiou</span></div><div class="nota">Você já viu atalhos de teclado no 6º ano. Eles voltam aqui, com uso real.</div></div></div><div class="acao"><span class="ico tecla" title="use o teclado">&#9000;&#65039;</span>Aperte a tecla <kbd>Enter</kbd>.</div><div class="acao"><span class="ico mouse" title="use o mouse">&#128433;&#65039;</span>Olhe no canto de cima, à <b>esquerda</b> da tela, logo abaixo da barra de pesquisa.</div><div class="acao">Lá está o botão azul <span class="ui">+ Novo notebook</span>. Clique nele.</div><div class="dentro"><div class="figura"><div class="rot">onde fica na tela do Colab</div><svg viewBox="0 0 700 190" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Tela inicial do Colab com o botao Novo notebook destacado">
+<rect x="0" y="0" width="700" height="190" rx="10" fill="#FFFFFF" stroke="#C8D2DB"/>
+<rect x="0" y="0" width="700" height="52" fill="#F8F9FA"/>
+<circle cx="34" cy="26" r="13" fill="#F9AB00"/>
+<text x="34" y="31" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11" font-weight="700" fill="#fff">CO</text>
+<rect x="150" y="12" width="400" height="28" rx="14" fill="#EEF1F4"/>
+<text x="172" y="31" font-family="Segoe UI,sans-serif" font-size="13" fill="#7A8794">Pesquisar notebooks</text>
+<rect x="150" y="96" width="178" height="40" rx="20" fill="#D3E3FD"/>
+<text x="239" y="121" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="15" font-weight="600" fill="#0842A0">+  Novo notebook</text>
+<rect x="344" y="96" width="216" height="40" rx="20" fill="#fff" stroke="#C8D2DB"/>
+<text x="452" y="121" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="15" fill="#5F6B78">Fazer upload de notebook</text>
+<rect x="146" y="92" width="186" height="48" rx="7" fill="none" stroke="#E8710A" stroke-width="3" stroke-dasharray="7 4"/><line x1="239.0" y1="151" x2="239.0" y2="142" stroke="#E8710A" stroke-width="2.5"/><text x="239.0" y="170" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="15" font-weight="700" fill="#B4530A">clique aqui</text></svg></div></div><div class="acao">Espere aparecer uma caixa vazia. Ela se chama <b>célula</b>. Quando você clica dentro dela, ela ganha uma <b>borda azul</b>.</div><div class="dentro"><div class="figura"><div class="rot">onde fica na tela do Colab</div><svg viewBox="0 0 700 230" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Notebook do Colab aberto com o elemento destacado">
+<rect x="0" y="0" width="700" height="230" rx="10" fill="#FFFFFF" stroke="#C8D2DB"/>
+<circle cx="30" cy="30" r="13" fill="#F9AB00"/>
+<text x="30" y="35" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11" font-weight="700" fill="#fff">CO</text>
+<text x="96" y="36" font-family="Segoe UI,sans-serif" font-size="17" font-weight="600" fill="#202124">Untitled0.ipynb</text>
+<rect x="520" y="14" width="150" height="32" rx="16" fill="#0B57D0"/>
+<text x="595" y="35" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="14" font-weight="600" fill="#fff">Compartilhar</text>
+<g font-family="Segoe UI,sans-serif" font-size="13.5" fill="#3C4753">
+<text x="34" y="70">Arquivo</text><text x="104" y="70">Editar</text><text x="160" y="70">Ver</text>
+<text x="200" y="70">Inserir</text><text x="254" y="70">Ambiente de execução</text>
+<text x="404" y="70">Ferramentas</text><text x="490" y="70">Ajuda</text></g>
+<line x1="16" y1="80" x2="684" y2="80" stroke="#E3E8ED"/>
+<rect x="30" y="88" width="92" height="24" rx="12" fill="#EEF1F4"/>
+<text x="76" y="105" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="13.5" font-weight="600" fill="#1A73E8">+ Código</text>
+<rect x="132" y="88" width="80" height="24" rx="12" fill="#EEF1F4"/>
+<text x="172" y="105" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="13.5" fill="#5F6B78">+ Texto</text>
+<text x="238" y="105" font-family="Segoe UI,sans-serif" font-size="13.5" fill="#5F6B78">&#9654; Executar tudo</text>
+<rect x="60" y="126" width="580" height="52" rx="8" fill="#fff" stroke="#4285F4" stroke-width="2.5"/>
+<rect x="60" y="126" width="46" height="52" rx="8" fill="#F1F3F4"/>
+<text x="83" y="158" text-anchor="middle" font-size="17" fill="#5F6368">&#9654;</text>
+<text x="122" y="157" font-family="Consolas,monospace" font-size="13" fill="#9AA4AE">a célula, onde o código vai</text>
+<rect x="56" y="122" width="588" height="60" rx="7" fill="none" stroke="#E8710A" stroke-width="3" stroke-dasharray="7 4"/><line x1="350.0" y1="193" x2="350.0" y2="184" stroke="#E8710A" stroke-width="2.5"/><text x="350.0" y="212" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="15" font-weight="700" fill="#B4530A">esta é a célula</text></svg></div></div><div class="dentro"><div class="espelho"><div class="rot">espelho · a sua célula no Colab deve ficar assim</div><div class="colab"><div class="play">&#9654;</div><pre> </pre></div></div></div></div>
+</div><div class="tela" id="t_2" data-aula="a01">
+<span class="cod">AULA 01 · S.03</span>
+<h2 class="th">Dar nome ao arquivo</h2>
+<div class="acoes"><div class="acao">No canto de cima, à esquerda, clique no nome <span class="ui">Untitled0.ipynb</span>.</div><div class="dentro"><div class="figura"><div class="rot">onde fica na tela do Colab</div><svg viewBox="0 0 700 230" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Notebook do Colab aberto com o elemento destacado">
+<rect x="0" y="0" width="700" height="230" rx="10" fill="#FFFFFF" stroke="#C8D2DB"/>
+<circle cx="30" cy="30" r="13" fill="#F9AB00"/>
+<text x="30" y="35" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11" font-weight="700" fill="#fff">CO</text>
+<text x="96" y="36" font-family="Segoe UI,sans-serif" font-size="17" font-weight="600" fill="#202124">Untitled0.ipynb</text>
+<rect x="520" y="14" width="150" height="32" rx="16" fill="#0B57D0"/>
+<text x="595" y="35" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="14" font-weight="600" fill="#fff">Compartilhar</text>
+<g font-family="Segoe UI,sans-serif" font-size="13.5" fill="#3C4753">
+<text x="34" y="70">Arquivo</text><text x="104" y="70">Editar</text><text x="160" y="70">Ver</text>
+<text x="200" y="70">Inserir</text><text x="254" y="70">Ambiente de execução</text>
+<text x="404" y="70">Ferramentas</text><text x="490" y="70">Ajuda</text></g>
+<line x1="16" y1="80" x2="684" y2="80" stroke="#E3E8ED"/>
+<rect x="30" y="88" width="92" height="24" rx="12" fill="#EEF1F4"/>
+<text x="76" y="105" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="13.5" font-weight="600" fill="#1A73E8">+ Código</text>
+<rect x="132" y="88" width="80" height="24" rx="12" fill="#EEF1F4"/>
+<text x="172" y="105" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="13.5" fill="#5F6B78">+ Texto</text>
+<text x="238" y="105" font-family="Segoe UI,sans-serif" font-size="13.5" fill="#5F6B78">&#9654; Executar tudo</text>
+<rect x="60" y="126" width="580" height="52" rx="8" fill="#fff" stroke="#4285F4" stroke-width="2.5"/>
+<rect x="60" y="126" width="46" height="52" rx="8" fill="#F1F3F4"/>
+<text x="83" y="158" text-anchor="middle" font-size="17" fill="#5F6368">&#9654;</text>
+<text x="122" y="157" font-family="Consolas,monospace" font-size="13" fill="#9AA4AE">a célula, onde o código vai</text>
+<rect x="92" y="14" width="140" height="32" rx="7" fill="none" stroke="#E8710A" stroke-width="3" stroke-dasharray="7 4"/><line x1="162.0" y1="57" x2="162.0" y2="48" stroke="#E8710A" stroke-width="2.5"/><text x="162.0" y="76" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="15" font-weight="700" fill="#B4530A">clique aqui para trocar o nome</text></svg></div></div><div class="acao"><span class="ico tecla" title="use o teclado">&#9000;&#65039;</span>Apague tudo o que está escrito lá.</div><div class="dentro"><div class="atalhos"><div class="rotulo">atalho de teclado</div><div class="lin"><span class="teclas"><kbd>Ctrl</kbd><span class="mais">+</span><kbd>A</kbd></span><span class="oque">seleciona tudo o que está escrito no campo</span></div><div class="lin"><span class="teclas"><kbd>Delete</kbd></span><span class="oque">apaga o que está selecionado</span></div></div></div><div class="acao"><span class="ico mouse" title="use o mouse">&#128433;&#65039;</span>Clique no botão <b>Copiar</b> deste quadro:</div><div class="dentro"><div class="copiar"><div class="cab2"><span>nome do arquivo</span><button class="btn" data-copiar="c1">Copiar</button></div><pre id="c1">3ºbim-A.01+02=Numero Secreto</pre></div></div><div class="acao"><span class="ico tecla" title="use o teclado">&#9000;&#65039;</span>Cole no lugar do nome que você apagou e aperte a tecla <kbd>Enter</kbd>.</div></div>
+</div><div class="tela" id="t_3" data-aula="a01">
+<span class="cod">AULA 01 · S.04</span>
+<h2 class="th">Colar o código e assinar</h2>
+<div class="acoes"><div class="acao"><span class="ico mouse" title="use o mouse">&#128433;&#65039;</span>Clique dentro da <b>célula</b>, a caixa vazia. Ela fica com a borda azul quando está selecionada.</div><div class="acao"><span class="ico mouse" title="use o mouse">&#128433;&#65039;</span>Clique no botão <b>Copiar</b>. É o código completo desta aula:</div><div class="dentro"><div class="copiar"><div class="cab2"><span>código completo desta célula</span><button class="btn" data-copiar="c2">Copiar</button></div><pre id="c2"># 3ºbim-A.01+02=Numero Secreto (01/02) - [ESCREVA SEU NOME AQUI]
+
+numero_secreto = 9
+
+input(&quot;Adivinhe o número entre 1 e 10:&quot;)
+print(&quot;O número secreto é:&quot;, numero_secreto)</pre></div></div><div class="acao"><span class="ico tecla" title="use o teclado">&#9000;&#65039;</span>Cole dentro da célula.</div><div class="dentro"><div class="atalhos"><div class="rotulo">atalho de teclado</div><div class="lin"><span class="teclas"><kbd>Ctrl</kbd><span class="mais">+</span><kbd>V</kbd></span><span class="oque">cola dentro da célula</span></div><div class="lin"><span class="teclas"><kbd>Ctrl</kbd><span class="mais">+</span><kbd>Z</kbd></span><span class="oque">desfaz, se você colar no lugar errado</span></div><div class="nota">O Ctrl+Z é o seu botão de arrependimento.</div></div></div><div class="acao">Na primeira linha, ache o colchete que abre: <code class="inl">[</code></div><div class="acao"><span class="ico mouse" title="use o mouse">&#128433;&#65039;</span>Clique logo <b>antes</b> dele. O risquinho fica piscando ali.</div><div class="dentro"><div class="atalhos"><div class="rotulo">atalho de teclado</div><div class="lin"><span class="teclas"><kbd>Shift</kbd><span class="mais">+</span><kbd>End</kbd></span><span class="oque">seleciona do risquinho até o fim da linha, sem passar do ponto</span></div><div class="lin"><span class="teclas"><kbd>Delete</kbd></span><span class="oque">apaga o que ficou selecionado, colchetes e tudo</span></div><div class="nota">Assim você nunca apaga o (01/02) sem querer: ele fica ANTES do colchete.</div></div></div><div class="acao"><span class="ico tecla" title="use o teclado">&#9000;&#65039;</span>Digite <span class="meunome">o seu nome completo</span> no lugar.</div><div class="acao">Confira: a sua tela tem que ficar assim, com o seu nome no lugar do exemplo.</div><div class="dentro"><div class="espelho"><div class="rot">espelho · a sua célula no Colab deve ficar assim</div><div class="colab"><div class="play">&#9654;</div><pre># 3ºbim-A.01+02=Numero Secreto (01/02) - Ana Souza
+
+numero_secreto = 9
+
+input(&quot;Adivinhe o número entre 1 e 10:&quot;)
+print(&quot;O número secreto é:&quot;, numero_secreto)</pre></div></div></div></div><div class="aviso bom"><b>O que significa (01/01)</b>O primeiro número é qual é esta célula. O segundo é quantas células o projeto tem. (01/02) quer dizer: este projeto vai ter duas células, e esta é a primeira. A segunda você cria na Aula 02.</div>
+</div><div class="tela" id="t_4" data-aula="a01">
+<span class="cod">AULA 01 · S.05</span>
+<h2 class="th">Rodar e testar</h2>
+<div class="acoes"><div class="acao"><span class="ico mouse" title="use o mouse">&#128433;&#65039;</span>Clique no botão <span class="ui">&#9654;</span>, do lado esquerdo da célula.</div><div class="dentro"><div class="figura"><div class="rot">onde fica na tela do Colab</div><svg viewBox="0 0 700 230" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Notebook do Colab aberto com o elemento destacado">
+<rect x="0" y="0" width="700" height="230" rx="10" fill="#FFFFFF" stroke="#C8D2DB"/>
+<circle cx="30" cy="30" r="13" fill="#F9AB00"/>
+<text x="30" y="35" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11" font-weight="700" fill="#fff">CO</text>
+<text x="96" y="36" font-family="Segoe UI,sans-serif" font-size="17" font-weight="600" fill="#202124">Untitled0.ipynb</text>
+<rect x="520" y="14" width="150" height="32" rx="16" fill="#0B57D0"/>
+<text x="595" y="35" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="14" font-weight="600" fill="#fff">Compartilhar</text>
+<g font-family="Segoe UI,sans-serif" font-size="13.5" fill="#3C4753">
+<text x="34" y="70">Arquivo</text><text x="104" y="70">Editar</text><text x="160" y="70">Ver</text>
+<text x="200" y="70">Inserir</text><text x="254" y="70">Ambiente de execução</text>
+<text x="404" y="70">Ferramentas</text><text x="490" y="70">Ajuda</text></g>
+<line x1="16" y1="80" x2="684" y2="80" stroke="#E3E8ED"/>
+<rect x="30" y="88" width="92" height="24" rx="12" fill="#EEF1F4"/>
+<text x="76" y="105" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="13.5" font-weight="600" fill="#1A73E8">+ Código</text>
+<rect x="132" y="88" width="80" height="24" rx="12" fill="#EEF1F4"/>
+<text x="172" y="105" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="13.5" fill="#5F6B78">+ Texto</text>
+<text x="238" y="105" font-family="Segoe UI,sans-serif" font-size="13.5" fill="#5F6B78">&#9654; Executar tudo</text>
+<rect x="60" y="126" width="580" height="52" rx="8" fill="#fff" stroke="#4285F4" stroke-width="2.5"/>
+<rect x="60" y="126" width="46" height="52" rx="8" fill="#F1F3F4"/>
+<text x="83" y="158" text-anchor="middle" font-size="17" fill="#5F6368">&#9654;</text>
+<text x="122" y="157" font-family="Consolas,monospace" font-size="13" fill="#9AA4AE">a célula, onde o código vai</text>
+<rect x="62" y="128" width="42" height="42" rx="7" fill="none" stroke="#E8710A" stroke-width="3" stroke-dasharray="7 4"/><line x1="83.0" y1="181" x2="83.0" y2="172" stroke="#E8710A" stroke-width="2.5"/><text x="83.0" y="200" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="15" font-weight="700" fill="#B4530A">este é o play</text></svg></div></div><div class="dentro"><div class="atalhos"><div class="rotulo">atalho de teclado</div><div class="lin"><span class="teclas"><kbd>Ctrl</kbd><span class="mais">+</span><kbd>Enter</kbd></span><span class="oque">roda a célula sem precisar do mouse</span></div></div></div><div class="acao">Na primeira vez o Colab demora alguns segundos para conectar. É normal.</div><div class="acao">Aparece a pergunta e uma caixinha para digitar.</div><div class="acao"><span class="ico tecla" title="use o teclado">&#9000;&#65039;</span>Digite um número e aperte a tecla <kbd>Enter</kbd>.</div><div class="dentro"><div class="espelho"><div class="rot">espelho · o resultado embaixo da célula</div><div class="saida"><pre>Adivinhe o número entre 1 e 10: 5
+O número secreto é: 9</pre></div></div></div></div><div class="aviso bom"><b>Você já percebeu o problema?</b>O jogo entrega o número secreto na tela. Assim ninguém precisa adivinhar. Na Aula 02 o computador vai sortear sozinho.</div>
+</div><div class="tela" id="t_5" data-aula="a01">
+<span class="cod">AULA 01 · S.06</span>
+<h2 class="th">Conferir o meu código</h2>
+<div class="verif"><h3>Cole aqui o seu código</h3><p>Selecione tudo o que está na sua célula, copie e cole na caixa. O guia diz se está igual.</p><div class="atalhos"><div class="rotulo">atalho de teclado</div><div class="lin"><span class="teclas"><kbd>Ctrl</kbd><span class="mais">+</span><kbd>A</kbd></span><span class="oque">clique dentro da célula e selecione todo o código</span></div><div class="lin"><span class="teclas"><kbd>Ctrl</kbd><span class="mais">+</span><kbd>C</kbd></span><span class="oque">copia o que está selecionado</span></div><div class="lin"><span class="teclas"><kbd>Ctrl</kbd><span class="mais">+</span><kbd>V</kbd></span><span class="oque">cola aqui na caixa de baixo</span></div></div><textarea id="cola1" placeholder="cole aqui o código da sua célula" spellcheck="false"></textarea><div style="margin-top:10px;display:flex;gap:9px;flex-wrap:wrap"><button class="btn" data-verif="1">Conferir</button><button class="btn sec" data-limpa="1">Limpar</button></div><div class="diag" id="diag1"></div></div>
+</div><div class="tela" id="t_6" data-aula="a01">
+<span class="cod">AULA 01 · S.07</span>
+<h2 class="th">Entender o que você colou</h2>
+<p class="intro">Aqui não tem colagem. Só leia e vá olhando no seu código.</p><table class="linhas"><tbody><tr><td class="lcod"># 3ºbim... (01/01)</td><td class="lexp">Recado para as pessoas lerem. O computador pula esta linha. Ela diz qual é o projeto, quem é você e quantas células existem.</td></tr><tr><td class="lcod">(linha em branco)</td><td class="lexp">Serve só para separar e deixar mais fácil de ler.</td></tr><tr><td class="lcod">numero_secreto = 9</td><td class="lexp">Guarda o número 9 numa caixinha com nome. Isso se chama <b>variável</b>.</td></tr><tr><td class="lcod">input("Adivinhe...")</td><td class="lexp">Escreve a pergunta na tela e espera você digitar.</td></tr><tr><td class="lcod">print("O número...")</td><td class="lexp">Escreve na tela o texto entre aspas e o que está guardado na caixinha.</td></tr></tbody></table><div class="aviso bom"><b>Experimente agora</b>Ache a linha do numero_secreto, apague o 9, digite 4 e clique no ▶. O jogo passa a esconder o 4. É você mandando no código.</div>
+</div><div class="tela" id="t_7" data-aula="a01">
+<span class="cod">AULA 01 · SONDA</span>
+<h2 class="th">Antes de responder</h2>
+<div class="aviso bom"><b>Não vale nota, mas você precisa passar para avançar.</b>São 8 perguntas sobre o que <b>você fez</b> nesta aula, divididas em <b>duas telas</b>. Para seguir, você precisa acertar <b>6</b>, que é 70%.</div><div class="acoes"><div class="acao">A primeira tela tem só perguntas de escolher a resposta certa.</div><div class="acao">A segunda tem verdadeiro ou falso e montar a frase na ordem certa.</div><div class="acao">Você marca e a resposta aparece na hora, com a explicação.</div><div class="acao">Não dá para trocar depois de marcar, então pense antes.</div><div class="acao">Se não chegar aos 70%, abrem <b>outras</b> perguntas sobre a mesma aula. Não são as mesmas de novo.</div></div><div class="aviso"><b>Não vale voltar no Colab</b>Responda pelo que você lembra de ter feito. Se não lembrar, tente e leia a explicação.</div>
+</div><div class="tela" id="t_8" data-aula="a01">
+<span class="cod">AULA 01 · VER1</span>
+<h2 class="th">Escolha a resposta certa</h2>
+<p class="intro">Esta é a <b>primeira parte</b>. São 4 perguntas de escolher a resposta. Depois vem outra tela com mais 4. Somando as duas, você precisa acertar <b>6</b> de 8, que é 70%.</p><div class="qs" data-set="a01" data-rod="r1a" data-grupo="t1" data-n="4" data-ng="8" data-corte="6"><div class="q" data-tipo="mc"><div class="txt">1. O que você digitou quando o computador fez a pergunta na tela?</div><div class="quantas">marque 1 alternativa · só 1 está certa</div><button class="alt" data-q="0" data-a="0">Um número</button><button class="alt" data-q="0" data-a="1">O meu nome</button><button class="alt" data-q="0" data-a="2">A palavra "sim"</button><button class="alt" data-q="0" data-a="3">Nada</button><div class="expl" id="ea01_r1a_0">Ele pediu um número de 1 a 10. Quem faz a pergunta é o comando input.</div></div><div class="q" data-tipo="mc"><div class="txt">2. Depois que você digitou e apertou Enter, o que apareceu?</div><div class="quantas">marque 1 alternativa · só 1 está certa</div><button class="alt" data-q="1" data-a="0">Nada</button><button class="alt" data-q="1" data-a="1">Uma frase dizendo qual era o número secreto</button><button class="alt" data-q="1" data-a="2">Um erro vermelho</button><button class="alt" data-q="1" data-a="3">O jogo fechou</button><div class="expl" id="ea01_r1a_1">Apareceu "O número secreto é: 9". Quem escreve na tela é o comando print.</div></div><div class="q" data-tipo="mc"><div class="txt">3. Para que serve o botão ▶ que fica do lado da célula?</div><div class="quantas">marque 1 alternativa · só 1 está certa</div><button class="alt" data-q="2" data-a="0">Apagar o código</button><button class="alt" data-q="2" data-a="1">Salvar o arquivo</button><button class="alt" data-q="2" data-a="2">Fazer o código funcionar</button><button class="alt" data-q="2" data-a="3">Fechar o Colab</button><div class="expl" id="ea01_r1a_2">O ▶ é o play. Toda vez que você muda alguma coisa, precisa clicar nele de novo.</div></div><div class="q" data-tipo="mc"><div class="txt">4. O <code class="inl">numero_secreto</code> é uma caixinha com nome onde o computador guarda uma informação. Como isso se chama?</div><div class="quantas">marque 1 alternativa · só 1 está certa</div><button class="alt" data-q="3" data-a="0">Comentário</button><button class="alt" data-q="3" data-a="1">Variável</button><button class="alt" data-q="3" data-a="2">Célula</button><button class="alt" data-q="3" data-a="3">Notebook</button><div class="expl" id="ea01_r1a_3">Variável. É como uma caixinha com etiqueta.</div></div></div><div class="andamento" id="anda01_r1a">nenhuma respondida ainda · 0 de 4</div>
+</div><div class="tela" id="t_9" data-aula="a01">
+<span class="cod">AULA 01 · VER2</span>
+<h2 class="th">Verdadeiro ou falso, e montar a frase</h2>
+<p class="intro">Esta é a <b>segunda parte</b>. São 4 perguntas de verdadeiro ou falso e de montar a frase. Somando com a tela anterior, você precisa acertar <b>6</b> de 8.</p><div class="qs" data-set="a01" data-rod="r1b" data-grupo="t1" data-n="4" data-ng="8" data-corte="6"><div class="q" data-tipo="vf"><div class="txt">1. A caixa onde você colou o código se chama <b>célula</b>.</div><div class="quantas">verdadeiro ou falso · marque 1</div><button class="alt vf" data-q="0" data-a="0">✅ Verdadeiro</button><button class="alt vf" data-q="0" data-a="1">❌ Falso</button><div class="expl" id="ea01_r1b_0">Verdadeiro. E ela fica com a borda azul quando você clica dentro dela.</div></div><div class="q" data-tipo="vf"><div class="txt">2. A linha que começa com <code class="inl">#</code> aparece no resultado, embaixo da célula.</div><div class="quantas">verdadeiro ou falso · marque 1</div><button class="alt vf" data-q="1" data-a="0">✅ Verdadeiro</button><button class="alt vf" data-q="1" data-a="1">❌ Falso</button><div class="expl" id="ea01_r1b_1">Falso. O computador pula essa linha. Ela é um recado para as pessoas lerem.</div></div><div class="q" data-tipo="lac"><div class="txt">3. Monte a frase na ordem certa:</div><div class="quantas">clique nas partes na ordem certa</div><div class="montado" id="mt_a01_r1b_2" data-q="2"></div><div class="pecas"><button class="pc" data-q="2" data-p="responde">responde</button><button class="pc" data-q="2" data-p="pergunta">pergunta</button><button class="pc" data-q="2" data-p="e o print">e o print</button><button class="pc" data-q="2" data-p="O input">O input</button></div><button class="btn sec limpalac" data-q="2">recomeçar</button><div class="expl" id="ea01_r1b_2">O input recebe o que você digita. O print escreve na tela.</div></div><div class="q" data-tipo="lac"><div class="txt">4. Monte a ordem em que as coisas acontecem quando você clica no play:</div><div class="quantas">clique nas partes na ordem certa</div><div class="montado" id="mt_a01_r1b_3" data-q="3"></div><div class="pecas"><button class="pc" data-q="3" data-p="o computador guarda o número secreto">o computador guarda o número secreto</button><button class="pc" data-q="3" data-p="espera você digitar">espera você digitar</button><button class="pc" data-q="3" data-p="faz a pergunta na tela">faz a pergunta na tela</button><button class="pc" data-q="3" data-p="mostra a resposta">mostra a resposta</button></div><button class="btn sec limpalac" data-q="3">recomeçar</button><div class="expl" id="ea01_r1b_3">Ele lê o código de cima para baixo, uma linha por vez.</div></div></div><div class="andamento" id="anda01_r1b">nenhuma respondida ainda · 0 de 4</div>
+</div><div class="tela" id="t_10" data-aula="a01">
+<span class="cod">AULA 01 · VER3</span>
+<h2 class="th">Mais algumas perguntas</h2>
+<div class="aviso bom"><b>Você não chegou aos 70% ainda</b>Sem problema. Estas são perguntas <b>diferentes</b>, sobre a mesma aula. Leia com calma: a explicação de cada uma ajuda na próxima.</div><p class="intro">São 4 perguntas. Precisa acertar <b>3</b>.</p><div class="qs" data-set="a01" data-rod="r2" data-grupo="t2" data-n="4" data-ng="4" data-corte="3"><div class="q" data-tipo="mc"><div class="txt">1. Onde fica o botão <b>+ Novo notebook</b> na tela do Colab?</div><div class="quantas">marque 1 alternativa · só 1 está certa</div><button class="alt" data-q="0" data-a="0">No canto de baixo, à direita</button><button class="alt" data-q="0" data-a="1">No canto de cima, à esquerda, abaixo da barra de pesquisa</button><button class="alt" data-q="0" data-a="2">No meio da tela</button><button class="alt" data-q="0" data-a="3">Não existe esse botão</button><div class="expl" id="ea01_r2_0">É o botão azul, logo abaixo da caixa de pesquisar notebooks.</div></div><div class="q" data-tipo="mc"><div class="txt">2. O <code class="inl">(01/02)</code> no fim da primeira linha quer dizer o quê?</div><div class="quantas">marque 1 alternativa · só 1 está certa</div><button class="alt" data-q="1" data-a="0">Que é 1 de janeiro</button><button class="alt" data-q="1" data-a="1">Que esta é a célula 1 de um projeto com 2 células</button><button class="alt" data-q="1" data-a="2">Que você acertou 1 de 2</button><button class="alt" data-q="1" data-a="3">Que o código tem 2 linhas</button><div class="expl" id="ea01_r2_1">O primeiro número é a ordem da célula. O segundo é o total do projeto.</div></div><div class="q" data-tipo="vf"><div class="txt">3. Sem entrar na conta Google, o arquivo some quando você fecha a aba.</div><div class="quantas">verdadeiro ou falso · marque 1</div><button class="alt vf" data-q="2" data-a="0">✅ Verdadeiro</button><button class="alt vf" data-q="2" data-a="1">❌ Falso</button><div class="expl" id="ea01_r2_2">Verdadeiro. Por isso o primeiro passo da aula é conferir a bolinha da conta.</div></div><div class="q" data-tipo="lac"><div class="txt">4. Monte a ordem dos passos para criar o seu arquivo:</div><div class="quantas">clique nas partes na ordem certa</div><div class="montado" id="mt_a01_r2_3" data-q="3"></div><div class="pecas"><button class="pc" data-q="3" data-p="entrar na conta Google">entrar na conta Google</button><button class="pc" data-q="3" data-p="abrir o Colab">abrir o Colab</button><button class="pc" data-q="3" data-p="trocar o nome do arquivo">trocar o nome do arquivo</button><button class="pc" data-q="3" data-p="clicar em Novo notebook">clicar em Novo notebook</button></div><button class="btn sec limpalac" data-q="3">recomeçar</button><div class="expl" id="ea01_r2_3">Se pular o login, o arquivo some quando você fechar a aba.</div></div></div><div class="andamento" id="anda01_r2">nenhuma respondida ainda · 0 de 4</div>
+</div><div class="tela" id="t_11" data-aula="a01">
+<span class="cod">AULA 01 · VER4</span>
+<h2 class="th">Últimas perguntas</h2>
+<div class="aviso bom"><b>Última leva de perguntas</b>Se ainda não der, você segue mesmo assim. Mas vale conversar com o professor sobre esta aula.</div><p class="intro">São 4 perguntas. Precisa acertar <b>3</b>.</p><div class="qs" data-set="a01" data-rod="r3" data-grupo="t3" data-n="4" data-ng="4" data-corte="3"><div class="q" data-tipo="mc"><div class="txt">1. A primeira linha do seu código serve para quê?</div><div class="quantas">marque 1 alternativa · só 1 está certa</div><button class="alt" data-q="0" data-a="0">Fazer o jogo começar</button><button class="alt" data-q="0" data-a="1">Dizer qual é o projeto, quem é você e quantas células existem</button><button class="alt" data-q="0" data-a="2">Sortear o número</button><button class="alt" data-q="0" data-a="3">Apagar a tela</button><div class="expl" id="ea01_r3_0">É um comentário. O computador ignora, mas o professor lê.</div></div><div class="q" data-tipo="mc"><div class="txt">2. Você apagou o <code class="inl">9</code> e digitou <code class="inl">4</code>. O que o jogo passou a esconder?</div><div class="quantas">marque 1 alternativa · só 1 está certa</div><button class="alt" data-q="1" data-a="0">O número 9</button><button class="alt" data-q="1" data-a="1">O número 4</button><button class="alt" data-q="1" data-a="2">Os dois</button><button class="alt" data-q="1" data-a="3">Nenhum</button><div class="expl" id="ea01_r3_1">O que está guardado na caixinha é o que o print mostra.</div></div><div class="q" data-tipo="vf"><div class="txt">3. Se você mudar alguma coisa no código, precisa clicar no ▶ outra vez.</div><div class="quantas">verdadeiro ou falso · marque 1</div><button class="alt vf" data-q="2" data-a="0">✅ Verdadeiro</button><button class="alt vf" data-q="2" data-a="1">❌ Falso</button><div class="expl" id="ea01_r3_2">Verdadeiro. Sem clicar de novo, o computador continua com o código antigo.</div></div><div class="q" data-tipo="vf"><div class="txt">4. O nome do arquivo é diferente para cada estudante da turma.</div><div class="quantas">verdadeiro ou falso · marque 1</div><button class="alt vf" data-q="3" data-a="0">✅ Verdadeiro</button><button class="alt vf" data-q="3" data-a="1">❌ Falso</button><div class="expl" id="ea01_r3_3">Falso. O nome é igual para todos. Quem identifica você é a primeira linha do código.</div></div></div><div class="andamento" id="anda01_r3">nenhuma respondida ainda · 0 de 4</div>
+</div><div class="tela" id="t_12" data-aula="a01">
+<span class="cod">AULA 01 · PLACAR</span>
+<h2 class="th">O seu resultado</h2>
+<div class="placarbox" id="pb_a01"><div class="placarnum">–</div><div class="placarde">responda a sondagem para ver o seu resultado</div></div>
+</div><div class="tela" id="t_13" data-aula="a02">
+<span class="cod">AULA 02 · S.08</span>
+<h2 class="th">De onde você começa</h2>
+<div class="verif"><h3>Confira o código da aula passada</h3><p>Abra o Colab e o arquivo <code class="inl">3ºbim-A.01+02=Numero Secreto</code>. Cole aqui o que está na célula.</p><textarea id="cola0" placeholder="cole aqui o código da sua célula" spellcheck="false"></textarea><div style="margin-top:10px;display:flex;gap:9px;flex-wrap:wrap"><button class="btn" data-verif="0">Conferir</button><button class="btn sec" data-limpa="0">Limpar</button></div><div class="diag" id="diag0"></div></div><div class="aviso bom"><b>Você NÃO vai apagar nada hoje</b>O código da Aula 01 fica onde está. Hoje você cria uma <b>célula nova</b> embaixo dele. Assim dá para rodar o antigo quando quiser, comparar os dois e ver o que mudou.</div><div class="aviso bom"><b>Faltou a aula passada? Perdeu o arquivo?</b>Sem problema. A próxima tela cria a célula nova do zero. Você entra junto com a turma.</div>
+</div><div class="tela" id="t_14" data-aula="a02">
+<span class="cod">AULA 02 · S.09</span>
+<h2 class="th">Criar uma célula nova</h2>
+<div class="acoes"><div class="acao"><span class="ico mouse" title="use o mouse">&#128433;&#65039;</span>Passe o mouse <b>embaixo</b> da célula da Aula 01.</div><div class="acao">Aparecem dois botões pequenos. Clique em <span class="ui">+ Código</span>.</div><div class="dentro"><div class="figura"><div class="rot">onde fica na tela do Colab</div><svg viewBox="0 0 700 230" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Notebook do Colab aberto com o elemento destacado">
+<rect x="0" y="0" width="700" height="230" rx="10" fill="#FFFFFF" stroke="#C8D2DB"/>
+<circle cx="30" cy="30" r="13" fill="#F9AB00"/>
+<text x="30" y="35" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11" font-weight="700" fill="#fff">CO</text>
+<text x="96" y="36" font-family="Segoe UI,sans-serif" font-size="17" font-weight="600" fill="#202124">Untitled0.ipynb</text>
+<rect x="520" y="14" width="150" height="32" rx="16" fill="#0B57D0"/>
+<text x="595" y="35" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="14" font-weight="600" fill="#fff">Compartilhar</text>
+<g font-family="Segoe UI,sans-serif" font-size="13.5" fill="#3C4753">
+<text x="34" y="70">Arquivo</text><text x="104" y="70">Editar</text><text x="160" y="70">Ver</text>
+<text x="200" y="70">Inserir</text><text x="254" y="70">Ambiente de execução</text>
+<text x="404" y="70">Ferramentas</text><text x="490" y="70">Ajuda</text></g>
+<line x1="16" y1="80" x2="684" y2="80" stroke="#E3E8ED"/>
+<rect x="30" y="88" width="92" height="24" rx="12" fill="#EEF1F4"/>
+<text x="76" y="105" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="13.5" font-weight="600" fill="#1A73E8">+ Código</text>
+<rect x="132" y="88" width="80" height="24" rx="12" fill="#EEF1F4"/>
+<text x="172" y="105" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="13.5" fill="#5F6B78">+ Texto</text>
+<text x="238" y="105" font-family="Segoe UI,sans-serif" font-size="13.5" fill="#5F6B78">&#9654; Executar tudo</text>
+<rect x="60" y="126" width="580" height="52" rx="8" fill="#fff" stroke="#4285F4" stroke-width="2.5"/>
+<rect x="60" y="126" width="46" height="52" rx="8" fill="#F1F3F4"/>
+<text x="83" y="158" text-anchor="middle" font-size="17" fill="#5F6368">&#9654;</text>
+<text x="122" y="157" font-family="Consolas,monospace" font-size="13" fill="#9AA4AE">a célula, onde o código vai</text>
+<rect x="26" y="84" width="100" height="32" rx="7" fill="none" stroke="#E8710A" stroke-width="3" stroke-dasharray="7 4"/><line x1="76.0" y1="127" x2="76.0" y2="118" stroke="#E8710A" stroke-width="2.5"/><text x="76.0" y="146" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="15" font-weight="700" fill="#B4530A">clique aqui</text></svg></div></div><div class="acao">Uma célula nova e vazia abre embaixo, com a borda azul.</div><div class="dentro"><div class="espelho"><div class="rot">em cima · a célula da Aula 01, que continua lá</div><div class="colab"><div class="play">&#9654;</div><pre># 3ºbim-A.01+02=Numero Secreto (01/02) - Ana Souza
+
+numero_secreto = 9
+
+input(&quot;Adivinhe o número entre 1 e 10:&quot;)
+print(&quot;O número secreto é:&quot;, numero_secreto)</pre></div></div></div></div><div class="espelho"><div class="rot">embaixo · a célula nova, vazia, esperando você</div><div class="colab"><div class="play">&#9654;</div><pre> </pre></div></div><div class="aviso"><b>Não mexa na célula de cima</b>Ela é a Aula 01 e continua funcionando. Se quiser, clique no play dela a qualquer momento para rever.</div>
+</div><div class="tela" id="t_15" data-aula="a02">
+<span class="cod">AULA 02 · S.10</span>
+<h2 class="th">Colar o código da Aula 02</h2>
+<div class="acoes"><div class="acao"><span class="ico mouse" title="use o mouse">&#128433;&#65039;</span>Clique dentro da <b>célula nova</b>, a de baixo.</div><div class="acao"><span class="ico mouse" title="use o mouse">&#128433;&#65039;</span>Clique no botão <b>Copiar</b>. É o código completo desta aula:</div><div class="dentro"><div class="copiar"><div class="cab2"><span>código completo desta célula</span><button class="btn" data-copiar="c3">Copiar</button></div><pre id="c3"># 3ºbim-A.01+02=Numero Secreto (02/02) - [ESCREVA SEU NOME AQUI]
+
+import random
+numero_secreto = random.randint(1, 10)
+
+input(&quot;Adivinhe o número entre 1 e 10:&quot;)
+print(&quot;O número secreto é:&quot;, numero_secreto)</pre></div></div><div class="acao"><span class="ico tecla" title="use o teclado">&#9000;&#65039;</span>Cole dentro da célula nova.</div><div class="acao">Na primeira linha, clique logo antes do colchete <code class="inl">[</code>, aperte <kbd>Shift</kbd>+<kbd>End</kbd>, aperte <kbd>Delete</kbd> e digite <span class="meunome">o seu nome completo</span>.</div><div class="acao"><span class="ico mouse" title="use o mouse">&#128433;&#65039;</span>Repare no fim da primeira linha: agora está <code class="inl">(02/02)</code>.</div><div class="dentro"><div class="espelho"><div class="rot">espelho · a sua célula no Colab deve ficar assim</div><div class="colab"><div class="play">&#9654;</div><pre># 3ºbim-A.01+02=Numero Secreto (02/02) - Ana Souza
+
+import random
+numero_secreto = random.randint(1, 10)
+
+input(&quot;Adivinhe o número entre 1 e 10:&quot;)
+print(&quot;O número secreto é:&quot;, numero_secreto)</pre></div></div></div></div><div class="aviso bom"><b>O contador mudou de propósito</b>A célula de cima é a <code class="inl">(01/02)</code> e esta é a <code class="inl">(02/02)</code>. Quer dizer: este projeto tem duas células, e esta é a segunda.</div>
+</div><div class="tela" id="t_16" data-aula="a02">
+<span class="cod">AULA 02 · S.11</span>
+<h2 class="th">Rodar duas vezes</h2>
+<div class="acoes"><div class="acao"><span class="ico mouse" title="use o mouse">&#128433;&#65039;</span>Clique no <span class="ui">&#9654;</span>, digite um número e aperte a tecla <kbd>Enter</kbd>.</div><div class="acao">Anote o número secreto que apareceu.</div><div class="acao"><span class="ico mouse" title="use o mouse">&#128433;&#65039;</span>Clique no <span class="ui">&#9654;</span> de novo e responda de novo.</div><div class="acao">O número secreto tem que ser <b>diferente</b>.</div><div class="dentro"><div class="espelho"><div class="rot">espelho · o resultado embaixo da célula</div><div class="saida"><pre>Adivinhe o número entre 1 e 10: 5
+O número secreto é: 3
+
+(rodando de novo)
+Adivinhe o número entre 1 e 10: 5
+O número secreto é: 8</pre></div></div></div></div><div class="aviso bom"><b>Se o número repetir</b>Sorteio pode repetir. Rode mais uma vez e ele muda.</div>
+</div><div class="tela" id="t_17" data-aula="a02">
+<span class="cod">AULA 02 · S.12</span>
+<h2 class="th">Entender o que mudou</h2>
+<p class="intro">Aqui não tem colagem. Só leia e vá olhando no seu código.</p><table class="linhas"><tbody><tr><td class="lcod">import random</td><td class="lexp">Liga a ferramenta de sorteio. Sem esta linha o computador não sabe o que é random.</td></tr><tr><td class="lcod">random.randint(1, 10)</td><td class="lexp">Sorteia um número inteiro de 1 até 10. Trocou a linha que tinha o 9 fixo.</td></tr><tr><td class="lcod">as outras linhas</td><td class="lexp">Continuam iguais à Aula 01: o input pergunta e o print responde.</td></tr></tbody></table><div class="aviso bom"><b>Só número inteiro</b>O randint sorteia 1, 2, 3, 10. Nunca sorteia número com vírgula, como 1,5. Em Python, número inteiro se chama <b>int</b>.</div>
+</div><div class="tela" id="t_18" data-aula="a02">
+<span class="cod">AULA 02 · S.13</span>
+<h2 class="th">Mudar a dificuldade</h2>
+<div class="acoes"><div class="acao"><span class="ico mouse" title="use o mouse">&#128433;&#65039;</span>Ache a linha que tem <span class="ui">random.randint(1, 10)</span>.</div><div class="acao"><span class="ico tecla" title="use o teclado">&#9000;&#65039;</span>Apague o número <b>10</b> e digite <b>50</b>. A linha fica assim:</div><div class="dentro"><div class="espelho"><div class="rot">como a linha deve ficar</div><div class="colab"><div class="play">&#9654;</div><pre>numero_secreto = random.randint(1, 50)</pre></div></div></div><div class="acao"><span class="ico mouse" title="use o mouse">&#128433;&#65039;</span>Clique no <span class="ui">&#9654;</span> e teste. Agora sorteia de 1 até 50.</div><div class="acao">Se quiser mais difícil, troque 50 por 100.</div><div class="acao">Depois de testar, <b>volte para 10</b>.</div></div><div class="verif"><h3>Conferir antes de entregar</h3><p>Cole aqui o seu código para conferir.</p><textarea id="cola2" placeholder="cole aqui o código da sua célula" spellcheck="false"></textarea><div style="margin-top:10px;display:flex;gap:9px;flex-wrap:wrap"><button class="btn" data-verif="2">Conferir</button><button class="btn sec" data-limpa="2">Limpar</button></div><div class="diag" id="diag2"></div></div>
+</div><div class="tela" id="t_19" data-aula="a02">
+<span class="cod">AULA 02 · S.14</span>
+<h2 class="th">Entregar o arquivo 1</h2>
+<div class="acoes"><div class="acao"><span class="ico mouse" title="use o mouse">&#128433;&#65039;</span>Clique em <span class="ui">Compartilhar</span>, no canto de cima e à direita.</div><div class="dentro"><div class="figura"><div class="rot">onde fica na tela do Colab</div><svg viewBox="0 0 700 230" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Notebook do Colab aberto com o elemento destacado">
+<rect x="0" y="0" width="700" height="230" rx="10" fill="#FFFFFF" stroke="#C8D2DB"/>
+<circle cx="30" cy="30" r="13" fill="#F9AB00"/>
+<text x="30" y="35" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11" font-weight="700" fill="#fff">CO</text>
+<text x="96" y="36" font-family="Segoe UI,sans-serif" font-size="17" font-weight="600" fill="#202124">Untitled0.ipynb</text>
+<rect x="520" y="14" width="150" height="32" rx="16" fill="#0B57D0"/>
+<text x="595" y="35" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="14" font-weight="600" fill="#fff">Compartilhar</text>
+<g font-family="Segoe UI,sans-serif" font-size="13.5" fill="#3C4753">
+<text x="34" y="70">Arquivo</text><text x="104" y="70">Editar</text><text x="160" y="70">Ver</text>
+<text x="200" y="70">Inserir</text><text x="254" y="70">Ambiente de execução</text>
+<text x="404" y="70">Ferramentas</text><text x="490" y="70">Ajuda</text></g>
+<line x1="16" y1="80" x2="684" y2="80" stroke="#E3E8ED"/>
+<rect x="30" y="88" width="92" height="24" rx="12" fill="#EEF1F4"/>
+<text x="76" y="105" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="13.5" font-weight="600" fill="#1A73E8">+ Código</text>
+<rect x="132" y="88" width="80" height="24" rx="12" fill="#EEF1F4"/>
+<text x="172" y="105" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="13.5" fill="#5F6B78">+ Texto</text>
+<text x="238" y="105" font-family="Segoe UI,sans-serif" font-size="13.5" fill="#5F6B78">&#9654; Executar tudo</text>
+<rect x="60" y="126" width="580" height="52" rx="8" fill="#fff" stroke="#4285F4" stroke-width="2.5"/>
+<rect x="60" y="126" width="46" height="52" rx="8" fill="#F1F3F4"/>
+<text x="83" y="158" text-anchor="middle" font-size="17" fill="#5F6368">&#9654;</text>
+<text x="122" y="157" font-family="Consolas,monospace" font-size="13" fill="#9AA4AE">a célula, onde o código vai</text>
+<rect x="516" y="10" width="158" height="40" rx="7" fill="none" stroke="#E8710A" stroke-width="3" stroke-dasharray="7 4"/><line x1="684" y1="19.0" x2="678" y2="30.0" stroke="#E8710A" stroke-width="2.5"/><text x="684" y="38.0" text-anchor="start" font-family="Segoe UI,sans-serif" font-size="15" font-weight="700" fill="#B4530A">clique aqui</text></svg></div></div><div class="acao">Na parte <span class="ui">Acesso geral</span>, clique em <span class="ui">Restrito</span>.</div><div class="acao"><span class="ico mouse" title="use o mouse">&#128433;&#65039;</span>Escolha <span class="ui">Qualquer pessoa com o link</span>.</div><div class="acao">Do lado direito, deixe <span class="ui">Leitor</span>.</div><div class="acao"><span class="ico mouse" title="use o mouse">&#128433;&#65039;</span>Clique em <span class="ui">Copiar link</span> e depois em <span class="ui">Concluído</span>.</div><div class="acao"><span class="ico tecla" title="use o teclado">&#9000;&#65039;</span>Cole o link na plataforma, onde o professor indicar.</div></div><div class="aviso"><b>Se ficar em Restrito</b>O professor não consegue abrir o seu trabalho e a atividade fica sem nota.</div>
+</div><div class="tela" id="t_20" data-aula="a02">
+<span class="cod">AULA 02 · SONDA</span>
+<h2 class="th">Antes de responder</h2>
+<div class="aviso bom"><b>Não vale nota, mas você precisa passar para avançar.</b>São 8 perguntas sobre o que <b>você fez</b> nesta aula, divididas em <b>duas telas</b>. Para seguir, você precisa acertar <b>6</b>, que é 70%.</div><div class="acoes"><div class="acao">A primeira tela tem só perguntas de escolher a resposta certa.</div><div class="acao">A segunda tem verdadeiro ou falso e montar a frase na ordem certa.</div><div class="acao">Você marca e a resposta aparece na hora, com a explicação.</div><div class="acao">Não dá para trocar depois de marcar, então pense antes.</div><div class="acao">Se não chegar aos 70%, abrem <b>outras</b> perguntas sobre a mesma aula. Não são as mesmas de novo.</div></div><div class="aviso"><b>Não vale voltar no Colab</b>Responda pelo que você lembra de ter feito. Se não lembrar, tente e leia a explicação.</div>
+</div><div class="tela" id="t_21" data-aula="a02">
+<span class="cod">AULA 02 · VER1</span>
+<h2 class="th">Escolha a resposta certa</h2>
+<p class="intro">Esta é a <b>primeira parte</b>. São 4 perguntas de escolher a resposta. Depois vem outra tela com mais 4. Somando as duas, você precisa acertar <b>6</b> de 8, que é 70%.</p><div class="qs" data-set="a02" data-rod="r1a" data-grupo="t1" data-n="4" data-ng="8" data-corte="6"><div class="q" data-tipo="mc"><div class="txt">1. Você rodou o jogo duas vezes. O que aconteceu com o número secreto?</div><div class="quantas">marque 1 alternativa · só 1 está certa</div><button class="alt" data-q="0" data-a="0">Foi o mesmo nas duas</button><button class="alt" data-q="0" data-a="1">Foi diferente cada vez</button><button class="alt" data-q="0" data-a="2">Sumiu</button><button class="alt" data-q="0" data-a="3">Virou zero</button><div class="expl" id="ea02_r1a_0">Agora quem escolhe o número é o computador, e ele sorteia de novo a cada vez.</div></div><div class="q" data-tipo="mc"><div class="txt">2. Qual palavra nova apareceu no código desta aula?</div><div class="quantas">marque 1 alternativa · só 1 está certa</div><button class="alt" data-q="1" data-a="0">print</button><button class="alt" data-q="1" data-a="1">input</button><button class="alt" data-q="1" data-a="2">random</button><button class="alt" data-q="1" data-a="3">nome</button><div class="expl" id="ea02_r1a_1">random quer dizer "sorteado" em inglês. É a ferramenta de sorteio.</div></div><div class="q" data-tipo="mc"><div class="txt">3. Em <code class="inl">random.randint(1, 10)</code>, o que os números 1 e 10 significam?</div><div class="quantas">marque 1 alternativa · só 1 está certa</div><button class="alt" data-q="2" data-a="0">Quantas vezes o jogo roda</button><button class="alt" data-q="2" data-a="1">O menor e o maior número que podem sair</button><button class="alt" data-q="2" data-a="2">A dificuldade em porcentagem</button><button class="alt" data-q="2" data-a="3">Quantas linhas o código tem</button><div class="expl" id="ea02_r1a_2">São o começo e o fim do sorteio.</div></div><div class="q" data-tipo="mc"><div class="txt">4. Para o professor abrir o seu link, o que precisa estar escolhido?</div><div class="quantas">marque 1 alternativa · só 1 está certa</div><button class="alt" data-q="3" data-a="0">Restrito</button><button class="alt" data-q="3" data-a="1">Qualquer pessoa com o link</button><button class="alt" data-q="3" data-a="2">Somente eu</button><button class="alt" data-q="3" data-a="3">Não importa</button><div class="expl" id="ea02_r1a_3">Se ficar em Restrito, o professor não abre e a atividade fica sem nota.</div></div></div><div class="andamento" id="anda02_r1a">nenhuma respondida ainda · 0 de 4</div>
+</div><div class="tela" id="t_22" data-aula="a02">
+<span class="cod">AULA 02 · VER2</span>
+<h2 class="th">Verdadeiro ou falso, e montar a frase</h2>
+<p class="intro">Esta é a <b>segunda parte</b>. São 4 perguntas de verdadeiro ou falso e de montar a frase. Somando com a tela anterior, você precisa acertar <b>6</b> de 8.</p><div class="qs" data-set="a02" data-rod="r1b" data-grupo="t1" data-n="4" data-ng="8" data-corte="6"><div class="q" data-tipo="vf"><div class="txt">1. Nesta aula você apagou o código da Aula 01.</div><div class="quantas">verdadeiro ou falso · marque 1</div><button class="alt vf" data-q="0" data-a="0">✅ Verdadeiro</button><button class="alt vf" data-q="0" data-a="1">❌ Falso</button><div class="expl" id="ea02_r1b_0">Falso. Você criou uma célula nova embaixo. O código antigo continua lá e ainda roda.</div></div><div class="q" data-tipo="vf"><div class="txt">2. Sem a linha <code class="inl">import random</code>, o computador não sabe o que é random.</div><div class="quantas">verdadeiro ou falso · marque 1</div><button class="alt vf" data-q="1" data-a="0">✅ Verdadeiro</button><button class="alt vf" data-q="1" data-a="1">❌ Falso</button><div class="expl" id="ea02_r1b_1">Verdadeiro. O import liga a ferramenta. A mensagem de erro é NameError.</div></div><div class="q" data-tipo="lac"><div class="txt">3. Monte a frase na ordem certa:</div><div class="quantas">clique nas partes na ordem certa</div><div class="montado" id="mt_a02_r1b_2" data-q="2"></div><div class="pecas"><button class="pc" data-q="2" data-p="O import">O import</button><button class="pc" data-q="2" data-p="e o randint">e o randint</button><button class="pc" data-q="2" data-p="liga a ferramenta">liga a ferramenta</button><button class="pc" data-q="2" data-p="sorteia o número">sorteia o número</button></div><button class="btn sec limpalac" data-q="2">recomeçar</button><div class="expl" id="ea02_r1b_2">São duas coisas diferentes: uma liga, a outra usa.</div></div><div class="q" data-tipo="lac"><div class="txt">4. Monte a ordem dos passos para entregar o seu trabalho:</div><div class="quantas">clique nas partes na ordem certa</div><div class="montado" id="mt_a02_r1b_3" data-q="3"></div><div class="pecas"><button class="pc" data-q="3" data-p="trocar Restrito por Qualquer pessoa com o link">trocar Restrito por Qualquer pessoa com o link</button><button class="pc" data-q="3" data-p="colar na plataforma">colar na plataforma</button><button class="pc" data-q="3" data-p="clicar em Compartilhar">clicar em Compartilhar</button><button class="pc" data-q="3" data-p="deixar em Leitor">deixar em Leitor</button><button class="pc" data-q="3" data-p="copiar o link">copiar o link</button></div><button class="btn sec limpalac" data-q="3">recomeçar</button><div class="expl" id="ea02_r1b_3">Se pular a troca do Restrito, o professor não abre.</div></div></div><div class="andamento" id="anda02_r1b">nenhuma respondida ainda · 0 de 4</div>
+</div><div class="tela" id="t_23" data-aula="a02">
+<span class="cod">AULA 02 · VER3</span>
+<h2 class="th">Mais algumas perguntas</h2>
+<div class="aviso bom"><b>Você não chegou aos 70% ainda</b>Sem problema. Estas são perguntas <b>diferentes</b>, sobre a mesma aula. Leia com calma: a explicação de cada uma ajuda na próxima.</div><p class="intro">São 4 perguntas. Precisa acertar <b>3</b>.</p><div class="qs" data-set="a02" data-rod="r2" data-grupo="t2" data-n="4" data-ng="4" data-corte="3"><div class="q" data-tipo="mc"><div class="txt">1. Na Aula 01 o número secreto era sempre 9. Por quê?</div><div class="quantas">marque 1 alternativa · só 1 está certa</div><button class="alt" data-q="0" data-a="0">Porque 9 é o maior</button><button class="alt" data-q="0" data-a="1">Porque estava escrito 9 no código</button><button class="alt" data-q="0" data-a="2">Porque o computador gosta do 9</button><button class="alt" data-q="0" data-a="3">Era um erro</button><div class="expl" id="ea02_r2_0">Estava fixo: numero_secreto = 9. Agora está sorteado.</div></div><div class="q" data-tipo="mc"><div class="txt">2. O <code class="inl">randint</code> pode sortear o número 3,5?</div><div class="quantas">marque 1 alternativa · só 1 está certa</div><button class="alt" data-q="1" data-a="0">Pode</button><button class="alt" data-q="1" data-a="1">Não pode: ele só sorteia números inteiros</button><button class="alt" data-q="1" data-a="2">Só se você pedir</button><button class="alt" data-q="1" data-a="3">Só aos domingos</button><div class="expl" id="ea02_r2_1">Em Python, número inteiro se chama int. O randint só trabalha com eles.</div></div><div class="q" data-tipo="vf"><div class="txt">3. Se o mesmo número secreto sair duas vezes seguidas, o jogo está com defeito.</div><div class="quantas">verdadeiro ou falso · marque 1</div><button class="alt vf" data-q="2" data-a="0">✅ Verdadeiro</button><button class="alt vf" data-q="2" data-a="1">❌ Falso</button><div class="expl" id="ea02_r2_2">Falso. Sorteio pode repetir. É normal. Rode mais uma vez.</div></div><div class="q" data-tipo="lac"><div class="txt">4. Monte a ordem das linhas da sua célula nova, de cima para baixo:</div><div class="quantas">clique nas partes na ordem certa</div><div class="montado" id="mt_a02_r2_3" data-q="3"></div><div class="pecas"><button class="pc" data-q="3" data-p="a pergunta na tela">a pergunta na tela</button><button class="pc" data-q="3" data-p="o sorteio do número">o sorteio do número</button><button class="pc" data-q="3" data-p="a resposta na tela">a resposta na tela</button><button class="pc" data-q="3" data-p="a linha com o seu nome">a linha com o seu nome</button><button class="pc" data-q="3" data-p="import random">import random</button></div><button class="btn sec limpalac" data-q="3">recomeçar</button><div class="expl" id="ea02_r2_3">O import precisa vir antes do randint, senão o computador não sabe o que é random.</div></div></div><div class="andamento" id="anda02_r2">nenhuma respondida ainda · 0 de 4</div>
+</div><div class="tela" id="t_24" data-aula="a02">
+<span class="cod">AULA 02 · VER4</span>
+<h2 class="th">Últimas perguntas</h2>
+<div class="aviso bom"><b>Última leva de perguntas</b>Se ainda não der, você segue mesmo assim. Mas vale conversar com o professor sobre esta aula.</div><p class="intro">São 4 perguntas. Precisa acertar <b>3</b>.</p><div class="qs" data-set="a02" data-rod="r3" data-grupo="t3" data-n="4" data-ng="4" data-corte="3"><div class="q" data-tipo="mc"><div class="txt">1. Você trocou o 10 por 50 e testou. O que mudou no jogo?</div><div class="quantas">marque 1 alternativa · só 1 está certa</div><button class="alt" data-q="0" data-a="0">Ficou mais fácil</button><button class="alt" data-q="0" data-a="1">Passou a sortear números maiores, até 50</button><button class="alt" data-q="0" data-a="2">Ficou mais rápido</button><button class="alt" data-q="0" data-a="3">Nada mudou</button><div class="expl" id="ea02_r3_0">Os dois números dentro dos parênteses dizem onde o sorteio começa e onde termina.</div></div><div class="q" data-tipo="mc"><div class="txt">2. Quantas células o seu projeto Número Secreto tem agora?</div><div class="quantas">marque 1 alternativa · só 1 está certa</div><button class="alt" data-q="1" data-a="0">Uma</button><button class="alt" data-q="1" data-a="1">Duas</button><button class="alt" data-q="1" data-a="2">Três</button><button class="alt" data-q="1" data-a="3">Nenhuma</button><div class="expl" id="ea02_r3_1">Por isso os contadores são (01/02) e (02/02).</div></div><div class="q" data-tipo="vf"><div class="txt">3. A célula da Aula 01 ainda funciona se você clicar no play dela.</div><div class="quantas">verdadeiro ou falso · marque 1</div><button class="alt vf" data-q="2" data-a="0">✅ Verdadeiro</button><button class="alt vf" data-q="2" data-a="1">❌ Falso</button><div class="expl" id="ea02_r3_2">Verdadeiro. Ela ficou intacta. Dá para rodar as duas e comparar.</div></div><div class="q" data-tipo="vf"><div class="txt">4. O contador da célula nova é <code class="inl">(02/02)</code>.</div><div class="quantas">verdadeiro ou falso · marque 1</div><button class="alt vf" data-q="3" data-a="0">✅ Verdadeiro</button><button class="alt vf" data-q="3" data-a="1">❌ Falso</button><div class="expl" id="ea02_r3_3">Verdadeiro. É a segunda célula de um projeto que tem duas.</div></div></div><div class="andamento" id="anda02_r3">nenhuma respondida ainda · 0 de 4</div>
+</div><div class="tela" id="t_25" data-aula="a02">
+<span class="cod">AULA 02 · PLACAR</span>
+<h2 class="th">O seu resultado</h2>
+<div class="placarbox" id="pb_a02"><div class="placarnum">–</div><div class="placarde">responda a sondagem para ver o seu resultado</div></div>
+</div><div class="tela" id="t_26" data-aula="a03">
+<span class="cod">AULA 03 · S.15</span>
+<h2 class="th">Criar o arquivo do Quiz</h2>
+<div class="aviso bom"><b>Projeto novo, arquivo novo</b>O Quiz é um jogo diferente do Número Secreto. Ele tem o seu próprio arquivo. <b>Não apague</b> o arquivo do Número Secreto.</div><div class="acoes"><div class="acao"><span class="ico mouse" title="use o mouse">&#128433;&#65039;</span>Abra o Colab. Você já está logado desde a Aula 01.</div><div class="acao">No canto de cima, à esquerda, clique no menu <span class="ui">Arquivo</span>.</div><div class="dentro"><div class="figura"><div class="rot">onde fica na tela do Colab</div><svg viewBox="0 0 700 230" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Notebook do Colab aberto com o elemento destacado">
+<rect x="0" y="0" width="700" height="230" rx="10" fill="#FFFFFF" stroke="#C8D2DB"/>
+<circle cx="30" cy="30" r="13" fill="#F9AB00"/>
+<text x="30" y="35" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11" font-weight="700" fill="#fff">CO</text>
+<text x="96" y="36" font-family="Segoe UI,sans-serif" font-size="17" font-weight="600" fill="#202124">Untitled0.ipynb</text>
+<rect x="520" y="14" width="150" height="32" rx="16" fill="#0B57D0"/>
+<text x="595" y="35" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="14" font-weight="600" fill="#fff">Compartilhar</text>
+<g font-family="Segoe UI,sans-serif" font-size="13.5" fill="#3C4753">
+<text x="34" y="70">Arquivo</text><text x="104" y="70">Editar</text><text x="160" y="70">Ver</text>
+<text x="200" y="70">Inserir</text><text x="254" y="70">Ambiente de execução</text>
+<text x="404" y="70">Ferramentas</text><text x="490" y="70">Ajuda</text></g>
+<line x1="16" y1="80" x2="684" y2="80" stroke="#E3E8ED"/>
+<rect x="30" y="88" width="92" height="24" rx="12" fill="#EEF1F4"/>
+<text x="76" y="105" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="13.5" font-weight="600" fill="#1A73E8">+ Código</text>
+<rect x="132" y="88" width="80" height="24" rx="12" fill="#EEF1F4"/>
+<text x="172" y="105" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="13.5" fill="#5F6B78">+ Texto</text>
+<text x="238" y="105" font-family="Segoe UI,sans-serif" font-size="13.5" fill="#5F6B78">&#9654; Executar tudo</text>
+<rect x="60" y="126" width="580" height="52" rx="8" fill="#fff" stroke="#4285F4" stroke-width="2.5"/>
+<rect x="60" y="126" width="46" height="52" rx="8" fill="#F1F3F4"/>
+<text x="83" y="158" text-anchor="middle" font-size="17" fill="#5F6368">&#9654;</text>
+<text x="122" y="157" font-family="Consolas,monospace" font-size="13" fill="#9AA4AE">a célula, onde o código vai</text>
+<rect x="26" y="50" width="70" height="30" rx="7" fill="none" stroke="#E8710A" stroke-width="3" stroke-dasharray="7 4"/><line x1="61.0" y1="91" x2="61.0" y2="82" stroke="#E8710A" stroke-width="2.5"/><text x="61.0" y="110" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="15" font-weight="700" fill="#B4530A">este menu</text></svg></div></div><div class="acao"><span class="ico mouse" title="use o mouse">&#128433;&#65039;</span>Clique em <span class="ui">Novo notebook</span>. Abre uma aba nova, com uma célula vazia.</div><div class="acao"><span class="ico mouse" title="use o mouse">&#128433;&#65039;</span>Clique no nome <span class="ui">Untitled0.ipynb</span> e apague tudo.</div><div class="acao"><span class="ico mouse" title="use o mouse">&#128433;&#65039;</span>Clique no botão <b>Copiar</b> deste quadro:</div><div class="dentro"><div class="copiar"><div class="cab2"><span>nome do arquivo 2</span><button class="btn" data-copiar="c4">Copiar</button></div><pre id="c4">3ºbim-A.03+04=Quiz</pre></div></div><div class="acao"><span class="ico tecla" title="use o teclado">&#9000;&#65039;</span>Cole no lugar do nome que você apagou e aperte a tecla <kbd>Enter</kbd>.</div></div>
+</div><div class="tela" id="t_27" data-aula="a03">
+<span class="cod">AULA 03 · S.16</span>
+<h2 class="th">Colar o código do Quiz</h2>
+<div class="acoes"><div class="acao"><span class="ico mouse" title="use o mouse">&#128433;&#65039;</span>Clique dentro da <b>célula</b>, a caixa vazia. Ela fica com a borda azul quando está selecionada.</div><div class="acao"><span class="ico mouse" title="use o mouse">&#128433;&#65039;</span>Clique no botão <b>Copiar</b>. É o código completo desta aula:</div><div class="dentro"><div class="copiar"><div class="cab2"><span>código completo desta célula</span><button class="btn" data-copiar="c5">Copiar</button></div><pre id="c5"># 3ºbim-A.03+04=Quiz (01/02) - [ESCREVA SEU NOME AQUI]
+
+resposta1 = input(&quot;Quem é a protagonista de Guerreiras do K-Pop?&quot;)
+resposta2 = input(&quot;Quem é o autor do livro Diário de um Banana?&quot;)
+resposta3 = input(&quot;Qual é o nome da nova vocalista da banda LINKIN PARK?&quot;)
+
+if resposta1 == &quot;rumi&quot;:
+    if resposta2 == &quot;jeff kinney&quot;:
+        if resposta3 == &quot;emily&quot;:
+            print(&quot;PARABÉNS, GANHOU O QUIZ E 1 MILHÃO DE REAIS!!&quot;)</pre></div></div><div class="acao"><span class="ico tecla" title="use o teclado">&#9000;&#65039;</span>Cole dentro da célula.</div><div class="acao">Na primeira linha, clique logo antes do colchete <code class="inl">[</code>, aperte <kbd>Shift</kbd>+<kbd>End</kbd>, aperte <kbd>Delete</kbd> e digite <span class="meunome">o seu nome completo</span>.</div><div class="dentro"><div class="espelho"><div class="rot">espelho · a sua célula no Colab deve ficar assim</div><div class="colab"><div class="play">&#9654;</div><pre># 3ºbim-A.03+04=Quiz (01/02) - Ana Souza
+
+resposta1 = input(&quot;Quem é a protagonista de Guerreiras do K-Pop?&quot;)
+resposta2 = input(&quot;Quem é o autor do livro Diário de um Banana?&quot;)
+resposta3 = input(&quot;Qual é o nome da nova vocalista da banda LINKIN PARK?&quot;)
+
+if resposta1 == &quot;rumi&quot;:
+    if resposta2 == &quot;jeff kinney&quot;:
+        if resposta3 == &quot;emily&quot;:
+            print(&quot;PARABÉNS, GANHOU O QUIZ E 1 MILHÃO DE REAIS!!&quot;)</pre></div></div></div></div><div class="aviso bom"><b>Repare na escadinha</b>As quatro últimas linhas entram cada uma um pouco mais para a direita. Esse espaço não é enfeite: ele diz ao computador o que pertence a quê. Como você colou de uma vez, ela já veio pronta.</div>
+</div><div class="tela" id="t_28" data-aula="a03">
+<span class="cod">AULA 03 · S.17</span>
+<h2 class="th">Rodar e ganhar o quiz</h2>
+<div class="acoes"><div class="acao"><span class="ico mouse" title="use o mouse">&#128433;&#65039;</span>Clique no botão <span class="ui">&#9654;</span>.</div><div class="acao">Responda as 3 perguntas usando só <b>letra minúscula</b>: rumi, jeff kinney, emily.</div><div class="dentro"><div class="espelho"><div class="rot">espelho · o resultado embaixo da célula</div><div class="saida"><pre>Quem é a protagonista de Guerreiras do K-Pop? rumi
+Quem é o autor do livro Diário de um Banana? jeff kinney
+Qual é o nome da nova vocalista da banda LINKIN PARK? emily
+PARABÉNS, GANHOU O QUIZ E 1 MILHÃO DE REAIS!!</pre></div></div></div><div class="acao">Agora rode de novo e erre uma de propósito. Não aparece nada.</div></div><div class="aviso"><b>Duas coisas ainda estão erradas no seu jogo</b>Se você digitar RUMI com letra grande, ele conta como erro. E quando a pessoa erra, o jogo fica calado. Você conserta as duas na Aula 04.</div>
+</div><div class="tela" id="t_29" data-aula="a03">
+<span class="cod">AULA 03 · S.18</span>
+<h2 class="th">Conferir e entender</h2>
+<div class="verif"><h3>Cole aqui o seu código</h3><p>O guia diz se está igual ao esperado.</p><textarea id="cola3" placeholder="cole aqui o código da sua célula" spellcheck="false"></textarea><div style="margin-top:10px;display:flex;gap:9px;flex-wrap:wrap"><button class="btn" data-verif="3">Conferir</button><button class="btn sec" data-limpa="3">Limpar</button></div><div class="diag" id="diag3"></div></div><table class="linhas"><tbody><tr><td class="lcod">resposta1 = input("...")</td><td class="lexp">Faz a pergunta e guarda o que a pessoa digitou numa caixinha.</td></tr><tr><td class="lcod">if resposta1 == "rumi":</td><td class="lexp">Compara. Dois sinais de igual (==) querem dizer "é igual a?".</td></tr><tr><td class="lcod">(espaço na frente)</td><td class="lexp">O recuo diz ao computador o que só acontece se a comparação der certo.</td></tr><tr><td class="lcod">print("PARABÉNS...")</td><td class="lexp">Só roda se as três comparações derem certo.</td></tr></tbody></table>
+</div><div class="tela" id="t_30" data-aula="a03">
+<span class="cod">AULA 03 · S.19</span>
+<h2 class="th">Escolher o tema do seu quiz</h2>
+<div class="acoes"><div class="acao">Pense num assunto que você gosta: música, série, livro ou filme.</div><div class="acao">No caderno, escreva 3 perguntas sobre esse assunto.</div><div class="acao">Ao lado de cada uma, escreva a resposta certa, tudo em letra minúscula.</div><div class="acao">Guarde o caderno. Você vai usar na Aula 04.</div></div>
+</div><div class="tela" id="t_31" data-aula="a03">
+<span class="cod">AULA 03 · SONDA</span>
+<h2 class="th">Antes de responder</h2>
+<div class="aviso bom"><b>Não vale nota, mas você precisa passar para avançar.</b>São 8 perguntas sobre o que <b>você fez</b> nesta aula, divididas em <b>duas telas</b>. Para seguir, você precisa acertar <b>6</b>, que é 70%.</div><div class="acoes"><div class="acao">A primeira tela tem só perguntas de escolher a resposta certa.</div><div class="acao">A segunda tem verdadeiro ou falso e montar a frase na ordem certa.</div><div class="acao">Você marca e a resposta aparece na hora, com a explicação.</div><div class="acao">Não dá para trocar depois de marcar, então pense antes.</div><div class="acao">Se não chegar aos 70%, abrem <b>outras</b> perguntas sobre a mesma aula. Não são as mesmas de novo.</div></div><div class="aviso"><b>Não vale voltar no Colab</b>Responda pelo que você lembra de ter feito. Se não lembrar, tente e leia a explicação.</div>
+</div><div class="tela" id="t_32" data-aula="a03">
+<span class="cod">AULA 03 · VER1</span>
+<h2 class="th">Escolha a resposta certa</h2>
+<p class="intro">Esta é a <b>primeira parte</b>. São 4 perguntas de escolher a resposta. Depois vem outra tela com mais 4. Somando as duas, você precisa acertar <b>6</b> de 8, que é 70%.</p><div class="qs" data-set="a03" data-rod="r1a" data-grupo="t1" data-n="4" data-ng="8" data-corte="6"><div class="q" data-tipo="mc"><div class="txt">1. Quantas perguntas o seu quiz faz para quem joga?</div><div class="quantas">marque 1 alternativa · só 1 está certa</div><button class="alt" data-q="0" data-a="0">Uma</button><button class="alt" data-q="0" data-a="1">Duas</button><button class="alt" data-q="0" data-a="2">Três</button><button class="alt" data-q="0" data-a="3">Dez</button><div class="expl" id="ea03_r1a_0">São três: resposta1, resposta2 e resposta3.</div></div><div class="q" data-tipo="mc"><div class="txt">2. O que aconteceu quando você acertou as três perguntas?</div><div class="quantas">marque 1 alternativa · só 1 está certa</div><button class="alt" data-q="1" data-a="0">Apareceu a mensagem de parabéns</button><button class="alt" data-q="1" data-a="1">Nada</button><button class="alt" data-q="1" data-a="2">Deu erro vermelho</button><button class="alt" data-q="1" data-a="3">O jogo recomeçou</button><div class="expl" id="ea03_r1a_1">A mensagem só aparece quando as três estão certas.</div></div><div class="q" data-tipo="mc"><div class="txt">3. O que os <b>dois</b> sinais de igual (<code class="inl">==</code>) fazem?</div><div class="quantas">marque 1 alternativa · só 1 está certa</div><button class="alt" data-q="2" data-a="0">Guardam um valor</button><button class="alt" data-q="2" data-a="1">Comparam duas coisas para ver se são iguais</button><button class="alt" data-q="2" data-a="2">Somam textos</button><button class="alt" data-q="2" data-a="3">Apagam o valor</button><div class="expl" id="ea03_r1a_2">Um sinal só (=) guarda. Dois sinais (==) comparam.</div></div><div class="q" data-tipo="mc"><div class="txt">4. Você criou o arquivo do Quiz usando qual menu?</div><div class="quantas">marque 1 alternativa · só 1 está certa</div><button class="alt" data-q="3" data-a="0">Editar</button><button class="alt" data-q="3" data-a="1">Arquivo</button><button class="alt" data-q="3" data-a="2">Ver</button><button class="alt" data-q="3" data-a="3">Ajuda</button><div class="expl" id="ea03_r1a_3">Menu Arquivo, depois Novo notebook. Abre numa aba nova.</div></div></div><div class="andamento" id="anda03_r1a">nenhuma respondida ainda · 0 de 4</div>
+</div><div class="tela" id="t_33" data-aula="a03">
+<span class="cod">AULA 03 · VER2</span>
+<h2 class="th">Verdadeiro ou falso, e montar a frase</h2>
+<p class="intro">Esta é a <b>segunda parte</b>. São 4 perguntas de verdadeiro ou falso e de montar a frase. Somando com a tela anterior, você precisa acertar <b>6</b> de 8.</p><div class="qs" data-set="a03" data-rod="r1b" data-grupo="t1" data-n="4" data-ng="8" data-corte="6"><div class="q" data-tipo="vf"><div class="txt">1. Quando você errou uma pergunta de propósito, apareceu uma mensagem avisando.</div><div class="quantas">verdadeiro ou falso · marque 1</div><button class="alt vf" data-q="0" data-a="0">✅ Verdadeiro</button><button class="alt vf" data-q="0" data-a="1">❌ Falso</button><div class="expl" id="ea03_r1b_0">Falso. Nesta aula o jogo ainda fica calado quando alguém erra. Isso muda na Aula 04.</div></div><div class="q" data-tipo="vf"><div class="txt">2. O Quiz ficou no mesmo arquivo do Número Secreto.</div><div class="quantas">verdadeiro ou falso · marque 1</div><button class="alt vf" data-q="1" data-a="0">✅ Verdadeiro</button><button class="alt vf" data-q="1" data-a="1">❌ Falso</button><div class="expl" id="ea03_r1b_1">Falso. São dois arquivos diferentes no Colab.</div></div><div class="q" data-tipo="lac"><div class="txt">3. Monte a frase na ordem certa:</div><div class="quantas">clique nas partes na ordem certa</div><div class="montado" id="mt_a03_r1b_2" data-q="2"></div><div class="pecas"><button class="pc" data-q="2" data-p="só aparece se der certo">só aparece se der certo</button><button class="pc" data-q="2" data-p="O if">O if</button><button class="pc" data-q="2" data-p="e o print">e o print</button><button class="pc" data-q="2" data-p="compara">compara</button></div><button class="btn sec limpalac" data-q="2">recomeçar</button><div class="expl" id="ea03_r1b_2">É por isso que o print fica mais para dentro que o if.</div></div><div class="q" data-tipo="lac"><div class="txt">4. Monte a ordem da escadinha do quiz, de cima para baixo:</div><div class="quantas">clique nas partes na ordem certa</div><div class="montado" id="mt_a03_r1b_3" data-q="3"></div><div class="pecas"><button class="pc" data-q="3" data-p="o terceiro if">o terceiro if</button><button class="pc" data-q="3" data-p="o print de parabéns">o print de parabéns</button><button class="pc" data-q="3" data-p="as três perguntas">as três perguntas</button><button class="pc" data-q="3" data-p="o primeiro if">o primeiro if</button><button class="pc" data-q="3" data-p="o segundo if">o segundo if</button></div><button class="btn sec limpalac" data-q="3">recomeçar</button><div class="expl" id="ea03_r1b_3">Cada if entra mais para a direita. O print é o que está mais para dentro.</div></div></div><div class="andamento" id="anda03_r1b">nenhuma respondida ainda · 0 de 4</div>
+</div><div class="tela" id="t_34" data-aula="a03">
+<span class="cod">AULA 03 · VER3</span>
+<h2 class="th">Mais algumas perguntas</h2>
+<div class="aviso bom"><b>Você não chegou aos 70% ainda</b>Sem problema. Estas são perguntas <b>diferentes</b>, sobre a mesma aula. Leia com calma: a explicação de cada uma ajuda na próxima.</div><p class="intro">São 4 perguntas. Precisa acertar <b>3</b>.</p><div class="qs" data-set="a03" data-rod="r2" data-grupo="t2" data-n="4" data-ng="4" data-corte="3"><div class="q" data-tipo="mc"><div class="txt">1. Se você digitasse RUMI com letra grande, o que ia acontecer nesta aula?</div><div class="quantas">marque 1 alternativa · só 1 está certa</div><button class="alt" data-q="0" data-a="0">Ia funcionar igual</button><button class="alt" data-q="0" data-a="1">O jogo ia contar como erro</button><button class="alt" data-q="0" data-a="2">O Colab ia travar</button><button class="alt" data-q="0" data-a="3">Ia aparecer um aviso</button><div class="expl" id="ea03_r2_0">Para o computador, RUMI e rumi são coisas diferentes. Isso muda na Aula 04.</div></div><div class="q" data-tipo="mc"><div class="txt">2. Se você apagar os dois-pontos do fim da linha do <code class="inl">if</code>, o que acontece?</div><div class="quantas">marque 1 alternativa · só 1 está certa</div><button class="alt" data-q="1" data-a="0">Nada, funciona igual</button><button class="alt" data-q="1" data-a="1">O jogo fica mais rápido</button><button class="alt" data-q="1" data-a="2">O Colab mostra erro vermelho</button><button class="alt" data-q="1" data-a="3">O if vira um else</button><div class="expl" id="ea03_r2_1">Os dois-pontos avisam que vem um bloco embaixo.</div></div><div class="q" data-tipo="vf"><div class="txt">3. O espaço na frente da linha do <code class="inl">print</code> é só enfeite.</div><div class="quantas">verdadeiro ou falso · marque 1</div><button class="alt vf" data-q="2" data-a="0">✅ Verdadeiro</button><button class="alt vf" data-q="2" data-a="1">❌ Falso</button><div class="expl" id="ea03_r2_2">Falso. O recuo diz ao computador o que só acontece se a comparação der certo.</div></div><div class="q" data-tipo="vf"><div class="txt">4. No código, a resposta certa foi escrita em letra minúscula de propósito.</div><div class="quantas">verdadeiro ou falso · marque 1</div><button class="alt vf" data-q="3" data-a="0">✅ Verdadeiro</button><button class="alt vf" data-q="3" data-a="1">❌ Falso</button><div class="expl" id="ea03_r2_3">Verdadeiro. Por enquanto o jogo só aceita minúscula.</div></div></div><div class="andamento" id="anda03_r2">nenhuma respondida ainda · 0 de 4</div>
+</div><div class="tela" id="t_35" data-aula="a03">
+<span class="cod">AULA 03 · VER4</span>
+<h2 class="th">Últimas perguntas</h2>
+<div class="aviso bom"><b>Última leva de perguntas</b>Se ainda não der, você segue mesmo assim. Mas vale conversar com o professor sobre esta aula.</div><p class="intro">São 4 perguntas. Precisa acertar <b>3</b>.</p><div class="qs" data-set="a03" data-rod="r3" data-grupo="t3" data-n="4" data-ng="4" data-corte="3"><div class="q" data-tipo="mc"><div class="txt">1. O contador do Quiz recomeçou em <code class="inl">(01/02)</code>. Por quê?</div><div class="quantas">marque 1 alternativa · só 1 está certa</div><button class="alt" data-q="0" data-a="0">Porque é um projeto novo, com contagem própria</button><button class="alt" data-q="0" data-a="1">Porque o Número Secreto acabou</button><button class="alt" data-q="0" data-a="2">Porque foi erro de digitação</button><button class="alt" data-q="0" data-a="3">Porque o professor mandou</button><div class="expl" id="ea03_r3_0">Cada projeto conta as próprias células. Um não continua o outro.</div></div><div class="q" data-tipo="mc"><div class="txt">2. Onde ficam as suas três perguntas do caderno?</div><div class="quantas">marque 1 alternativa · só 1 está certa</div><button class="alt" data-q="1" data-a="0">Dentro das aspas do input</button><button class="alt" data-q="1" data-a="1">Fora dos parênteses</button><button class="alt" data-q="1" data-a="2">No nome do arquivo</button><button class="alt" data-q="1" data-a="3">No primeiro comentário</button><div class="expl" id="ea03_r3_1">É só o texto entre aspas que você troca. O resto da linha fica igual.</div></div><div class="q" data-tipo="vf"><div class="txt">3. A escadinha veio pronta porque você colou o bloco inteiro de uma vez.</div><div class="quantas">verdadeiro ou falso · marque 1</div><button class="alt vf" data-q="2" data-a="0">✅ Verdadeiro</button><button class="alt vf" data-q="2" data-a="1">❌ Falso</button><div class="expl" id="ea03_r3_2">Verdadeiro. Se colasse linha por linha, o editor mudaria os espaços sozinho.</div></div><div class="q" data-tipo="vf"><div class="txt">4. Você precisa apagar o arquivo do Número Secreto para o Quiz funcionar.</div><div class="quantas">verdadeiro ou falso · marque 1</div><button class="alt vf" data-q="3" data-a="0">✅ Verdadeiro</button><button class="alt vf" data-q="3" data-a="1">❌ Falso</button><div class="expl" id="ea03_r3_3">Falso. Os dois convivem. No fim você entrega os dois links.</div></div></div><div class="andamento" id="anda03_r3">nenhuma respondida ainda · 0 de 4</div>
+</div><div class="tela" id="t_36" data-aula="a03">
+<span class="cod">AULA 03 · PLACAR</span>
+<h2 class="th">O seu resultado</h2>
+<div class="placarbox" id="pb_a03"><div class="placarnum">–</div><div class="placarde">responda a sondagem para ver o seu resultado</div></div>
+</div><div class="tela" id="t_37" data-aula="a04">
+<span class="cod">AULA 04 · S.20</span>
+<h2 class="th">De onde você começa</h2>
+<div class="verif"><h3>Confira o código da aula passada</h3><p>Abra o arquivo <code class="inl">3ºbim-A.03+04=Quiz</code> e cole aqui o que está na célula.</p><textarea id="cola4" placeholder="cole aqui o código da sua célula" spellcheck="false"></textarea><div style="margin-top:10px;display:flex;gap:9px;flex-wrap:wrap"><button class="btn" data-verif="4">Conferir</button><button class="btn sec" data-limpa="4">Limpar</button></div><div class="diag" id="diag4"></div></div><div class="aviso bom"><b>Você NÃO vai apagar nada hoje</b>O Quiz da Aula 03 fica onde está. Hoje você cria uma <b>célula nova</b> embaixo dele. Assim dá para rodar os dois e comparar o que melhorou.</div><div class="aviso bom"><b>Faltou a aula passada?</b>Sem problema. A próxima tela cria a célula nova do zero.</div>
+</div><div class="tela" id="t_38" data-aula="a04">
+<span class="cod">AULA 04 · S.21</span>
+<h2 class="th">Criar uma célula nova</h2>
+<div class="acoes"><div class="acao">Antes de tudo: rode o Quiz da Aula 03 e digite <span class="ui">RUMI</span> com letra grande.</div><div class="acao">Ele não dá parabéns, mesmo você tendo acertado. Guarde essa.</div><div class="acao">Agora passe o mouse <b>embaixo</b> da célula da Aula 03.</div><div class="acao"><span class="ico mouse" title="use o mouse">&#128433;&#65039;</span>Clique em <span class="ui">+ Código</span>. Abre uma célula nova e vazia embaixo.</div><div class="dentro"><div class="figura"><div class="rot">onde fica na tela do Colab</div><svg viewBox="0 0 700 230" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Notebook do Colab aberto com o elemento destacado">
+<rect x="0" y="0" width="700" height="230" rx="10" fill="#FFFFFF" stroke="#C8D2DB"/>
+<circle cx="30" cy="30" r="13" fill="#F9AB00"/>
+<text x="30" y="35" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11" font-weight="700" fill="#fff">CO</text>
+<text x="96" y="36" font-family="Segoe UI,sans-serif" font-size="17" font-weight="600" fill="#202124">Untitled0.ipynb</text>
+<rect x="520" y="14" width="150" height="32" rx="16" fill="#0B57D0"/>
+<text x="595" y="35" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="14" font-weight="600" fill="#fff">Compartilhar</text>
+<g font-family="Segoe UI,sans-serif" font-size="13.5" fill="#3C4753">
+<text x="34" y="70">Arquivo</text><text x="104" y="70">Editar</text><text x="160" y="70">Ver</text>
+<text x="200" y="70">Inserir</text><text x="254" y="70">Ambiente de execução</text>
+<text x="404" y="70">Ferramentas</text><text x="490" y="70">Ajuda</text></g>
+<line x1="16" y1="80" x2="684" y2="80" stroke="#E3E8ED"/>
+<rect x="30" y="88" width="92" height="24" rx="12" fill="#EEF1F4"/>
+<text x="76" y="105" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="13.5" font-weight="600" fill="#1A73E8">+ Código</text>
+<rect x="132" y="88" width="80" height="24" rx="12" fill="#EEF1F4"/>
+<text x="172" y="105" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="13.5" fill="#5F6B78">+ Texto</text>
+<text x="238" y="105" font-family="Segoe UI,sans-serif" font-size="13.5" fill="#5F6B78">&#9654; Executar tudo</text>
+<rect x="60" y="126" width="580" height="52" rx="8" fill="#fff" stroke="#4285F4" stroke-width="2.5"/>
+<rect x="60" y="126" width="46" height="52" rx="8" fill="#F1F3F4"/>
+<text x="83" y="158" text-anchor="middle" font-size="17" fill="#5F6368">&#9654;</text>
+<text x="122" y="157" font-family="Consolas,monospace" font-size="13" fill="#9AA4AE">a célula, onde o código vai</text>
+<rect x="26" y="84" width="100" height="32" rx="7" fill="none" stroke="#E8710A" stroke-width="3" stroke-dasharray="7 4"/><line x1="76.0" y1="127" x2="76.0" y2="118" stroke="#E8710A" stroke-width="2.5"/><text x="76.0" y="146" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="15" font-weight="700" fill="#B4530A">clique aqui</text></svg></div></div><div class="dentro"><div class="espelho"><div class="rot">a célula nova, vazia, esperando você</div><div class="colab"><div class="play">&#9654;</div><pre> </pre></div></div></div></div><div class="aviso"><b>Não mexa na célula de cima</b>Ela é o Quiz da Aula 03 e continua funcionando. No fim da aula dá para rodar os dois e comparar.</div>
+</div><div class="tela" id="t_39" data-aula="a04">
+<span class="cod">AULA 04 · S.22</span>
+<h2 class="th">Colar o código da Aula 04</h2>
+<div class="acoes"><div class="acao"><span class="ico mouse" title="use o mouse">&#128433;&#65039;</span>Clique dentro da <b>célula nova</b>, a de baixo.</div><div class="acao"><span class="ico mouse" title="use o mouse">&#128433;&#65039;</span>Clique no botão <b>Copiar</b>. É o código completo desta aula:</div><div class="dentro"><div class="copiar"><div class="cab2"><span>código completo desta célula</span><button class="btn" data-copiar="c6">Copiar</button></div><pre id="c6"># 3ºbim-A.03+04=Quiz (02/02) - [ESCREVA SEU NOME AQUI]
+
+resposta1 = input(&quot;Quem é a protagonista de Guerreiras do K-Pop?&quot;).lower()
+resposta2 = input(&quot;Quem é o autor do livro Diário de um Banana?&quot;).lower()
+resposta3 = input(&quot;Qual é o nome da nova vocalista da banda LINKIN PARK?&quot;).lower()
+
+if resposta1 == &quot;rumi&quot; and resposta2 == &quot;jeff kinney&quot; and resposta3 == &quot;emily&quot;:
+    print(&quot;PARABÉNS, GANHOU O QUIZ E 1 MILHÃO DE REAIS!!&quot;)
+else:
+    print(&quot;VOCÊ ERROU UMA OU MAIS PERGUNTAS, TENTE NOVAMENTE!&quot;)</pre></div></div><div class="acao"><span class="ico tecla" title="use o teclado">&#9000;&#65039;</span>Cole dentro da célula nova.</div><div class="acao">Na primeira linha, clique logo antes do colchete <code class="inl">[</code>, aperte <kbd>Shift</kbd>+<kbd>End</kbd>, aperte <kbd>Delete</kbd> e digite <span class="meunome">o seu nome completo</span>.</div><div class="acao"><span class="ico mouse" title="use o mouse">&#128433;&#65039;</span>Repare no fim da primeira linha: agora está <code class="inl">(02/02)</code>.</div><div class="dentro"><div class="espelho"><div class="rot">espelho · a sua célula no Colab deve ficar assim</div><div class="colab"><div class="play">&#9654;</div><pre># 3ºbim-A.03+04=Quiz (02/02) - Ana Souza
+
+resposta1 = input(&quot;Quem é a protagonista de Guerreiras do K-Pop?&quot;).lower()
+resposta2 = input(&quot;Quem é o autor do livro Diário de um Banana?&quot;).lower()
+resposta3 = input(&quot;Qual é o nome da nova vocalista da banda LINKIN PARK?&quot;).lower()
+
+if resposta1 == &quot;rumi&quot; and resposta2 == &quot;jeff kinney&quot; and resposta3 == &quot;emily&quot;:
+    print(&quot;PARABÉNS, GANHOU O QUIZ E 1 MILHÃO DE REAIS!!&quot;)
+else:
+    print(&quot;VOCÊ ERROU UMA OU MAIS PERGUNTAS, TENTE NOVAMENTE!&quot;)</pre></div></div></div></div>
+</div><div class="tela" id="t_40" data-aula="a04">
+<span class="cod">AULA 04 · S.23</span>
+<h2 class="th">Testar as duas mensagens</h2>
+<div class="acoes"><div class="acao"><span class="ico mouse" title="use o mouse">&#128433;&#65039;</span>Clique no botão <span class="ui">&#9654;</span>.</div><div class="acao">Teste 1: responda tudo certo, misturando letra grande e pequena.</div><div class="dentro"><div class="espelho"><div class="rot">teste 1 · acertando tudo</div><div class="saida"><pre>Quem é a protagonista de Guerreiras do K-Pop? RUMI
+Quem é o autor do livro Diário de um Banana? Jeff Kinney
+Qual é o nome da nova vocalista da banda LINKIN PARK? emily
+PARABÉNS, GANHOU O QUIZ E 1 MILHÃO DE REAIS!!</pre></div></div></div><div class="acao">Teste 2: rode de novo e erre uma resposta de propósito.</div><div class="dentro"><div class="espelho"><div class="rot">teste 2 · errando uma</div><div class="saida"><pre>Quem é a protagonista de Guerreiras do K-Pop? rumi
+Quem é o autor do livro Diário de um Banana? banana
+Qual é o nome da nova vocalista da banda LINKIN PARK? emily
+VOCÊ ERROU UMA OU MAIS PERGUNTAS, TENTE NOVAMENTE!</pre></div></div></div><div class="acao">Se as duas mensagens apareceram, o seu jogo está pronto.</div></div>
+</div><div class="tela" id="t_41" data-aula="a04">
+<span class="cod">AULA 04 · S.24</span>
+<h2 class="th">Entender o que mudou</h2>
+<p class="intro">Aqui não tem colagem. Só leia e vá olhando no seu código.</p><table class="linhas"><tbody><tr><td class="lcod">.lower()</td><td class="lexp">Passa o que a pessoa digitou para letra minúscula antes de comparar. Por isso RUMI passou a valer. Fica <b>depois</b> do parêntese fechado.</td></tr><tr><td class="lcod">and</td><td class="lexp">Quer dizer "e". As três respostas precisam estar certas ao mesmo tempo.</td></tr><tr><td class="lcod">else:</td><td class="lexp">O caminho do "não deu certo". Começa colado na margem, igual ao if.</td></tr></tbody></table><div class="verif"><h3>Conferir antes de entregar</h3><p>Cole aqui o seu código para conferir.</p><textarea id="cola5" placeholder="cole aqui o código da sua célula" spellcheck="false"></textarea><div style="margin-top:10px;display:flex;gap:9px;flex-wrap:wrap"><button class="btn" data-verif="5">Conferir</button><button class="btn sec" data-limpa="5">Limpar</button></div><div class="diag" id="diag5"></div></div>
+</div><div class="tela" id="t_42" data-aula="a04">
+<span class="cod">AULA 04 · S.25</span>
+<h2 class="th">Trocar pelas suas perguntas e renomear</h2>
+<div class="acoes"><div class="acao"><span class="ico mouse" title="use o mouse">&#128433;&#65039;</span>Pegue o caderno da Aula 03.</div><div class="acao"><span class="ico tecla" title="use o teclado">&#9000;&#65039;</span>Troque só o texto que está <b>dentro das aspas</b> das três perguntas.</div><div class="acao">Na linha do <code class="inl">if</code>, troque rumi, jeff kinney e emily pelas suas respostas certas, sempre em minúscula.</div><div class="acao"><span class="ico mouse" title="use o mouse">&#128433;&#65039;</span>Clique no <span class="ui">&#9654;</span> e teste antes de seguir.</div><div class="acao">Agora o nome do arquivo precisa dizer qual é o seu assunto. Clique no nome e <b>acrescente</b> no fim:</div><div class="dentro"><div class="espelho"><div class="rot">como renomear</div><div class="colab"><div class="play">&#9654;</div><pre>antes:   3ºbim-A.03+04=Quiz
+depois:  3ºbim-A.03+04=Quiz de Música
+
+outros:  Quiz de Séries · Quiz de Livros · Quiz de Filmes</pre></div></div></div><div class="acao"><span class="ico tecla" title="use o teclado">&#9000;&#65039;</span>Acrescente o mesmo assunto na primeira linha do código.</div><div class="dentro"><div class="espelho"><div class="rot">espelho · a sua célula no Colab deve ficar assim</div><div class="colab"><div class="play">&#9654;</div><pre># 3ºbim-A.03+04=Quiz de Música - Ana Souza (01/01)</pre></div></div></div></div><div class="aviso bom"><b>Se você não trocou as perguntas</b>Deixe o nome como está: 3ºbim-A.03+04=Quiz.</div>
+</div><div class="tela" id="t_43" data-aula="a04">
+<span class="cod">AULA 04 · S.26</span>
+<h2 class="th">Entregar os dois links</h2>
+<div class="acoes"><div class="acao"><span class="ico mouse" title="use o mouse">&#128433;&#65039;</span>Abra o arquivo e clique em <span class="ui">Compartilhar</span>.</div><div class="dentro"><div class="figura"><div class="rot">onde fica na tela do Colab</div><svg viewBox="0 0 700 230" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Notebook do Colab aberto com o elemento destacado">
+<rect x="0" y="0" width="700" height="230" rx="10" fill="#FFFFFF" stroke="#C8D2DB"/>
+<circle cx="30" cy="30" r="13" fill="#F9AB00"/>
+<text x="30" y="35" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11" font-weight="700" fill="#fff">CO</text>
+<text x="96" y="36" font-family="Segoe UI,sans-serif" font-size="17" font-weight="600" fill="#202124">Untitled0.ipynb</text>
+<rect x="520" y="14" width="150" height="32" rx="16" fill="#0B57D0"/>
+<text x="595" y="35" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="14" font-weight="600" fill="#fff">Compartilhar</text>
+<g font-family="Segoe UI,sans-serif" font-size="13.5" fill="#3C4753">
+<text x="34" y="70">Arquivo</text><text x="104" y="70">Editar</text><text x="160" y="70">Ver</text>
+<text x="200" y="70">Inserir</text><text x="254" y="70">Ambiente de execução</text>
+<text x="404" y="70">Ferramentas</text><text x="490" y="70">Ajuda</text></g>
+<line x1="16" y1="80" x2="684" y2="80" stroke="#E3E8ED"/>
+<rect x="30" y="88" width="92" height="24" rx="12" fill="#EEF1F4"/>
+<text x="76" y="105" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="13.5" font-weight="600" fill="#1A73E8">+ Código</text>
+<rect x="132" y="88" width="80" height="24" rx="12" fill="#EEF1F4"/>
+<text x="172" y="105" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="13.5" fill="#5F6B78">+ Texto</text>
+<text x="238" y="105" font-family="Segoe UI,sans-serif" font-size="13.5" fill="#5F6B78">&#9654; Executar tudo</text>
+<rect x="60" y="126" width="580" height="52" rx="8" fill="#fff" stroke="#4285F4" stroke-width="2.5"/>
+<rect x="60" y="126" width="46" height="52" rx="8" fill="#F1F3F4"/>
+<text x="83" y="158" text-anchor="middle" font-size="17" fill="#5F6368">&#9654;</text>
+<text x="122" y="157" font-family="Consolas,monospace" font-size="13" fill="#9AA4AE">a célula, onde o código vai</text>
+<rect x="516" y="10" width="158" height="40" rx="7" fill="none" stroke="#E8710A" stroke-width="3" stroke-dasharray="7 4"/><line x1="684" y1="19.0" x2="678" y2="30.0" stroke="#E8710A" stroke-width="2.5"/><text x="684" y="38.0" text-anchor="start" font-family="Segoe UI,sans-serif" font-size="15" font-weight="700" fill="#B4530A">clique aqui</text></svg></div></div><div class="acao">Na parte <span class="ui">Acesso geral</span>, clique em <span class="ui">Restrito</span>.</div><div class="acao"><span class="ico mouse" title="use o mouse">&#128433;&#65039;</span>Escolha <span class="ui">Qualquer pessoa com o link</span>.</div><div class="acao">Do lado direito, deixe <span class="ui">Leitor</span>.</div><div class="acao"><span class="ico mouse" title="use o mouse">&#128433;&#65039;</span>Clique em <span class="ui">Copiar link</span> e depois em <span class="ui">Concluído</span>.</div><div class="acao"><span class="ico tecla" title="use o teclado">&#9000;&#65039;</span>Cole o link na plataforma.</div><div class="acao"><b>Repita tudo com o outro arquivo</b>, o do Número Secreto. São dois links.</div></div>
+</div><div class="tela" id="t_44" data-aula="a04">
+<span class="cod">AULA 04 · SONDA</span>
+<h2 class="th">Antes de responder</h2>
+<div class="aviso bom"><b>Não vale nota, mas você precisa passar para avançar.</b>São 8 perguntas sobre o que <b>você fez</b> nesta aula, divididas em <b>duas telas</b>. Para seguir, você precisa acertar <b>6</b>, que é 70%.</div><div class="acoes"><div class="acao">A primeira tela tem só perguntas de escolher a resposta certa.</div><div class="acao">A segunda tem verdadeiro ou falso e montar a frase na ordem certa.</div><div class="acao">Você marca e a resposta aparece na hora, com a explicação.</div><div class="acao">Não dá para trocar depois de marcar, então pense antes.</div><div class="acao">Se não chegar aos 70%, abrem <b>outras</b> perguntas sobre a mesma aula. Não são as mesmas de novo.</div></div><div class="aviso"><b>Não vale voltar no Colab</b>Responda pelo que você lembra de ter feito. Se não lembrar, tente e leia a explicação.</div>
+</div><div class="tela" id="t_45" data-aula="a04">
+<span class="cod">AULA 04 · VER1</span>
+<h2 class="th">Escolha a resposta certa</h2>
+<p class="intro">Esta é a <b>primeira parte</b>. São 4 perguntas de escolher a resposta. Depois vem outra tela com mais 4. Somando as duas, você precisa acertar <b>6</b> de 8, que é 70%.</p><div class="qs" data-set="a04" data-rod="r1a" data-grupo="t1" data-n="4" data-ng="8" data-corte="6"><div class="q" data-tipo="mc"><div class="txt">1. Agora você pode responder RUMI com letra grande e o jogo aceita. O que fez isso funcionar?</div><div class="quantas">marque 1 alternativa · só 1 está certa</div><button class="alt" data-q="0" data-a="0">O and</button><button class="alt" data-q="0" data-a="1">O else</button><button class="alt" data-q="0" data-a="2">O .lower()</button><button class="alt" data-q="0" data-a="3">O print</button><div class="expl" id="ea04_r1a_0">O .lower() passa tudo para letra minúscula antes de comparar.</div></div><div class="q" data-tipo="mc"><div class="txt">2. O que acontece agora quando alguém erra uma pergunta?</div><div class="quantas">marque 1 alternativa · só 1 está certa</div><button class="alt" data-q="1" data-a="0">Não acontece nada</button><button class="alt" data-q="1" data-a="1">Aparece uma mensagem mandando tentar de novo</button><button class="alt" data-q="1" data-a="2">O jogo fecha</button><button class="alt" data-q="1" data-a="3">Dá erro vermelho</button><div class="expl" id="ea04_r1a_1">Quem faz isso é o else. Ele é o caminho do "não deu certo".</div></div><div class="q" data-tipo="mc"><div class="txt">3. Para ganhar o quiz, quantas perguntas você precisa acertar?</div><div class="quantas">marque 1 alternativa · só 1 está certa</div><button class="alt" data-q="2" data-a="0">Uma</button><button class="alt" data-q="2" data-a="1">Duas</button><button class="alt" data-q="2" data-a="2">As três</button><button class="alt" data-q="2" data-a="3">Nenhuma</button><div class="expl" id="ea04_r1a_2">A palavra and quer dizer "e". As três precisam estar certas ao mesmo tempo.</div></div><div class="q" data-tipo="mc"><div class="txt">4. No fim do bimestre você entrega quantos links?</div><div class="quantas">marque 1 alternativa · só 1 está certa</div><button class="alt" data-q="3" data-a="0">Um</button><button class="alt" data-q="3" data-a="1">Dois</button><button class="alt" data-q="3" data-a="2">Três</button><button class="alt" data-q="3" data-a="3">Nenhum</button><div class="expl" id="ea04_r1a_3">Um do Número Secreto e um do Quiz. São dois arquivos diferentes.</div></div></div><div class="andamento" id="anda04_r1a">nenhuma respondida ainda · 0 de 4</div>
+</div><div class="tela" id="t_46" data-aula="a04">
+<span class="cod">AULA 04 · VER2</span>
+<h2 class="th">Verdadeiro ou falso, e montar a frase</h2>
+<p class="intro">Esta é a <b>segunda parte</b>. São 4 perguntas de verdadeiro ou falso e de montar a frase. Somando com a tela anterior, você precisa acertar <b>6</b> de 8.</p><div class="qs" data-set="a04" data-rod="r1b" data-grupo="t1" data-n="4" data-ng="8" data-corte="6"><div class="q" data-tipo="vf"><div class="txt">1. Se você trocar as perguntas e não trocar as respostas certas, ninguém consegue ganhar.</div><div class="quantas">verdadeiro ou falso · marque 1</div><button class="alt vf" data-q="0" data-a="0">✅ Verdadeiro</button><button class="alt vf" data-q="0" data-a="1">❌ Falso</button><div class="expl" id="ea04_r1b_0">Verdadeiro. A pergunta e a resposta certa andam juntas.</div></div><div class="q" data-tipo="vf"><div class="txt">2. O <code class="inl">.lower()</code> fica antes do parêntese, junto da pergunta.</div><div class="quantas">verdadeiro ou falso · marque 1</div><button class="alt vf" data-q="1" data-a="0">✅ Verdadeiro</button><button class="alt vf" data-q="1" data-a="1">❌ Falso</button><div class="expl" id="ea04_r1b_1">Falso. Ele vem depois do parêntese fechado, no fim da linha.</div></div><div class="q" data-tipo="lac"><div class="txt">3. Monte a ordem das três novidades desta aula:</div><div class="quantas">clique nas partes na ordem certa</div><div class="montado" id="mt_a04_r1b_2" data-q="2"></div><div class="pecas"><button class="pc" data-q="2" data-p="o else avisa quando erra">o else avisa quando erra</button><button class="pc" data-q="2" data-p="o and exige as três certas">o and exige as três certas</button><button class="pc" data-q="2" data-p="o lower deixa aceitar letra grande">o lower deixa aceitar letra grande</button></div><button class="btn sec limpalac" data-q="2">recomeçar</button><div class="expl" id="ea04_r1b_2">Três palavras, três problemas resolvidos.</div></div><div class="q" data-tipo="lac"><div class="txt">4. Monte a frase na ordem certa:</div><div class="quantas">clique nas partes na ordem certa</div><div class="montado" id="mt_a04_r1b_3" data-q="3"></div><div class="pecas"><button class="pc" data-q="3" data-p="deixa tudo minúsculo">deixa tudo minúsculo</button><button class="pc" data-q="3" data-p="O lower">O lower</button><button class="pc" data-q="3" data-p="antes">antes</button><button class="pc" data-q="3" data-p="de comparar">de comparar</button></div><button class="btn sec limpalac" data-q="3">recomeçar</button><div class="expl" id="ea04_r1b_3">Por isso RUMI, Rumi e rumi passam a valer a mesma coisa.</div></div></div><div class="andamento" id="anda04_r1b">nenhuma respondida ainda · 0 de 4</div>
+</div><div class="tela" id="t_47" data-aula="a04">
+<span class="cod">AULA 04 · VER3</span>
+<h2 class="th">Mais algumas perguntas</h2>
+<div class="aviso bom"><b>Você não chegou aos 70% ainda</b>Sem problema. Estas são perguntas <b>diferentes</b>, sobre a mesma aula. Leia com calma: a explicação de cada uma ajuda na próxima.</div><p class="intro">São 4 perguntas. Precisa acertar <b>3</b>.</p><div class="qs" data-set="a04" data-rod="r2" data-grupo="t2" data-n="4" data-ng="4" data-corte="3"><div class="q" data-tipo="mc"><div class="txt">1. Por que o <code class="inl">else</code> começa colado na margem, igual ao <code class="inl">if</code>?</div><div class="quantas">marque 1 alternativa · só 1 está certa</div><button class="alt" data-q="0" data-a="0">Para ficar bonito</button><button class="alt" data-q="0" data-a="1">Porque os dois são o mesmo nível da decisão</button><button class="alt" data-q="0" data-a="2">Porque else é curto</button><button class="alt" data-q="0" data-a="3">Não importa</button><div class="expl" id="ea04_r2_0">Um é o caminho do sim, o outro o do não. Se o else ficar para dentro, dá erro.</div></div><div class="q" data-tipo="mc"><div class="txt">2. O que a Aula 04 fez com o código da Aula 03?</div><div class="quantas">marque 1 alternativa · só 1 está certa</div><button class="alt" data-q="1" data-a="0">Apagou</button><button class="alt" data-q="1" data-a="1">Deixou lá e criou uma célula nova embaixo</button><button class="alt" data-q="1" data-a="2">Mandou por e-mail</button><button class="alt" data-q="1" data-a="3">Transformou em texto</button><div class="expl" id="ea04_r2_1">Por isso o Quiz também tem duas células: (01/02) e (02/02).</div></div><div class="q" data-tipo="vf"><div class="txt">3. Você renomeia o arquivo antes de trocar as perguntas.</div><div class="quantas">verdadeiro ou falso · marque 1</div><button class="alt vf" data-q="2" data-a="0">✅ Verdadeiro</button><button class="alt vf" data-q="2" data-a="1">❌ Falso</button><div class="expl" id="ea04_r2_2">Falso. Primeiro troca e testa. Só depois renomeia.</div></div><div class="q" data-tipo="lac"><div class="txt">4. Monte a ordem certa do fim do trabalho:</div><div class="quantas">clique nas partes na ordem certa</div><div class="montado" id="mt_a04_r2_3" data-q="3"></div><div class="pecas"><button class="pc" data-q="3" data-p="testar o quiz">testar o quiz</button><button class="pc" data-q="3" data-p="compartilhar o link">compartilhar o link</button><button class="pc" data-q="3" data-p="trocar as perguntas">trocar as perguntas</button><button class="pc" data-q="3" data-p="renomear o arquivo">renomear o arquivo</button></div><button class="btn sec limpalac" data-q="3">recomeçar</button><div class="expl" id="ea04_r2_3">Renomear antes de testar promete um assunto que o arquivo ainda não tem.</div></div></div><div class="andamento" id="anda04_r2">nenhuma respondida ainda · 0 de 4</div>
+</div><div class="tela" id="t_48" data-aula="a04">
+<span class="cod">AULA 04 · VER4</span>
+<h2 class="th">Últimas perguntas</h2>
+<div class="aviso bom"><b>Última leva de perguntas</b>Se ainda não der, você segue mesmo assim. Mas vale conversar com o professor sobre esta aula.</div><p class="intro">São 4 perguntas. Precisa acertar <b>3</b>.</p><div class="qs" data-set="a04" data-rod="r3" data-grupo="t3" data-n="4" data-ng="4" data-corte="3"><div class="q" data-tipo="mc"><div class="txt">1. Se o nome do seu arquivo continuar só <code class="inl">Quiz</code>, sem assunto, o que isso quer dizer?</div><div class="quantas">marque 1 alternativa · só 1 está certa</div><button class="alt" data-q="0" data-a="0">Que você errou</button><button class="alt" data-q="0" data-a="1">Que você usou as perguntas do exemplo da aula</button><button class="alt" data-q="0" data-a="2">Que o arquivo está vazio</button><button class="alt" data-q="0" data-a="3">Que o professor não vai corrigir</button><div class="expl" id="ea04_r3_0">Nome sem assunto quer dizer que o quiz é o do exemplo. Não é erro, é uma escolha.</div></div><div class="q" data-tipo="mc"><div class="txt">2. A escadinha de três <code class="inl">if</code> virou o quê nesta aula?</div><div class="quantas">marque 1 alternativa · só 1 está certa</div><button class="alt" data-q="1" data-a="0">Uma linha só, com and</button><button class="alt" data-q="1" data-a="1">Três linhas de else</button><button class="alt" data-q="1" data-a="2">Um print maior</button><button class="alt" data-q="1" data-a="3">Nada, continua igual</button><div class="expl" id="ea04_r3_1">O and juntou as três comparações numa linha só.</div></div><div class="q" data-tipo="vf"><div class="txt">3. Se o link ficar em Restrito, o professor recebe um pedido de acesso e o trabalho fica sem nota.</div><div class="quantas">verdadeiro ou falso · marque 1</div><button class="alt vf" data-q="2" data-a="0">✅ Verdadeiro</button><button class="alt vf" data-q="2" data-a="1">❌ Falso</button><div class="expl" id="ea04_r3_2">Verdadeiro. Confira os dois links antes de encerrar.</div></div><div class="q" data-tipo="vf"><div class="txt">4. No fim do bimestre você tem 2 arquivos e 4 células no total.</div><div class="quantas">verdadeiro ou falso · marque 1</div><button class="alt vf" data-q="3" data-a="0">✅ Verdadeiro</button><button class="alt vf" data-q="3" data-a="1">❌ Falso</button><div class="expl" id="ea04_r3_3">Verdadeiro. Dois arquivos, duas células em cada um.</div></div></div><div class="andamento" id="anda04_r3">nenhuma respondida ainda · 0 de 4</div>
+</div><div class="tela" id="t_49" data-aula="a04">
+<span class="cod">AULA 04 · PLACAR</span>
+<h2 class="th">O seu resultado</h2>
+<div class="placarbox" id="pb_a04"><div class="placarnum">–</div><div class="placarde">responda a sondagem para ver o seu resultado</div></div>
+</div><div class="tela" id="t_50" data-aula="a04">
+<span class="cod">AULA 04 · FIM</span>
+<h2 class="th">Placar geral do bimestre</h2>
+<p class="intro">Aqui somam os acertos das quatro sondagens do bimestre.</p><div class="placarbox" id="pb_geral"><div class="placarnum">–</div><div class="placarde">responda as sondagens para ver o total</div></div><div id="pg_detalhe"></div>
+</div>
+</main>
+
+<div class="overlay" id="overlay"><div class="lista">
+<button class="btn sec fecha" id="bFecha">Fechar</button>
+<h3>Todas as telas</h3>
+<p style="color:var(--fraco);font-size:14px;margin:0">Clique para ir direto. ✅ = você já passou por ela.</p>
+<div id="listaBox"></div>
+</div></div>
+
+<footer class="nav"><div class="in">
+<button class="nb" id="bVoltar">← Voltar</button>
+<button class="nb lista" id="bLista">☰ lista de todas as telas</button>
+<button class="nb prim" id="bAvancar">Avançar →</button>
+</div></footer>
+
+<script>
+(function(){
+"use strict";
+var PFX='facaFases_';
+var mem={};
+function guarda(k,v){try{localStorage.setItem(k,v)}catch(e){mem[k]=v}}
+function le(k){try{var v=localStorage.getItem(k);return v===null?mem[k]:v}catch(e){return mem[k]}}
+
+var META=[{"aula": "a01", "cod": "S.01", "titulo": "Entrar na sua conta Google", "obj": null}, {"aula": "a01", "cod": "S.02", "titulo": "Abrir o Google Colab", "obj": null}, {"aula": "a01", "cod": "S.03", "titulo": "Dar nome ao arquivo", "obj": 0}, {"aula": "a01", "cod": "S.04", "titulo": "Colar o código e assinar", "obj": 1}, {"aula": "a01", "cod": "S.05", "titulo": "Rodar e testar", "obj": 2}, {"aula": "a01", "cod": "S.06", "titulo": "Conferir o meu código", "obj": null}, {"aula": "a01", "cod": "S.07", "titulo": "Entender o que você colou", "obj": 3}, {"aula": "a01", "cod": "SONDA", "titulo": "Antes de responder", "obj": null}, {"aula": "a01", "cod": "VER1", "titulo": "Escolha a resposta certa", "obj": null}, {"aula": "a01", "cod": "VER2", "titulo": "Verdadeiro ou falso, e montar a frase", "obj": null}, {"aula": "a01", "cod": "VER3", "titulo": "Mais algumas perguntas", "obj": null}, {"aula": "a01", "cod": "VER4", "titulo": "Últimas perguntas", "obj": null}, {"aula": "a01", "cod": "PLACAR", "titulo": "O seu resultado", "obj": null}, {"aula": "a02", "cod": "S.08", "titulo": "De onde você começa", "obj": null}, {"aula": "a02", "cod": "S.09", "titulo": "Criar uma célula nova", "obj": 0}, {"aula": "a02", "cod": "S.10", "titulo": "Colar o código da Aula 02", "obj": 1}, {"aula": "a02", "cod": "S.11", "titulo": "Rodar duas vezes", "obj": 2}, {"aula": "a02", "cod": "S.12", "titulo": "Entender o que mudou", "obj": 3}, {"aula": "a02", "cod": "S.13", "titulo": "Mudar a dificuldade", "obj": null}, {"aula": "a02", "cod": "S.14", "titulo": "Entregar o arquivo 1", "obj": null}, {"aula": "a02", "cod": "SONDA", "titulo": "Antes de responder", "obj": null}, {"aula": "a02", "cod": "VER1", "titulo": "Escolha a resposta certa", "obj": null}, {"aula": "a02", "cod": "VER2", "titulo": "Verdadeiro ou falso, e montar a frase", "obj": null}, {"aula": "a02", "cod": "VER3", "titulo": "Mais algumas perguntas", "obj": null}, {"aula": "a02", "cod": "VER4", "titulo": "Últimas perguntas", "obj": null}, {"aula": "a02", "cod": "PLACAR", "titulo": "O seu resultado", "obj": null}, {"aula": "a03", "cod": "S.15", "titulo": "Criar o arquivo do Quiz", "obj": 0}, {"aula": "a03", "cod": "S.16", "titulo": "Colar o código do Quiz", "obj": 1}, {"aula": "a03", "cod": "S.17", "titulo": "Rodar e ganhar o quiz", "obj": 2}, {"aula": "a03", "cod": "S.18", "titulo": "Conferir e entender", "obj": null}, {"aula": "a03", "cod": "S.19", "titulo": "Escolher o tema do seu quiz", "obj": 3}, {"aula": "a03", "cod": "SONDA", "titulo": "Antes de responder", "obj": null}, {"aula": "a03", "cod": "VER1", "titulo": "Escolha a resposta certa", "obj": null}, {"aula": "a03", "cod": "VER2", "titulo": "Verdadeiro ou falso, e montar a frase", "obj": null}, {"aula": "a03", "cod": "VER3", "titulo": "Mais algumas perguntas", "obj": null}, {"aula": "a03", "cod": "VER4", "titulo": "Últimas perguntas", "obj": null}, {"aula": "a03", "cod": "PLACAR", "titulo": "O seu resultado", "obj": null}, {"aula": "a04", "cod": "S.20", "titulo": "De onde você começa", "obj": null}, {"aula": "a04", "cod": "S.21", "titulo": "Criar uma célula nova", "obj": 0}, {"aula": "a04", "cod": "S.22", "titulo": "Colar o código da Aula 04", "obj": 1}, {"aula": "a04", "cod": "S.23", "titulo": "Testar as duas mensagens", "obj": 2}, {"aula": "a04", "cod": "S.24", "titulo": "Entender o que mudou", "obj": 3}, {"aula": "a04", "cod": "S.25", "titulo": "Trocar pelas suas perguntas e renomear", "obj": null}, {"aula": "a04", "cod": "S.26", "titulo": "Entregar os dois links", "obj": null}, {"aula": "a04", "cod": "SONDA", "titulo": "Antes de responder", "obj": null}, {"aula": "a04", "cod": "VER1", "titulo": "Escolha a resposta certa", "obj": null}, {"aula": "a04", "cod": "VER2", "titulo": "Verdadeiro ou falso, e montar a frase", "obj": null}, {"aula": "a04", "cod": "VER3", "titulo": "Mais algumas perguntas", "obj": null}, {"aula": "a04", "cod": "VER4", "titulo": "Últimas perguntas", "obj": null}, {"aula": "a04", "cod": "PLACAR", "titulo": "O seu resultado", "obj": null}, {"aula": "a04", "cod": "FIM", "titulo": "Placar geral do bimestre", "obj": null}], OBJ={"a01": [["Criar o meu arquivo no Colab", "Entrar na conta, abrir o site e dar o nome certo"], ["Colar o meu primeiro código", "Colar o bloco e escrever o meu nome nele"], ["Fazer o programa funcionar", "Clicar no play e ver a resposta na tela"], ["Entender o que eu colei", "Saber o que cada linha faz"]], "a02": [["Criar uma célula nova", "Sem apagar nada do que eu já fiz"], ["Colar o código da Aula 02", "Na célula nova, com o meu nome"], ["Ver o sorteio funcionando", "Rodar duas vezes e o número mudar"], ["Entender o que mudou", "Saber o que o random faz"]], "a03": [["Criar o segundo arquivo", "Um arquivo novo, só para o Quiz"], ["Colar o código do Quiz", "Colar o bloco e escrever o meu nome"], ["Ganhar o meu próprio quiz", "Responder as três e ver a mensagem de parabéns"], ["Escolher o meu tema", "Pensar em 3 perguntas do meu assunto"]], "a04": [["Criar uma célula nova", "Sem apagar o Quiz da Aula 03"], ["Colar o código da Aula 04", "Na célula nova, com o meu nome"], ["Ver as duas mensagens", "A de acerto e a de erro"], ["Entender o que mudou", "Saber o que o .lower(), o and e o else fazem"]]}, GAB={"0": ["# 3ºbim-A.01+02=Numero Secreto (01/02) - [ESCREVA SEU NOME AQUI]", "", "numero_secreto = 9", "", "input(\"Adivinhe o número entre 1 e 10:\")", "print(\"O número secreto é:\", numero_secreto)"], "1": ["# 3ºbim-A.01+02=Numero Secreto (01/02) - [ESCREVA SEU NOME AQUI]", "", "numero_secreto = 9", "", "input(\"Adivinhe o número entre 1 e 10:\")", "print(\"O número secreto é:\", numero_secreto)"], "2": ["# 3ºbim-A.01+02=Numero Secreto (02/02) - [ESCREVA SEU NOME AQUI]", "", "import random", "numero_secreto = random.randint(1, 10)", "", "input(\"Adivinhe o número entre 1 e 10:\")", "print(\"O número secreto é:\", numero_secreto)"], "3": ["# 3ºbim-A.03+04=Quiz (01/02) - [ESCREVA SEU NOME AQUI]", "", "resposta1 = input(\"Quem é a protagonista de Guerreiras do K-Pop?\")", "resposta2 = input(\"Quem é o autor do livro Diário de um Banana?\")", "resposta3 = input(\"Qual é o nome da nova vocalista da banda LINKIN PARK?\")", "", "if resposta1 == \"rumi\":", "    if resposta2 == \"jeff kinney\":", "        if resposta3 == \"emily\":", "            print(\"PARABÉNS, GANHOU O QUIZ E 1 MILHÃO DE REAIS!!\")"], "4": ["# 3ºbim-A.03+04=Quiz (01/02) - [ESCREVA SEU NOME AQUI]", "", "resposta1 = input(\"Quem é a protagonista de Guerreiras do K-Pop?\")", "resposta2 = input(\"Quem é o autor do livro Diário de um Banana?\")", "resposta3 = input(\"Qual é o nome da nova vocalista da banda LINKIN PARK?\")", "", "if resposta1 == \"rumi\":", "    if resposta2 == \"jeff kinney\":", "        if resposta3 == \"emily\":", "            print(\"PARABÉNS, GANHOU O QUIZ E 1 MILHÃO DE REAIS!!\")"], "5": ["# 3ºbim-A.03+04=Quiz (02/02) - [ESCREVA SEU NOME AQUI]", "", "resposta1 = input(\"Quem é a protagonista de Guerreiras do K-Pop?\").lower()", "resposta2 = input(\"Quem é o autor do livro Diário de um Banana?\").lower()", "resposta3 = input(\"Qual é o nome da nova vocalista da banda LINKIN PARK?\").lower()", "", "if resposta1 == \"rumi\" and resposta2 == \"jeff kinney\" and resposta3 == \"emily\":", "    print(\"PARABÉNS, GANHOU O QUIZ E 1 MILHÃO DE REAIS!!\")", "else:", "    print(\"VOCÊ ERROU UMA OU MAIS PERGUNTAS, TENTE NOVAMENTE!\")"]}, BANCO={"a01": {"r1a": [{"tipo": "mc", "t": "O que você digitou quando o computador fez a pergunta na tela?", "a": ["Um número", "O meu nome", "A palavra \"sim\"", "Nada"], "c": 0, "e": "Ele pediu um número de 1 a 10. Quem faz a pergunta é o comando input."}, {"tipo": "mc", "t": "Depois que você digitou e apertou Enter, o que apareceu?", "a": ["Nada", "Uma frase dizendo qual era o número secreto", "Um erro vermelho", "O jogo fechou"], "c": 1, "e": "Apareceu \"O número secreto é: 9\". Quem escreve na tela é o comando print."}, {"tipo": "mc", "t": "Para que serve o botão ▶ que fica do lado da célula?", "a": ["Apagar o código", "Salvar o arquivo", "Fazer o código funcionar", "Fechar o Colab"], "c": 2, "e": "O ▶ é o play. Toda vez que você muda alguma coisa, precisa clicar nele de novo."}, {"tipo": "mc", "t": "O <code class=\"inl\">numero_secreto</code> é uma caixinha com nome onde o computador guarda uma informação. Como isso se chama?", "a": ["Comentário", "Variável", "Célula", "Notebook"], "c": 1, "e": "Variável. É como uma caixinha com etiqueta."}], "r1b": [{"tipo": "vf", "t": "A caixa onde você colou o código se chama <b>célula</b>.", "c": 0, "e": "Verdadeiro. E ela fica com a borda azul quando você clica dentro dela."}, {"tipo": "vf", "t": "A linha que começa com <code class=\"inl\">#</code> aparece no resultado, embaixo da célula.", "c": 1, "e": "Falso. O computador pula essa linha. Ela é um recado para as pessoas lerem."}, {"tipo": "lac", "t": "Monte a frase na ordem certa:", "ordem": ["O input", "pergunta", "e o print", "responde"], "e": "O input recebe o que você digita. O print escreve na tela."}, {"tipo": "lac", "t": "Monte a ordem em que as coisas acontecem quando você clica no play:", "ordem": ["o computador guarda o número secreto", "faz a pergunta na tela", "espera você digitar", "mostra a resposta"], "e": "Ele lê o código de cima para baixo, uma linha por vez."}], "r2": [{"tipo": "mc", "t": "Onde fica o botão <b>+ Novo notebook</b> na tela do Colab?", "a": ["No canto de baixo, à direita", "No canto de cima, à esquerda, abaixo da barra de pesquisa", "No meio da tela", "Não existe esse botão"], "c": 1, "e": "É o botão azul, logo abaixo da caixa de pesquisar notebooks."}, {"tipo": "mc", "t": "O <code class=\"inl\">(01/02)</code> no fim da primeira linha quer dizer o quê?", "a": ["Que é 1 de janeiro", "Que esta é a célula 1 de um projeto com 2 células", "Que você acertou 1 de 2", "Que o código tem 2 linhas"], "c": 1, "e": "O primeiro número é a ordem da célula. O segundo é o total do projeto."}, {"tipo": "vf", "t": "Sem entrar na conta Google, o arquivo some quando você fecha a aba.", "c": 0, "e": "Verdadeiro. Por isso o primeiro passo da aula é conferir a bolinha da conta."}, {"tipo": "lac", "t": "Monte a ordem dos passos para criar o seu arquivo:", "ordem": ["entrar na conta Google", "abrir o Colab", "clicar em Novo notebook", "trocar o nome do arquivo"], "e": "Se pular o login, o arquivo some quando você fechar a aba."}], "r3": [{"tipo": "mc", "t": "A primeira linha do seu código serve para quê?", "a": ["Fazer o jogo começar", "Dizer qual é o projeto, quem é você e quantas células existem", "Sortear o número", "Apagar a tela"], "c": 1, "e": "É um comentário. O computador ignora, mas o professor lê."}, {"tipo": "mc", "t": "Você apagou o <code class=\"inl\">9</code> e digitou <code class=\"inl\">4</code>. O que o jogo passou a esconder?", "a": ["O número 9", "O número 4", "Os dois", "Nenhum"], "c": 1, "e": "O que está guardado na caixinha é o que o print mostra."}, {"tipo": "vf", "t": "Se você mudar alguma coisa no código, precisa clicar no ▶ outra vez.", "c": 0, "e": "Verdadeiro. Sem clicar de novo, o computador continua com o código antigo."}, {"tipo": "vf", "t": "O nome do arquivo é diferente para cada estudante da turma.", "c": 1, "e": "Falso. O nome é igual para todos. Quem identifica você é a primeira linha do código."}]}, "a02": {"r1a": [{"tipo": "mc", "t": "Você rodou o jogo duas vezes. O que aconteceu com o número secreto?", "a": ["Foi o mesmo nas duas", "Foi diferente cada vez", "Sumiu", "Virou zero"], "c": 1, "e": "Agora quem escolhe o número é o computador, e ele sorteia de novo a cada vez."}, {"tipo": "mc", "t": "Qual palavra nova apareceu no código desta aula?", "a": ["print", "input", "random", "nome"], "c": 2, "e": "random quer dizer \"sorteado\" em inglês. É a ferramenta de sorteio."}, {"tipo": "mc", "t": "Em <code class=\"inl\">random.randint(1, 10)</code>, o que os números 1 e 10 significam?", "a": ["Quantas vezes o jogo roda", "O menor e o maior número que podem sair", "A dificuldade em porcentagem", "Quantas linhas o código tem"], "c": 1, "e": "São o começo e o fim do sorteio."}, {"tipo": "mc", "t": "Para o professor abrir o seu link, o que precisa estar escolhido?", "a": ["Restrito", "Qualquer pessoa com o link", "Somente eu", "Não importa"], "c": 1, "e": "Se ficar em Restrito, o professor não abre e a atividade fica sem nota."}], "r1b": [{"tipo": "vf", "t": "Nesta aula você apagou o código da Aula 01.", "c": 1, "e": "Falso. Você criou uma célula nova embaixo. O código antigo continua lá e ainda roda."}, {"tipo": "vf", "t": "Sem a linha <code class=\"inl\">import random</code>, o computador não sabe o que é random.", "c": 0, "e": "Verdadeiro. O import liga a ferramenta. A mensagem de erro é NameError."}, {"tipo": "lac", "t": "Monte a frase na ordem certa:", "ordem": ["O import", "liga a ferramenta", "e o randint", "sorteia o número"], "e": "São duas coisas diferentes: uma liga, a outra usa."}, {"tipo": "lac", "t": "Monte a ordem dos passos para entregar o seu trabalho:", "ordem": ["clicar em Compartilhar", "trocar Restrito por Qualquer pessoa com o link", "deixar em Leitor", "copiar o link", "colar na plataforma"], "e": "Se pular a troca do Restrito, o professor não abre."}], "r2": [{"tipo": "mc", "t": "Na Aula 01 o número secreto era sempre 9. Por quê?", "a": ["Porque 9 é o maior", "Porque estava escrito 9 no código", "Porque o computador gosta do 9", "Era um erro"], "c": 1, "e": "Estava fixo: numero_secreto = 9. Agora está sorteado."}, {"tipo": "mc", "t": "O <code class=\"inl\">randint</code> pode sortear o número 3,5?", "a": ["Pode", "Não pode: ele só sorteia números inteiros", "Só se você pedir", "Só aos domingos"], "c": 1, "e": "Em Python, número inteiro se chama int. O randint só trabalha com eles."}, {"tipo": "vf", "t": "Se o mesmo número secreto sair duas vezes seguidas, o jogo está com defeito.", "c": 1, "e": "Falso. Sorteio pode repetir. É normal. Rode mais uma vez."}, {"tipo": "lac", "t": "Monte a ordem das linhas da sua célula nova, de cima para baixo:", "ordem": ["a linha com o seu nome", "import random", "o sorteio do número", "a pergunta na tela", "a resposta na tela"], "e": "O import precisa vir antes do randint, senão o computador não sabe o que é random."}], "r3": [{"tipo": "mc", "t": "Você trocou o 10 por 50 e testou. O que mudou no jogo?", "a": ["Ficou mais fácil", "Passou a sortear números maiores, até 50", "Ficou mais rápido", "Nada mudou"], "c": 1, "e": "Os dois números dentro dos parênteses dizem onde o sorteio começa e onde termina."}, {"tipo": "mc", "t": "Quantas células o seu projeto Número Secreto tem agora?", "a": ["Uma", "Duas", "Três", "Nenhuma"], "c": 1, "e": "Por isso os contadores são (01/02) e (02/02)."}, {"tipo": "vf", "t": "A célula da Aula 01 ainda funciona se você clicar no play dela.", "c": 0, "e": "Verdadeiro. Ela ficou intacta. Dá para rodar as duas e comparar."}, {"tipo": "vf", "t": "O contador da célula nova é <code class=\"inl\">(02/02)</code>.", "c": 0, "e": "Verdadeiro. É a segunda célula de um projeto que tem duas."}]}, "a03": {"r1a": [{"tipo": "mc", "t": "Quantas perguntas o seu quiz faz para quem joga?", "a": ["Uma", "Duas", "Três", "Dez"], "c": 2, "e": "São três: resposta1, resposta2 e resposta3."}, {"tipo": "mc", "t": "O que aconteceu quando você acertou as três perguntas?", "a": ["Apareceu a mensagem de parabéns", "Nada", "Deu erro vermelho", "O jogo recomeçou"], "c": 0, "e": "A mensagem só aparece quando as três estão certas."}, {"tipo": "mc", "t": "O que os <b>dois</b> sinais de igual (<code class=\"inl\">==</code>) fazem?", "a": ["Guardam um valor", "Comparam duas coisas para ver se são iguais", "Somam textos", "Apagam o valor"], "c": 1, "e": "Um sinal só (=) guarda. Dois sinais (==) comparam."}, {"tipo": "mc", "t": "Você criou o arquivo do Quiz usando qual menu?", "a": ["Editar", "Arquivo", "Ver", "Ajuda"], "c": 1, "e": "Menu Arquivo, depois Novo notebook. Abre numa aba nova."}], "r1b": [{"tipo": "vf", "t": "Quando você errou uma pergunta de propósito, apareceu uma mensagem avisando.", "c": 1, "e": "Falso. Nesta aula o jogo ainda fica calado quando alguém erra. Isso muda na Aula 04."}, {"tipo": "vf", "t": "O Quiz ficou no mesmo arquivo do Número Secreto.", "c": 1, "e": "Falso. São dois arquivos diferentes no Colab."}, {"tipo": "lac", "t": "Monte a frase na ordem certa:", "ordem": ["O if", "compara", "e o print", "só aparece se der certo"], "e": "É por isso que o print fica mais para dentro que o if."}, {"tipo": "lac", "t": "Monte a ordem da escadinha do quiz, de cima para baixo:", "ordem": ["as três perguntas", "o primeiro if", "o segundo if", "o terceiro if", "o print de parabéns"], "e": "Cada if entra mais para a direita. O print é o que está mais para dentro."}], "r2": [{"tipo": "mc", "t": "Se você digitasse RUMI com letra grande, o que ia acontecer nesta aula?", "a": ["Ia funcionar igual", "O jogo ia contar como erro", "O Colab ia travar", "Ia aparecer um aviso"], "c": 1, "e": "Para o computador, RUMI e rumi são coisas diferentes. Isso muda na Aula 04."}, {"tipo": "mc", "t": "Se você apagar os dois-pontos do fim da linha do <code class=\"inl\">if</code>, o que acontece?", "a": ["Nada, funciona igual", "O jogo fica mais rápido", "O Colab mostra erro vermelho", "O if vira um else"], "c": 2, "e": "Os dois-pontos avisam que vem um bloco embaixo."}, {"tipo": "vf", "t": "O espaço na frente da linha do <code class=\"inl\">print</code> é só enfeite.", "c": 1, "e": "Falso. O recuo diz ao computador o que só acontece se a comparação der certo."}, {"tipo": "vf", "t": "No código, a resposta certa foi escrita em letra minúscula de propósito.", "c": 0, "e": "Verdadeiro. Por enquanto o jogo só aceita minúscula."}], "r3": [{"tipo": "mc", "t": "O contador do Quiz recomeçou em <code class=\"inl\">(01/02)</code>. Por quê?", "a": ["Porque é um projeto novo, com contagem própria", "Porque o Número Secreto acabou", "Porque foi erro de digitação", "Porque o professor mandou"], "c": 0, "e": "Cada projeto conta as próprias células. Um não continua o outro."}, {"tipo": "mc", "t": "Onde ficam as suas três perguntas do caderno?", "a": ["Dentro das aspas do input", "Fora dos parênteses", "No nome do arquivo", "No primeiro comentário"], "c": 0, "e": "É só o texto entre aspas que você troca. O resto da linha fica igual."}, {"tipo": "vf", "t": "A escadinha veio pronta porque você colou o bloco inteiro de uma vez.", "c": 0, "e": "Verdadeiro. Se colasse linha por linha, o editor mudaria os espaços sozinho."}, {"tipo": "vf", "t": "Você precisa apagar o arquivo do Número Secreto para o Quiz funcionar.", "c": 1, "e": "Falso. Os dois convivem. No fim você entrega os dois links."}]}, "a04": {"r1a": [{"tipo": "mc", "t": "Agora você pode responder RUMI com letra grande e o jogo aceita. O que fez isso funcionar?", "a": ["O and", "O else", "O .lower()", "O print"], "c": 2, "e": "O .lower() passa tudo para letra minúscula antes de comparar."}, {"tipo": "mc", "t": "O que acontece agora quando alguém erra uma pergunta?", "a": ["Não acontece nada", "Aparece uma mensagem mandando tentar de novo", "O jogo fecha", "Dá erro vermelho"], "c": 1, "e": "Quem faz isso é o else. Ele é o caminho do \"não deu certo\"."}, {"tipo": "mc", "t": "Para ganhar o quiz, quantas perguntas você precisa acertar?", "a": ["Uma", "Duas", "As três", "Nenhuma"], "c": 2, "e": "A palavra and quer dizer \"e\". As três precisam estar certas ao mesmo tempo."}, {"tipo": "mc", "t": "No fim do bimestre você entrega quantos links?", "a": ["Um", "Dois", "Três", "Nenhum"], "c": 1, "e": "Um do Número Secreto e um do Quiz. São dois arquivos diferentes."}], "r1b": [{"tipo": "vf", "t": "Se você trocar as perguntas e não trocar as respostas certas, ninguém consegue ganhar.", "c": 0, "e": "Verdadeiro. A pergunta e a resposta certa andam juntas."}, {"tipo": "vf", "t": "O <code class=\"inl\">.lower()</code> fica antes do parêntese, junto da pergunta.", "c": 1, "e": "Falso. Ele vem depois do parêntese fechado, no fim da linha."}, {"tipo": "lac", "t": "Monte a ordem das três novidades desta aula:", "ordem": ["o lower deixa aceitar letra grande", "o and exige as três certas", "o else avisa quando erra"], "e": "Três palavras, três problemas resolvidos."}, {"tipo": "lac", "t": "Monte a frase na ordem certa:", "ordem": ["O lower", "deixa tudo minúsculo", "antes", "de comparar"], "e": "Por isso RUMI, Rumi e rumi passam a valer a mesma coisa."}], "r2": [{"tipo": "mc", "t": "Por que o <code class=\"inl\">else</code> começa colado na margem, igual ao <code class=\"inl\">if</code>?", "a": ["Para ficar bonito", "Porque os dois são o mesmo nível da decisão", "Porque else é curto", "Não importa"], "c": 1, "e": "Um é o caminho do sim, o outro o do não. Se o else ficar para dentro, dá erro."}, {"tipo": "mc", "t": "O que a Aula 04 fez com o código da Aula 03?", "a": ["Apagou", "Deixou lá e criou uma célula nova embaixo", "Mandou por e-mail", "Transformou em texto"], "c": 1, "e": "Por isso o Quiz também tem duas células: (01/02) e (02/02)."}, {"tipo": "vf", "t": "Você renomeia o arquivo antes de trocar as perguntas.", "c": 1, "e": "Falso. Primeiro troca e testa. Só depois renomeia."}, {"tipo": "lac", "t": "Monte a ordem certa do fim do trabalho:", "ordem": ["trocar as perguntas", "testar o quiz", "renomear o arquivo", "compartilhar o link"], "e": "Renomear antes de testar promete um assunto que o arquivo ainda não tem."}], "r3": [{"tipo": "mc", "t": "Se o nome do seu arquivo continuar só <code class=\"inl\">Quiz</code>, sem assunto, o que isso quer dizer?", "a": ["Que você errou", "Que você usou as perguntas do exemplo da aula", "Que o arquivo está vazio", "Que o professor não vai corrigir"], "c": 1, "e": "Nome sem assunto quer dizer que o quiz é o do exemplo. Não é erro, é uma escolha."}, {"tipo": "mc", "t": "A escadinha de três <code class=\"inl\">if</code> virou o quê nesta aula?", "a": ["Uma linha só, com and", "Três linhas de else", "Um print maior", "Nada, continua igual"], "c": 0, "e": "O and juntou as três comparações numa linha só."}, {"tipo": "vf", "t": "Se o link ficar em Restrito, o professor recebe um pedido de acesso e o trabalho fica sem nota.", "c": 0, "e": "Verdadeiro. Confira os dois links antes de encerrar."}, {"tipo": "vf", "t": "No fim do bimestre você tem 2 arquivos e 4 células no total.", "c": 0, "e": "Verdadeiro. Dois arquivos, duas células em cada um."}]}};
+var AULAS=['a01','a02','a03','a04'];
+var TITAULA={"a01": "Número Secreto · parte 1", "a02": "Número Secreto · parte 2", "a03": "Quiz · parte 1", "a04": "Quiz · parte 2"};
+var NOMES={a01:'AULA 01',a02:'AULA 02',a03:'AULA 03',a04:'AULA 04'};
+
+/* ordem de navegacao: capa, [obj_aula, telas da aula]* */
+var ORDEM=['ident','capa'];
+AULAS.forEach(function(a){
+  ORDEM.push('obj_'+a);
+  META.forEach(function(t,i){ if(t.aula===a) ORDEM.push(String(i)); });
+});
+
+var atual=0, voltarPara=null, interst=null;
+var feitos=JSON.parse(le(PFX+'feitos')||'{}');
+var vistas=JSON.parse(le(PFX+'vistas')||'{}');
+
+function idDe(k){ return (k==='capa'||k==='ident')?('t_'+k):('t_'+k); }
+function aulaDe(k){
+  if(k==='capa'||k==='ident') return 'a01';
+  if(k.indexOf('obj_')===0) return k.slice(4);
+  return META[+k].aula;
+}
+function mostra(pos,semScroll){
+  interst=null;
+  atual=Math.max(0,Math.min(ORDEM.length-1,pos));
+  var k=ORDEM[atual];
+  document.querySelectorAll('.tela').forEach(function(t){t.classList.remove('on')});
+  var el=document.getElementById(idDe(k));
+  if(el)el.classList.add('on');
+  var a=aulaDe(k);
+  document.documentElement.setAttribute('data-aula',a);
+  document.getElementById('eyebrow').innerHTML = (k==='capa'||k==='ident')
+    ? '<b class="marca">FAÇA COMO EU FIZ</b> Tecnologia · 9º ano · 3º bimestre'
+    : '<b class="marca">FAÇA COMO EU FIZ</b> '+NOMES[a]+' · '+TITAULA[a]+
+      ' <span class="deq">'+(AULAS.indexOf(a)+1)+' de 4</span>';
+  document.getElementById('tt').textContent =
+    k==='ident' ? 'Quem é você' : k==='capa' ? 'Escolha a aula'
+    : (k.indexOf('obj_')===0 ? 'Objetivos da aula' : META[+k].titulo);
+  var tot=ORDEM.length-1;
+  document.getElementById('passoinfo').textContent='tela '+atual+' de '+tot+objSufixo(aulaDe(k),k);
+  document.getElementById('barra').style.width=(atual/tot*100)+'%';
+  document.getElementById('bVoltar').disabled=(atual===0);
+  atualizaBotao();
+  if(!semScroll)window.scrollTo({top:0,behavior:'instant'});
+  if(k!=='capa'&&k!=='ident'&&k.indexOf('obj_')!==0){vistas[k]=1;guarda(PFX+'vistas',JSON.stringify(vistas));
+    if(META[+k]&&META[+k].cod==='PLACAR'&&typeof pintaPlacar==='function')pintaPlacar(META[+k].aula);}
+  pintaCards();pintaTrilha();pintaObjBar();
+  guarda(PFX+'atual',String(atual));
+}
+function posDe(aula,cod){
+  for(var i=0;i<META.length;i++){
+    if(META[i].aula===aula&&META[i].cod===cod)return ORDEM.indexOf(String(i));
+  }
+  return -1;
+}
+function proxima(sec){
+  var p=sec.nextElementSibling;
+  while(p && !(p.classList.contains('passo')||p.classList.contains('sond')||p.classList.contains('verif')))
+    p=p.nextElementSibling;
+  return p;
+}
+function atualizaBotao(){
+  var b=document.getElementById('bAvancar');
+  var k=ORDEM[atual];
+  if(interst){b.disabled=false;return}
+  if(k==='capa'||k==='ident'||k.indexOf('obj_')===0){
+    b.disabled=false;b.textContent='Avançar →';return;
+  }
+  var m=META[+k];
+  if(m && m.cod && m.cod.indexOf('VER')===0){
+    var box=document.querySelector('#t_'+k+' .qs');
+    if(box){
+      var set=box.dataset.set, rod=box.dataset.rod, gr=box.dataset.grupo;
+      var n=+box.dataset.n, corte=+box.dataset.corte;
+      var d=(RES[set]&&RES[set][rod])?RES[set][rod]:{gab:[]};
+      var f=0;for(var i=0;i<n;i++){if(d.gab[i]!==undefined)f++}
+      if(f<n){b.disabled=true;b.textContent='Responda as '+n+' ('+f+' feitas)';return}
+      var g=somaGrupo(set,gr);
+      if(g.feitas<g.tot){b.disabled=false;b.textContent='Segunda parte →';return}
+      if(g.ac>=corte){b.disabled=false;b.textContent='Passou · avançar →';return}
+      if(rod==='r3'){b.disabled=false;b.textContent='Seguir mesmo assim →';return}
+      b.disabled=false;b.textContent='Tentar com outras perguntas →';return;
+    }
+  }
+  b.disabled=false;
+  b.textContent = atual===ORDEM.length-1?'Terminei':'Avançar →';
+}
+function objSufixo(a,k){
+  if(k==='capa'||k==='ident'||!OBJ[a])return '';
+  var f=feitos[a]||[];
+  return ' · objetivos '+f.length+' de '+OBJ[a].length;
+}
+function telaDoObjetivo(a,i){
+  for(var j=0;j<META.length;j++){
+    if(META[j].aula===a&&META[j].obj===i)return {cod:META[j].cod,pos:ORDEM.indexOf(String(j))};
+  }
+  return null;
+}
+function pintaObjBar(){
+  var bar=document.getElementById('objbar');if(!bar)return;
+  var k=ORDEM[atual], a=interst?interst.slice(4):aulaDe(k);
+  if((k==='capa'||k==='ident')&&!interst){bar.style.display='none';return}
+  bar.style.display='flex';
+  var lista=OBJ[a]||[], f=feitos[a]||[];
+  var chips='';
+  lista.forEach(function(o,i){
+    var st = f.indexOf(i)>=0 ? 'ok' : (i===f.length ? 'agora' : 'trava');
+    var ic = st==='ok' ? '✅' : (st==='agora' ? '◉' : '🔒');
+    chips += '<button class="oc '+st+'" data-obj="'+i+'" title="'+o[0].replace(/"/g,'')+'">'+
+             ic+'<span>'+(i+1)+'</span></button>';
+  });
+  var feitosN=f.length, prox=lista[Math.min(feitosN,lista.length-1)];
+  var frase = feitosN>=lista.length
+    ? '<span class="agora pronto"><span class="ag">tudo pronto</span>'+
+      '<span class="agtx">os '+lista.length+' objetivos desta aula estão concluídos</span></span>'
+    : '<span class="agora"><span class="ag">agora</span><span class="agtx">'+prox[0]+'</span></span>';
+  bar.innerHTML='<span class="oclab">🎯 objetivos</span>'+chips+
+    '<span class="ocfrase">'+frase+'</span>'+
+    '<button class="ocver" id="bVerObj">ver todos</button>';
+  bar.querySelectorAll('.oc,#bVerObj').forEach(function(b){
+    b.addEventListener('click',function(){painelObjetivos(a)});
+  });
+}
+function painelObjetivos(aula){
+  var f=feitos[aula]||[];
+  pintaObjetivos(aula, -1);
+  if(!interst)voltarPara=atual;
+  interst='obj_'+aula;
+  document.querySelectorAll('.tela').forEach(function(t){t.classList.remove('on')});
+  document.getElementById('t_obj_'+aula).classList.add('on');
+  document.documentElement.setAttribute('data-aula',aula);
+  document.getElementById('eyebrow').innerHTML='<b class="marca">FAÇA COMO EU FIZ</b> '+NOMES[aula]+' · '+TITAULA[aula]+' · objetivos';
+  document.getElementById('tt').textContent='Objetivos desta aula';
+  document.getElementById('passoinfo').textContent=
+    'você está na tela '+atual+' de '+(ORDEM.length-1)+
+    ' · objetivos '+f.length+' de '+OBJ[aula].length+' concluídos';
+  document.getElementById('bAvancar').textContent='Voltar para onde eu estava →';
+  pintaObjBar();
+  window.scrollTo({top:0,behavior:'instant'});
+}
+function pintaTrilha(){
+  var t=document.getElementById('trilha');if(!t)return;
+  if(!t.dataset.pronto){
+    var h='',ant=null;
+    ORDEM.forEach(function(k,i){
+      var a=aulaDe(k);
+      if(k!=='capa'&&k!=='ident'&&ant!==null&&a!==ant)h+='<span class="sep"></span>';
+      if(k!=='capa'&&k!=='ident')ant=a;
+      var cd = (k!=='capa'&&k!=='ident'&&k.indexOf('obj_')!==0&&META[+k]) ? META[+k].cod : '';
+      var cls = (k==='capa'||k==='ident') ? 'capa' : (k.indexOf('obj_')===0 ? 'obj'
+        : (cd==='PLACAR' ? 'placar' : (cd.indexOf('VER')===0 ? 'sonda' : '')));
+      var tit = k==='ident' ? 'Quem é você' : k==='capa' ? 'Escolha a aula'
+        : (k.indexOf('obj_')===0 ? NOMES[a]+' · objetivos'
+        : NOMES[a]+' · '+(cd.indexOf('VER')===0?'verificação':cd==='PLACAR'?'placar':cd)+' · '+META[+k].titulo);
+      var fecha = (k!=='capa'&&k!=='ident'&&k.indexOf('obj_')!==0&&META[+k]&&META[+k].obj!==null&&META[+k].obj!==undefined);
+      if(fecha)tit+=' · fecha o objetivo '+(META[+k].obj+1);
+      h+='<button class="tp '+cls+(fecha?' fecha':'')+'" data-ir="'+i+'" title="'+tit.replace(/"/g,'')+'"></button>';
+    });
+    t.innerHTML=h;t.dataset.pronto='1';
+    t.querySelectorAll('.tp').forEach(function(b){
+      b.addEventListener('click',function(){mostra(+b.dataset.ir)});
+    });
+  }
+  t.querySelectorAll('.tp').forEach(function(b){
+    var i=+b.dataset.ir,k=ORDEM[i];
+    b.classList.toggle('atual',i===atual);
+    var visto = (k==='capa'||k==='ident') || (k.indexOf('obj_')===0 ? true : !!vistas[k]);
+    b.classList.toggle('visto',visto&&i!==atual);
+  });
+}
+function pintaCards(){
+  AULAS.forEach(function(a){
+    var idx=[];META.forEach(function(t,i){if(t.aula===a)idx.push(String(i))});
+    var n=idx.filter(function(i){return vistas[i]}).length;
+    var el=document.getElementById('st_'+a);
+    if(el)el.textContent=n+' de '+idx.length+' telas';
+  });
+}
+
+/* ---- objetivos ---- */
+function pintaObjetivos(aula,destaque){
+  var box=document.getElementById('objs_'+aula);
+  var lista=OBJ[aula], f=feitos[aula]||[];
+  box.innerHTML='';
+  lista.forEach(function(o,i){
+    var st = (i===destaque) ? 'atual' : (f.indexOf(i)>=0 ? 'feito' : 'bloq');
+    var mk = (st==='bloq') ? '🔒' : '✅';
+    var d=document.createElement('div');
+    d.className='obj '+st;
+    var t=telaDoObjetivo(aula,i);
+    var onde = t ? ('<span class="ondeobj">'+(st==='bloq'?'vai abrir na tela ':'conquistado na tela ')+
+                    t.pos+' · '+t.cod+'</span>') : '';
+    d.innerHTML='<div class="mk">'+mk+'</div><div class="tx"><b>'+o[0]+'</b><span>'+o[1]+'</span>'+onde+
+      (st==='atual'?'<span class="cta">Você acabou de conseguir este. Clique para continuar →</span>':'')+'</div>';
+    if(st==='atual')d.addEventListener('click',function(){ if(interst)saiInterst(); });
+    box.appendChild(d);
+  });
+}
+function abreObjetivos(aula,indice,proximaPos){
+  var f=feitos[aula]||[];
+  if(f.indexOf(indice)<0){f.push(indice);feitos[aula]=f;guarda(PFX+'feitos',JSON.stringify(feitos));}
+  pintaObjetivos(aula,indice);
+  voltarPara=proximaPos;
+  interst='obj_'+aula;
+  document.querySelectorAll('.tela').forEach(function(t){t.classList.remove('on')});
+  document.getElementById('t_obj_'+aula).classList.add('on');
+  document.documentElement.setAttribute('data-aula',aula);
+  document.getElementById('eyebrow').innerHTML='<b class="marca">FAÇA COMO EU FIZ</b> '+NOMES[aula]+' · '+TITAULA[aula]+' · objetivo alcançado';
+  document.getElementById('tt').textContent='Você conseguiu mais um objetivo';
+  document.getElementById('passoinfo').textContent=
+    'você está na tela '+atual+' de '+(ORDEM.length-1)+
+    ' · objetivo '+(indice+1)+' de '+OBJ[aula].length+' conquistado';
+  document.getElementById('bVoltar').disabled=false;
+  document.getElementById('bAvancar').textContent='Continuar →';
+  pintaObjBar();
+  window.scrollTo({top:0,behavior:'instant'});
+}
+function saiInterst(){
+  interst=null;
+  var p=(voltarPara===null?atual:voltarPara);voltarPara=null;
+  mostra(p);
+}
+
+/* ---- navegacao ---- */
+document.getElementById('bVoltar').addEventListener('click',function(){
+  if(interst){interst=null;voltarPara=null;mostra(atual);return}
+  mostra(atual-1);
+});
+document.getElementById('bAvancar').addEventListener('click',function(){
+  if(interst){saiInterst();return}
+  var k=ORDEM[atual];
+  if(k!=='capa'&&k!=='ident'&&k.indexOf('obj_')!==0){
+    var t=META[+k];
+    if(t.obj!==null&&t.obj!==undefined){
+      var f=feitos[t.aula]||[];
+      if(f.indexOf(t.obj)<0){ abreObjetivos(t.aula,t.obj,atual+1); return; }
+    }
+  }
+  if(k.indexOf('obj_')===0&&voltarPara!==null){var p=voltarPara;voltarPara=null;mostra(p);return;}
+  mostra(atual+1);
+});
+
+/* ---- lista de telas ---- */
+var ov=document.getElementById('overlay');
+function montaLista(){
+  var box=document.getElementById('listaBox');box.innerHTML='';
+  AULAS.forEach(function(a,gi){
+    var g=document.createElement('div');g.className='grupo';
+    g.innerHTML='<span class="gt g'+(gi+1)+'">'+NOMES[a]+' · '+AULAS_T[a]+'</span>';
+    var oi=ORDEM.indexOf('obj_'+a);
+    g.appendChild(item('Objetivos da aula',oi,false));
+    META.forEach(function(t,i){
+      if(t.aula!==a)return;
+      g.appendChild(item(t.cod+' · '+t.titulo,ORDEM.indexOf(String(i)),!!vistas[String(i)]));
+    });
+    box.appendChild(g);
+  });
+}
+function item(txt,pos,ok){
+  var d=document.createElement('div');
+  d.className='it'+(pos===atual?' atual':'');
+  d.innerHTML='<span class="num">'+pos+'</span><span>'+txt+'</span>'+(ok?'<span class="ck">✅</span>':'');
+  d.addEventListener('click',function(){ov.classList.remove('on');mostra(pos)});
+  return d;
+}
+var AULAS_T={"a01": "Número Secreto · parte 1", "a02": "Número Secreto · parte 2", "a03": "Quiz · parte 1", "a04": "Quiz · parte 2"};
+document.getElementById('bLista').addEventListener('click',function(){
+  if(interst){interst=null;voltarPara=null;}
+  montaLista();ov.classList.add('on')});
+document.getElementById('bFecha').addEventListener('click',function(){ov.classList.remove('on')});
+ov.addEventListener('click',function(e){if(e.target===ov)ov.classList.remove('on')});
+
+/* ---- copiar ---- */
+function limpaBotoes(menos){
+  document.querySelectorAll('[data-copiar]').forEach(function(x){
+    if(x!==menos){x.textContent='Copiar';x.classList.remove('ok','falhou')}
+  });
+}
+function marcaOk(b){limpaBotoes(b);b.textContent='✓ Copiado';b.classList.add('ok');b.classList.remove('falhou')}
+function marcaFalha(b,id){
+  limpaBotoes(b);b.textContent='Aperte Ctrl+C';b.classList.add('falhou');b.classList.remove('ok');
+  var pre=document.getElementById(id);
+  try{
+    var r=document.createRange();r.selectNodeContents(pre);
+    var s=window.getSelection();s.removeAllRanges();s.addRange(r);
+    pre.scrollIntoView({block:'nearest'});
+  }catch(e){}
+  var av=pre.parentNode.querySelector('.copfalha');
+  if(!av){av=document.createElement('div');av.className='copfalha';
+    av.textContent='O navegador nao deixou copiar sozinho. Ja deixei o texto selecionado: aperte Ctrl+C.';
+    pre.parentNode.appendChild(av);}
+}
+document.querySelectorAll('[data-copiar]').forEach(function(b){
+  b.addEventListener('click',function(){
+    var id=b.dataset.copiar, txt=document.getElementById(id).textContent;
+    function velho(){
+      var ta=document.createElement('textarea');ta.value=txt;ta.style.position='fixed';
+      ta.style.top='-1000px';document.body.appendChild(ta);ta.focus();ta.select();
+      var deu=false;try{deu=document.execCommand('copy')}catch(e){deu=false}
+      document.body.removeChild(ta);
+      if(deu){marcaOk(b)}else{marcaFalha(b,id)}
+    }
+    if(navigator.clipboard&&navigator.clipboard.writeText){
+      navigator.clipboard.writeText(txt).then(function(){marcaOk(b)},velho);
+    }else{velho()}
+  });
+});
+
+/* ---- verificador ---- */
+function norm(l){return l.replace(/[\u201C\u201D\u201E\u2033]/g,'"').replace(/[\u2018\u2019\u2032]/g,"'")
+  .replace(/\u00A0/g,' ').replace(/\s+$/,'')}
+function chave(l){return l.replace(/^#.*$/,'#T').replace(/^\s+/,'')}
+function verifica(bruto,gab){
+  var linhas=bruto.split(/\r?\n/).map(norm).filter(function(l){return l.trim()!==''&&l.trim()!=='Copiar código'});
+  var p=[];
+  if(!linhas.length)return{ok:false,p:['A caixa está vazia. Cole o que está na sua célula do Colab.']};
+  if(/Copiar c[oó]digo/i.test(bruto))p.push('Você copiou junto as palavras "Copiar código". Apague essa linha.');
+  if(/[\u201C\u201D\u2018\u2019]/.test(bruto))p.push('As suas aspas vieram tortas. Apague e use o botão Copiar.');
+  var g=gab.filter(function(l){return l.trim()!==''});
+  var meu=linhas.map(chave), ref=g.map(chave);
+  if(!/^#/.test(linhas[0]||'')){
+    p.push('Falta a primeira linha, a que começa com # e tem o seu nome.');
+  }else{
+    var t0=g[0]||'', i1=t0.indexOf('('), i2=t0.indexOf(')');
+    if(i1>0 && i2>i1){
+      var cont=t0.substring(i1,i2+1);
+      if(linhas[0].indexOf(cont)<0){
+        p.push('Sumiu o contador '+cont+' da primeira linha. Você apagou demais. Apague a célula toda e cole de novo.');
+      }
+    }
+  }
+  if(meu.length>ref.length)p.push('Você tem '+meu.length+' linhas e deveria ter '+ref.length+'. Talvez tenha colado duas vezes.');
+  if(meu.length<ref.length)p.push('Faltam linhas. Você tem '+meu.length+' e deveria ter '+ref.length+'.');
+  if(!p.length){for(var i=0;i<ref.length;i++){if(meu[i]!==ref[i]){
+    p.push(ref.indexOf(meu[i])>=0?'As linhas estão certas, mas na ordem errada. A linha '+(i+1)+' deveria ser:|'+g[i]
+      :'A linha '+(i+1)+' está diferente.|você colou:  '+linhas[i]+'\ndeveria ser: '+g[i]);break}}}
+  if(!p.length&&/ESCREVA SEU NOME AQUI/.test(bruto))p.push('Está quase. Falta trocar ESCREVA SEU NOME AQUI pelo seu nome completo.');
+  return{ok:!p.length,p:p};
+}
+function esc(s){return String(s).replace(/[&<>]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;'}[c]})}
+document.querySelectorAll('[data-verif]').forEach(function(b){
+  b.addEventListener('click',function(){
+    var k=b.dataset.verif,r=verifica(document.getElementById('cola'+k).value,GAB[k]);
+    var d=document.getElementById('diag'+k);
+    d.className='diag mostra '+(r.ok?'certo':'errado');
+    if(r.ok){d.innerHTML='<b>Está igual ao esperado.</b> Pode avançar.';return}
+    var h='<b>Achei '+r.p.length+(r.p.length===1?' diferença:':' diferenças:')+'</b><ol>';
+    r.p.forEach(function(x){var q=x.split('|');h+='<li>'+esc(q[0]);if(q[1])h+='<span class="lin">'+esc(q[1])+'</span>';h+='</li>'});
+    d.innerHTML=h+'</ol><p style="margin:10px 0 0">Jeito mais rápido: apague tudo da célula e cole de novo com o botão Copiar.</p>';
+  });
+});
+document.querySelectorAll('[data-limpa]').forEach(function(b){
+  b.addEventListener('click',function(){
+    document.getElementById('cola'+b.dataset.limpa).value='';
+    document.getElementById('diag'+b.dataset.limpa).className='diag';
+  });
+});
+
+/* ---- sondagem ---- */
+var RES={};
+try{RES=JSON.parse(le(PFX+'res')||'{}')}catch(e){RES={}}
+function corteDe(n){return Math.ceil(n*0.7)}
+function passou(a){var r=RES[a];return !!(r&&r.passou)}
+
+function pintaPlacar(set){
+  var box=document.getElementById('pb_'+set);if(!box)return;
+  var r=RES[set];
+  if(!r||!r.passou){
+    box.innerHTML='<div class="placarnum">–</div>'+
+      '<div class="placarde">responda as perguntas para ver o seu resultado</div>';return;
+  }
+  var a=r.acertos,n=r.total,t=r.tentativa;
+  var msg = a===n ? 'Você acertou tudo. Entendeu mesmo o que fez.'
+    : t==='t1' ? 'Passou na primeira tentativa. Muito bom.'
+    : t==='t2' ? 'Passou na segunda tentativa. Valeu a insistência.'
+    : 'Passou na última tentativa. Vale conversar com o professor sobre esta aula.';
+  var bolas='';for(var i=0;i<n;i++){var ok=r.gab[i];bolas+='<div class="bo '+(ok?'c':'x')+'">'+(ok?'✅':'✗')+'</div>'}
+  box.innerHTML='<div class="placarnum">'+a+'</div>'+
+    '<div class="placarde">de '+n+' · precisava de '+corteDe(n)+'</div>'+
+    '<div class="bolinhas">'+bolas+'</div>'+
+    '<div class="placarmsg">'+msg+'</div>';
+}
+function pintaGeral(){
+  var box=document.getElementById('pb_geral');if(!box)return;
+  var tot=0,max=0,det='',pass=0;
+  ['a01','a02','a03','a04'].forEach(function(a){
+    var r=RES[a];
+    if(r&&r.passou){tot+=r.acertos;max+=r.total;pass++;
+      det+='<div class="lgeral"><span class="lga">'+NOMES[a]+'</span><span class="lgb">'+
+           r.acertos+' de '+r.total+' · passou na tentativa '+r.tentativa.slice(1)+'</span></div>';
+    }else{
+      det+='<div class="lgeral"><span class="lga">'+NOMES[a]+'</span><span class="lgb">ainda não concluída</span></div>';
+    }
+  });
+  box.innerHTML='<div class="placarnum">'+pass+'</div>'+
+    '<div class="placarde">de 4 aulas com a verificação concluída</div>'+
+    (max?'<div class="placarmsg">'+tot+' acertos em '+max+' perguntas respondidas</div>':'');
+  document.getElementById('pg_detalhe').innerHTML=det;
+}
+
+function estadoRod(box){
+  var set=box.dataset.set, rod=box.dataset.rod, gr=box.dataset.grupo;
+  var n=+box.dataset.n, ng=+box.dataset.ng, corte=+box.dataset.corte;
+  if(!RES[set])RES[set]={};
+  if(!RES[set][rod])RES[set][rod]={gab:[],n:n};
+  return {set:set,rod:rod,gr:gr,n:n,ng:ng,corte:corte,d:RES[set][rod]};
+}
+var RODS_DO_GRUPO={t1:['r1a','r1b'],t2:['r2'],t3:['r3']};
+function somaGrupo(set,gr){
+  var feitas=0,ac=0,tot=0;
+  RODS_DO_GRUPO[gr].forEach(function(r){
+    var d=(RES[set]&&RES[set][r])?RES[set][r]:{gab:[],n:0};
+    var n=d.n||0;tot+=n;
+    for(var i=0;i<n;i++){if(d.gab[i]!==undefined){feitas++;if(d.gab[i])ac++}}
+  });
+  return {feitas:feitas,ac:ac,tot:tot};
+}
+function atualizaRod(box){
+  var s=estadoRod(box);
+  s.d.n=s.n;
+  var f=0,a=0;
+  for(var i=0;i<s.n;i++){if(s.d.gab[i]!==undefined){f++;if(s.d.gab[i])a++}}
+  var g=somaGrupo(s.set,s.gr);
+  var el=document.getElementById('and'+s.set+'_'+s.rod);
+  if(el){
+    if(f<s.n){
+      el.textContent=f+' de '+s.n+' respondidas nesta tela · acertos no total: '+g.ac+' de '+g.feitas;
+      el.className='andamento';
+    }else if(g.feitas<g.tot){
+      el.textContent='Tela completa. Somando tudo: '+g.ac+' certas de '+g.feitas+'. Faltam '+(g.tot-g.feitas)+' na próxima tela.';
+      el.className='andamento';
+    }else{
+      el.textContent = g.ac>=s.corte
+        ? 'Você acertou '+g.ac+' de '+g.tot+'. Passou. Pode avançar.'
+        : 'Você acertou '+g.ac+' de '+g.tot+'. Precisava de '+s.corte+'. Vamos tentar com outras perguntas.';
+      el.className='andamento'+(g.ac>=s.corte?' ok':' falta');
+    }
+  }
+  if(g.feitas===g.tot && g.ac>=s.corte && !passou(s.set)){
+    RES[s.set].passou=true;RES[s.set].tentativa=s.gr;
+    RES[s.set].acertos=g.ac;RES[s.set].total=g.tot;
+    var todos=[];RODS_DO_GRUPO[s.gr].forEach(function(r){
+      var d=RES[s.set][r]||{gab:[]};todos=todos.concat(d.gab)});
+    RES[s.set].gab=todos;
+    pintaPlacar(s.set);pintaGeral();
+  }
+  guarda(PFX+'res',JSON.stringify(RES));
+  atualizaBotao();
+}
+function marcaResposta(box,qi,certo){
+  var s=estadoRod(box);
+  s.d.gab[qi]=certo;
+  document.getElementById('e'+s.set+'_'+s.rod+'_'+qi).classList.add('mostra');
+  atualizaRod(box);
+}
+
+/* ---- múltipla escolha e verdadeiro/falso ---- */
+document.querySelectorAll('.qs').forEach(function(box){
+  box.addEventListener('click',function(ev){
+    var b=ev.target.closest('.alt');
+    if(b){
+      var qi=+b.dataset.q, ai=+b.dataset.a;
+      var g=box.querySelectorAll('.alt[data-q="'+qi+'"]');
+      if(g[0].disabled)return;
+      var lista=BANCO[box.dataset.set][box.dataset.rod], q=lista[qi];
+      g.forEach(function(x,j){x.disabled=true;
+        if(j===q.c)x.classList.add('certa');else if(j===ai)x.classList.add('errada')});
+      marcaResposta(box,qi,ai===q.c);
+      return;
+    }
+    var p=ev.target.closest('.pc');
+    if(p){
+      if(p.disabled)return;
+      var qi2=+p.dataset.q;
+      var lista2=BANCO[box.dataset.set][box.dataset.rod], q2=lista2[qi2];
+      var alvo=box.querySelector('.montado[data-q="'+qi2+'"]');
+      var esc=document.createElement('span');esc.className='pcm';esc.textContent=p.dataset.p;
+      alvo.appendChild(esc);p.disabled=true;p.classList.add('usada');
+      var montado=[].map.call(alvo.querySelectorAll('.pcm'),function(x){return x.textContent});
+      if(montado.length===q2.ordem.length){
+        var ok=montado.every(function(x,i){return x===q2.ordem[i]});
+        alvo.classList.add(ok?'certo':'errado');
+        if(!ok){
+          var cert=document.createElement('div');cert.className='lacresp';
+          cert.innerHTML='<b>ordem certa:</b> '+q2.ordem.join(' · ');
+          alvo.parentNode.insertBefore(cert,alvo.nextSibling);
+        }
+        box.querySelectorAll('.pc[data-q="'+qi2+'"]').forEach(function(x){x.disabled=true});
+        box.querySelectorAll('.limpalac[data-q="'+qi2+'"]').forEach(function(x){x.style.display='none'});
+        marcaResposta(box,qi2,ok);
+      }
+      return;
+    }
+    var lp=ev.target.closest('.limpalac');
+    if(lp){
+      var qi3=+lp.dataset.q;
+      var alvo3=box.querySelector('.montado[data-q="'+qi3+'"]');
+      alvo3.innerHTML='';alvo3.className='montado';
+      box.querySelectorAll('.pc[data-q="'+qi3+'"]').forEach(function(x){x.disabled=false;x.classList.remove('usada')});
+    }
+  });
+});
+['a01','a02','a03','a04'].forEach(pintaPlacar);pintaGeral();
+
+/* ---- identificacao ---- */
+var IDENT={};
+try{IDENT=JSON.parse(le(PFX+'ident')||'{}')}catch(e){IDENT={}}
+var fN=document.getElementById('fNome'), fT=document.getElementById('fTurma');
+function pintaIdent(){
+  var av=document.getElementById('idaviso');
+  var n=(IDENT.nome||'').trim();
+  if(av){
+    av.innerHTML = n
+      ? 'Guardado. Quando o guia pedir o seu nome, digite: <b>'+esc(n)+'</b>'
+      : 'Escreva o seu nome para o guia lembrar depois. Você pode seguir sem isso, mas aí terá que lembrar sozinho.';
+    av.className='idaviso'+(n?' ok':'');
+  }
+  document.querySelectorAll('.meunome').forEach(function(x){
+    x.textContent = n || 'o seu nome completo';
+  });
+}
+if(fN){fN.value=IDENT.nome||'';fT.value=IDENT.turma||'';
+  [fN,fT].forEach(function(c){c.addEventListener('input',function(){
+    IDENT.nome=fN.value;IDENT.turma=fT.value;
+    guarda(PFX+'ident',JSON.stringify(IDENT));pintaIdent();
+  })});
+  pintaIdent();
+}
+
+/* ---- inicio ---- */
+document.querySelectorAll('.card').forEach(function(c){
+  c.addEventListener('click',function(){mostra(ORDEM.indexOf('obj_'+c.dataset.aula))});
+});
+AULAS.forEach(function(a){pintaObjetivos(a,-1)});
+mostra(+(le(PFX+'atual')||0),true);
+})();
+</script>
+</body>
+</html>
